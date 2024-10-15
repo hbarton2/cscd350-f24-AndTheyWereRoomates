@@ -16,4 +16,10 @@ public class Relationship {
     public String getDestination(){
         return this.destination;
     }
+    public void setSource(final String source) {
+        this.source = source;
+    }
+    public void setDestination(final String destination) {
+        this.destination = destination;
+    }
 }

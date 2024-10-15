@@ -15,4 +15,10 @@ public class Field {
     public String getType(){
         return this.type;
     }
+    public void setName(final String name) {
+        this.name = name;
+    }
+    public void setType(final String type) {
+        this.type = type;
+    }
 }
