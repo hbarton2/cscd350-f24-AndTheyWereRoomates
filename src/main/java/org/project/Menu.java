@@ -3,15 +3,18 @@ import java.util.Scanner;
 
 
 public class Menu {
-    public static void runMenu() {
+
+    Scanner scanner;
+    public Menu() {
+        this.scanner = new Scanner(System.in);
+    }
+    public void runMenu() {
         System.out.println("Welcome to our UML Editor application");
 
         String userInput = "";
-        Scanner scanner;
         do {
-            scanner = new Scanner(System.in);
             System.out.print("~ ");
-            userInput = scanner.nextLine();
+            userInput = this.scanner.nextLine();
             if(!inputCheck(userInput)) {
                 continue;
             }
@@ -28,7 +31,7 @@ public class Menu {
         }while(!userInput.equals("exit"));
     }
 
-    private static boolean inputCheck(String input) {
+    private boolean inputCheck(String input) {
 
         // check for empty str
         if(input.isEmpty()) {
@@ -63,14 +66,14 @@ public class Menu {
 
     }
 
-    private static void commandCheck(String[] input) {
+    private void commandCheck(String[] input) {
         switch (input[0]) {
             case "add" -> addCommand(input);
             case "help" -> helpCommand(input[1]);
         };
     }
 
-    private static void addCommand(String[] input) {
+    private void addCommand(String[] input) {
         switch(input[1]) {
             case "class" -> addClass();
             case "method" -> addMethod();
@@ -80,33 +83,33 @@ public class Menu {
         }
     }
 
-    private static void addClass() {
+    private void addClass() {
         System.out.println("Please enter a class name: ");
         System.out.println("added: Class Apple");
 
     }
 
-    private static void addField() {
+    private void addField() {
         System.out.println("Please enter a field name and type: ");
         System.out.println("added: seeds:int");
     }
 
-    private static void addMethod() {
+    private void addMethod() {
         System.out.println("Please enter a method name: ");
         System.out.println("added: Eat()");
     }
 
-    private static void addParameter() {
+    private void addParameter() {
         System.out.println("Please enter a parameter name and type: ");
         System.out.println("added: side:String");
     }
 
-    private static void addRelationship() {
+    private void addRelationship() {
         System.out.println("Please enter a relationship name: ");
         System.out.println("added: destination = Orange");
     }
 
-    private static boolean helpCommand(String command) {
+    private boolean helpCommand(String command) {
 
         switch(command) {
             case "add":
@@ -141,7 +144,7 @@ public class Menu {
         }
     }
 
-    private static boolean help() {
+    private boolean help() {
         System.out.println("Syntax: help [command]");
         System.out.println();
         System.out.println("Existing commands are: ");
