@@ -62,7 +62,7 @@ public class Method {
         return this.name = name;
     }
 
-    public void setName(){
+    public void setName(String name){
         this.name = name;
     }
 
