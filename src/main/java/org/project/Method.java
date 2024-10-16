@@ -10,46 +10,77 @@ public class Method {
     }
 
     public boolean addParameter(final String parameterName, final String parameterType){
+
+        if(parameterName.isBlank() || parameterName == null || parameterType.isBlank() || parameterType == null){
+            System.out.println("Inputs were Null/Blank");
+            return false;
+        }
+
         if(hasParameter(parameterName)){
             System.out.println("This method already has this parameter");
             return false;
         }
+
         parameters.add(new Parameter(parameterName,parameterType));
         return true;
     }
 
     public boolean changeParameter(final String oldParamName, final String newParamName, final String newParamType){
-        if(!oldParamName.equals(newParamName) && hasParameter(newParamName)){
-            System.out.println("method already has this parameter");
+
+        if(newParamName.isBlank() || newParamName == null || newParamType.isBlank() || newParamType == null || oldParamName.isBlank() || oldParamName == null){
+            System.out.println("Inputs were Null/Blank");
             return false;
         }
+
+        if(!oldParamName.equals(newParamName) && hasParameter(newParamName)){
+            System.out.println("This method already has this parameter");
+            return false;
+        }
+
         for(Parameter param: parameters){
             if(param.getName().equals(oldParamName)){
                 param.setName(newParamName);
                 param.setType(newParamType);
-                System.out.println("the parameter has ban changed to " + newParamName + " parame of type: " + newParamType);
+                System.out.println("The parameter has been changed to " + newParamName + ", param of type: " + newParamType);
                 return true;
             }
-
         }
-        System.out.println("parameter now found try another name");
+
+        System.out.println("Parameter not found try another name");
         return false;
     }
 
     public boolean deleteParameter(final String parameterName){
+
+        if(parameterName.isBlank() || parameterName == null){
+            System.out.println("Input was Null/Blank");
+            return false;
+        }
+
         for(Parameter param: parameters){
             if(param.getName().equals(parameterName)){
                 parameters.remove(param);
-                System.out.println("the parameter has been deleted");
+                System.out.println("The parameter has been deleted");
                 return true;
             }
-
         }
+
         System.out.println("Parameter was not found in method");
         return false;
     }
 
+    public void deleteAllParameter(){
+        this.parameters.clear();
+        System.out.println("All parameters in method has been deleted");
+    }
+
     public boolean hasParameter(final String parameterName){
+
+        if(parameterName.isBlank() || parameterName == null){
+            System.out.println("Input was Null/Blank");
+            return false;
+        }
+
         for(Parameter param: parameters){
             if(param.getName().equals(parameterName)){
                 return true;
@@ -59,10 +90,10 @@ public class Method {
     }
 
     public String getName(){
-        return this.name = name;
+        return this.name;
     }
 
-    public void setName(){
+    public void setName(String name){
         this.name = name;
     }
 
