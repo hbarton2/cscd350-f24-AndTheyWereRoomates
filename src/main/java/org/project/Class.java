@@ -80,5 +80,65 @@ public class Class {
    public void setName(String name) {
       this.name = name;
    }
+
+
+
+   public boolean addField(String name, String type){
+      if(name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
+
+      if(hasField(name)) return false;
+
+      return fields.add(new Field(name, type));
+   }
+
+   public boolean removeField(String name){
+      if(name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
+
+      if(!hasField(name)) return false;
+
+      Field field = findField(name);
+
+      return fields.remove(field);
+
+   }
+
+   public boolean renameField(String old, String newName){
+      if(name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
+
+      if(!hasField(old)) return false;
+
+      Field field = findField(old);
+
+      field.setName(newName);
+      return true;
+   }
+
+   private Field findField( final String name){
+      for(Field field: fields){
+         if(field.getName().equals(name)){
+            return field;
+         }
+      }
+      return null;
+   }
+
+
+   private boolean hasField(final String name){
+      for(Field field: fields){
+         if(field.getName().equals(name)){
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean addRelation(final String source, final String dest){
+      if(source == null || source.isEmpty()) throw new IllegalArgumentException("Invalid source, try again");
+      if(dest == null || dest.isEmpty()) throw new IllegalArgumentException("Invalid destination, try again");
+
+      return relation.add(new Relationship(source, dest));
+
+
+   }
 }
 
