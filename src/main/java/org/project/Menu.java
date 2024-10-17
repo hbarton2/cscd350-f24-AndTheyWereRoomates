@@ -14,7 +14,7 @@ public class Menu {
     }
     public void runMenu() {
         System.out.println("Welcome to our UML Editor application");
-
+        System.out.println("If you would like a list of commands enter 'help' ");
         String userInput = "";
         do {
             System.out.print("~ ");
@@ -140,8 +140,19 @@ public class Menu {
     }
 
     private void addRelationship() {
-        System.out.println("Please enter a relationship name: ");
-        System.out.println("added: destination = Orange");
+        System.out.println("Please enter the class name of the source class: ");
+        String input1 = this.scanner.nextLine();
+        Class obj1 = this.storage.list.get(input1);
+        if(input1 == null || input1.isBlank()){
+            System.out.println("Class does not exist.");
+        }
+        System.out.println("Please enter the class name of the destination class : ");
+        String input2 = this .scanner.nextLine();
+        if(input2 == null || input2.isBlank()){
+            System.out.println("Class does not exist.");
+        }
+        Class obj2 = this.storage.list.get(input2);
+        obj1.addRelation(input1,input2);
     }
 
     private void listCommand(String[] input) {
@@ -164,6 +175,12 @@ public class Menu {
             System.out.println("Class with this name does not exists");
         } else {
             System.out.println("Class name: " + obj.getName());
+            System.out.println("Relationships: ");
+            for (Relationship relate: obj.relation){
+                System.out.println("----------------------");
+                System.out.println("Source Class: " + relate.getSource());
+                System.out.println("Destination class: " + relate.getDestination());
+            }
             System.out.println("Fields:");
             for (Field field : obj.fields) {
                 System.out.println("----------------------");
