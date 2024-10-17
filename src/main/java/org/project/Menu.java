@@ -1,12 +1,16 @@
 package org.project;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 
 public class Menu {
 
     Scanner scanner;
-    public Menu() {
+    Storage storage;
+    public Menu(Storage storage) {
         this.scanner = new Scanner(System.in);
+        this.storage = storage;
     }
     public void runMenu() {
         System.out.println("Welcome to our UML Editor application");
@@ -14,18 +18,12 @@ public class Menu {
         String userInput = "";
         do {
             System.out.print("~ ");
-            userInput = this.scanner.nextLine();
+            userInput = this.scanner.nextLine().toLowerCase();
             if(!inputCheck(userInput)) {
                 continue;
             }
 
             commandCheck(userInput.split(" "));
-
-            System.out.println("""
-            Class Apple
-            + seeds: Integer
-            + eat(side: String)
-            + destination: Orange""");
 
 
         }while(!userInput.equals("exit"));
@@ -56,20 +54,13 @@ public class Menu {
         }
 
         return true;
-
-//        return switch (str[0]) {
-//            case "add" -> addCommand(str[1]);
-//            case "help" -> helpCommand(str[1]);
-//            default -> true;
-//        };
-
-
     }
 
     private void commandCheck(String[] input) {
         switch (input[0]) {
             case "add" -> addCommand(input);
             case "help" -> helpCommand(input[1]);
+            case "list" -> listCommand(input);
         };
     }
 
@@ -84,29 +75,124 @@ public class Menu {
     }
 
     private void addClass() {
-        System.out.println("Please enter a class name: ");
-        System.out.println("added: Class Apple");
+        System.out.print("Class name: ");
+        String input = this.scanner.nextLine();
+        this.storage.addClass(input);
 
     }
 
     private void addField() {
-        System.out.println("Please enter a field name and type: ");
-        System.out.println("added: seeds:int");
+        System.out.print("Enter class name: ");
+        String input = this.scanner.nextLine();
+        Class objClass = this.storage.getClass(input);
+        if(objClass == null) {
+            System.out.println("Invalid name");
+        }
+        else {
+            System.out.print("Enter field name:" );
+            String fieldName = this.scanner.nextLine();
+            System.out.print("Enter field type:");
+            String fieldType = this.scanner.nextLine();
+            objClass.addField(fieldName, fieldType);
+        }
     }
 
     private void addMethod() {
-        System.out.println("Please enter a method name: ");
-        System.out.println("added: Eat()");
+        System.out.print("Class name: ");
+        String input = this.scanner.nextLine();
+        Class objClass = this.storage.getClass(input);
+        if(objClass == null) {
+            System.out.println("Invalid name");
+        }
+        else {
+            System.out.print("Enter method name:" );
+            input = this.scanner.nextLine();
+            objClass.addMethod(input);
+        }
     }
 
     private void addParameter() {
-        System.out.println("Please enter a parameter name and type: ");
-        System.out.println("added: side:String");
+        System.out.print("Enter class name: ");
+        String input = this.scanner.nextLine();
+        Class objClass = this.storage.getClass(input);
+        if(objClass == null) {
+            System.out.println("Invalid name");
+        }
+        else {
+            System.out.print("Enter method name: ");
+            input = this.scanner.nextLine();
+            ArrayList<Method> methods = objClass.methodlist;
+            Method objMethod;
+            for (Method method : methods) {
+                if(method.getName().equals(input)) {
+                    objMethod = method;
+                    System.out.print("Enter parameter name:" );
+                    String parameterName = this.scanner.nextLine();
+                    System.out.print("Enter parameter type:");
+                     String parameterType = this.scanner.nextLine();
+                    objMethod.addParameter(parameterName, parameterType);
+                } else {
+                    System.out.println("Invalid input");
+                }
+            }
+            
+        }
     }
 
     private void addRelationship() {
         System.out.println("Please enter a relationship name: ");
         System.out.println("added: destination = Orange");
+    }
+
+    private void listCommand(String[] input) {
+        if(input[1].equals("class")) {
+            listClass(input);
+        }
+        else if(input[1].equals("classes")) {
+            listClasses();
+        }
+        else {
+            System.out.println("Invalid input");
+        }
+    }
+
+    public void listClass(String[] input) {
+        System.out.print("You class is: " );
+        String name = this.scanner.nextLine();
+        Class obj = this.storage.list.get(name);
+        if(obj == null) {
+            System.out.println("Class with this name does not exists");
+        } else {
+            System.out.println("Class name: " + obj.getName());
+            System.out.println("Fields:");
+            for (Field field : obj.fields) {
+                System.out.println("----------------------");
+                System.out.println("Field name: " + field.getName());
+                System.out.println("Field type: " + field.getType());
+            }
+            System.out.println("Methods: ");
+            for (Method method : obj.methodlist) {
+                System.out.println("----------------------");
+                System.out.println("Method: " + method.getName());
+                System.out.println();
+                System.out.println("Parameters:");
+                for (Parameter parameter : method.parameters) {
+                    System.out.println("----------------------");
+                    System.out.println("Name: " + parameter.getName());
+                    System.out.println("Type" + parameter.getType());
+                }
+
+            }
+        }
+
+        
+    }
+
+    public void listClasses() {
+        System.out.println("Number of classese: " + this.storage.list.size());
+        for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
+            System.out.println(entry.getValue().getName());
+        }
     }
 
     private boolean helpCommand(String command) {

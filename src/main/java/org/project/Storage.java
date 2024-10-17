@@ -1,7 +1,7 @@
 package org.project;
 import java.util.TreeMap;
 
-public class Storage extends TreeMap<String, Class> {
+public class Storage {
     public TreeMap<String, Class> list = new TreeMap<>();
 
     /**
@@ -13,6 +13,10 @@ public class Storage extends TreeMap<String, Class> {
         if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
         list.put(name, new Class(name));
         return true;
+    }
+
+    public Class getClass(String name) {
+        return this.list.get(name);
     }
 
     /**

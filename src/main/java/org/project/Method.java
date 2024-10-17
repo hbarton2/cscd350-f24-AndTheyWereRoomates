@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Method {
     private String name;
-    private ArrayList<Parameter> parameters;
+    public ArrayList<Parameter> parameters;
     public Method(final String name){
         this.name = name;
         this.parameters = new ArrayList<>();

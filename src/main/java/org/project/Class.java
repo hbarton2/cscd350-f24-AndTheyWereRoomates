@@ -5,9 +5,9 @@ import java.util.Iterator;
 
 public class Class {
    private String name;
-   private ArrayList<Method> methodlist;
-   private ArrayList<Field> fields;
-   private ArrayList<Relationship> relation;
+   public ArrayList<Method> methodlist;
+   public ArrayList<Field> fields;
+   public ArrayList<Relationship> relation;
 
    public Class(String name) {
       this.name = name;
