@@ -60,7 +60,7 @@ public class Menu {
     private void addCommand(String[] input) {
         switch(input[1]) {
             case "class" -> ClassCommands.addClass(this.scanner, this.storage, input);
-            case "method" -> addMethod();
+            case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
             case "field" -> addField();
             case "parameter" -> addParameter();
             case "relationship" -> addRelationship();
@@ -70,7 +70,7 @@ public class Menu {
     private void removeCommand(String[] input) {
         switch(input[1]) {
             case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
-            case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
+            case "method" -> MethodCommands.removeMethod(this.scanner, this.storage, input);
         }
     }
 
