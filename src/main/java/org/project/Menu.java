@@ -18,7 +18,7 @@ public class Menu {
         String userInput = "";
         do {
             System.out.print("~ ");
-            userInput = this.scanner.nextLine().toLowerCase();
+            userInput = this.scanner.nextLine().toLowerCase().trim();
             if(!inputCheck(userInput)) {
                 continue;
             }
@@ -59,7 +59,7 @@ public class Menu {
     private void commandCheck(String[] input) {
         switch (input[0]) {
             case "add" -> addCommand(input);
-            case "help" -> helpCommand(input[1]);
+            case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
         };
     }
@@ -212,38 +212,37 @@ public class Menu {
         }
     }
 
-    private boolean helpCommand(String command) {
+    private void helpCommand(String[] command) {
 
-        switch(command) {
+        switch(command[1]) {
             case "add":
                 System.out.println("Add command allows you to create a new class, method, field, relationship, or parameter.");
                 System.out.println("Syntax: add [object]");
-                return true;
+                return;
             case "delete":
                 System.out.println("Delete command allows you to delete existing class, method, field, relationship");
                 System.out.println("Syntax: delete [object]");
-                return true;
+                return;
             case "rename":
                 System.out.println("Rename command allows you to rename existing class, method, field");
                 System.out.println("Syntax: rename [object]");
-                return true;
+                return;
             case "save":
                 System.out.println("Save command allows you to save existing class");
                 System.out.println("Syntax: save [object]");
-                return true;
+                return;
             case "load":
                 System.out.println("Load command allows you to load existing class");
                 System.out.println("Syntax: load [object]");
-                return true;
+                return;
             case "list":
                 System.out.println("List command allows you to list existing class");
                 System.out.println("Syntax: list [object]");
-                return true;
+                return;
             case "exit":
                 System.out.println("Exits the program");
-                return false;
+                return;
             default:
-                return false;
         }
     }
 
