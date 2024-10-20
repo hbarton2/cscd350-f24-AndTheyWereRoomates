@@ -22,10 +22,7 @@ public class Save {
         try{
             FileWriter writer = new FileWriter(fileName);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Collection<Class> list = this.storage.list.values();
-            for (Class clas : list){
-                writer.write(gson.toJson(clas));
-            }
+            gson.toJson(this.storage.list, writer);
 
             writer.close();
 
