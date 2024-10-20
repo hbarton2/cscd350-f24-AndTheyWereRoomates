@@ -50,6 +50,7 @@ public class Menu {
     private void commandCheck(String[] input) {
         switch (input[0]) {
             case "add" -> addCommand(input);
+            case "remove" -> removeCommand(input);
             case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
         };
@@ -62,6 +63,12 @@ public class Menu {
             case "field" -> addField();
             case "parameter" -> addParameter();
             case "relationship" -> addRelationship();
+        }
+    }
+
+    private void removeCommand(String[] input) {
+        switch(input[1]) {
+            case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
         }
     }
 
@@ -202,6 +209,7 @@ public class Menu {
             case "add":
                 System.out.println("Add command allows you to create a new class, method, field, relationship, or parameter.");
                 System.out.println("Syntax: add [object]");
+                System.out.println("Syntax: add class [name]");
                 return;
             case "delete":
                 System.out.println("Delete command allows you to delete existing class, method, field, relationship");
