@@ -54,17 +54,9 @@ public class Menu {
             case "change" -> changeCommand(input);
             case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
-            case "save" -> save();
         };
     }
 
-    private void save() {
-        System.out.println("Please enter the file name(.json): ");
-        String name = scanner.nextLine();
-        Save save = new Save(storage);
-        save.save(name);
-
-    }
 
     private void addCommand(String[] input) {
         switch(input[1]) {
