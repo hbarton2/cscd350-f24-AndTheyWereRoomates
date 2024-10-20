@@ -1,4 +1,5 @@
 package org.project;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
@@ -61,7 +62,16 @@ public class Menu {
             case "add" -> addCommand(input);
             case "help" -> helpCommand(input[1]);
             case "list" -> listCommand(input);
+            case "save" -> save();
         };
+    }
+
+    private void save() {
+        System.out.println("Please enter the file name(.json): ");
+        String name = scanner.nextLine();
+        Save save = new Save(storage);
+        save.save(name);
+
     }
 
     private void addCommand(String[] input) {
