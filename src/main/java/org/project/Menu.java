@@ -70,6 +70,7 @@ public class Menu {
     private void removeCommand(String[] input) {
         switch(input[1]) {
             case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
+            case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
         }
     }
 
