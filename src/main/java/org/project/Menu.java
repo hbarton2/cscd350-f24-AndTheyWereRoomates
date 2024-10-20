@@ -48,10 +48,10 @@ public class Menu {
             return false;
         }
 
-        if(str.length != 2) {
-            System.out.println("Invalid number of arguments");
-            return false;
-        }
+//        if(str.length != 2) {
+//            System.out.println("Invalid number of arguments");
+//            return false;
+//        }
 
         return true;
     }
@@ -66,7 +66,7 @@ public class Menu {
 
     private void addCommand(String[] input) {
         switch(input[1]) {
-            case "class" -> addClass();
+            case "class" -> ClassCommands.addClass(this.scanner, this.storage, input);
             case "method" -> addMethod();
             case "field" -> addField();
             case "parameter" -> addParameter();
