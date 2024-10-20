@@ -206,7 +206,7 @@ public class Menu {
     }
 
     public void listClasses() {
-        System.out.println("Number of classese: " + this.storage.list.size());
+        System.out.println("Number of classes: " + this.storage.list.size());
         for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
             System.out.println(entry.getValue().getName());
         }
@@ -243,6 +243,7 @@ public class Menu {
                 System.out.println("Exits the program");
                 return;
             default:
+                System.out.println("This command does not exist.");
         }
     }
 
