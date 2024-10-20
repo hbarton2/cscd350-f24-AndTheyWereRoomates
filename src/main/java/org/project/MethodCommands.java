@@ -73,4 +73,19 @@ public class MethodCommands {
             }
         }
     }
+
+    public static void renameMethod(Scanner scanner, Storage storage, String[] input) {
+        if(input.length < 4) {
+            System.out.println("Invalid number of arguments");
+        } else {
+            String className = input[2];
+            String methodName = input[3];
+            if(!storage.list.containsKey(className)) {
+                System.out.println("Class " + className + " does not exist");
+            } else {
+                Class classObject = storage.getClass(className);
+                classObject.renameMethod(methodName, className);
+            }
+        }
+    }
 }
