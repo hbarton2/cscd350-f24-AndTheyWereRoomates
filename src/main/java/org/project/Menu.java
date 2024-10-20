@@ -44,16 +44,7 @@ public class Menu {
             return help();
         }
 
-        if(str[0].equals("exit") && str.length < 2) {
-            return false;
-        }
-
-//        if(str.length != 2) {
-//            System.out.println("Invalid number of arguments");
-//            return false;
-//        }
-
-        return true;
+        return !str[0].equals("exit") || str.length >= 2;
     }
 
     private void commandCheck(String[] input) {
@@ -72,13 +63,6 @@ public class Menu {
             case "parameter" -> addParameter();
             case "relationship" -> addRelationship();
         }
-    }
-
-    private void addClass() {
-        System.out.print("Class name: ");
-        String input = this.scanner.nextLine();
-        this.storage.addClass(input);
-
     }
 
     private void addField() {
