@@ -51,6 +51,7 @@ public class Menu {
         switch (input[0]) {
             case "add" -> addCommand(input);
             case "remove" -> removeCommand(input);
+            case "rename" ->renameCommand(input);
             case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
         };
@@ -69,6 +70,12 @@ public class Menu {
     private void removeCommand(String[] input) {
         switch(input[1]) {
             case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
+        }
+    }
+
+    private void renameCommand(String[] input) {
+        switch(input[1]) {
+            case "class" -> ClassCommands.renameClass(this.scanner, this.storage, input);
         }
     }
 
