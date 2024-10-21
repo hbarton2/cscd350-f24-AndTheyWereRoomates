@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class RelationshipMethods {
 
     public static void addRelationship(Scanner scanner, Storage storage, String[] input){
-        if(input.length < 4){
+        if(input.length != 4){
             System.out.println("Invalid number of arguments");
 
         }else{
@@ -24,7 +24,7 @@ public class RelationshipMethods {
     }
 
     public static void removeRelationship(Scanner scanner, Storage storage, String[] input){
-        if(input.length < 4){
+        if(input.length != 4){
             System.out.println("Invalid number of arguments");
         }else{
 

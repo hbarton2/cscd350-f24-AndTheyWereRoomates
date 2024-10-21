@@ -1,6 +1,4 @@
 package org.project;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -65,7 +63,7 @@ public class Menu {
             case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
             case "field" -> FieldCommands.addField(this.scanner, this.storage, input);
             case "parameter" -> ParameterCommands.addParameter(this.scanner, this.storage, input);
-            case "relationship" -> addRelationship();
+            case "relationship" -> RelationshipMethods.addRelationship(this.scanner, this.storage, input);
         }
     }
 
@@ -75,6 +73,7 @@ public class Menu {
             case "method" -> MethodCommands.removeMethod(this.scanner, this.storage, input);
             case "field" -> FieldCommands.removeField(this.scanner, this.storage, input);
             case "parameter" -> ParameterCommands.removeParameter(this.scanner, this.storage, input);
+            case "relationship" -> RelationshipMethods.removeRelationship(this.scanner, this.storage, input);
         }
     }
 
@@ -90,80 +89,6 @@ public class Menu {
         switch(input[1]) {
             case "parameter" -> ParameterCommands.changeParameter(this.scanner, this.storage, input);
         }
-    }
-
-    private void addField() {
-        System.out.print("Enter class name: ");
-        String input = this.scanner.nextLine();
-        Class objClass = this.storage.getClass(input);
-        if(objClass == null) {
-            System.out.println("Invalid name");
-        }
-        else {
-            System.out.print("Enter field name:" );
-            String fieldName = this.scanner.nextLine();
-            System.out.print("Enter field type:");
-            String fieldType = this.scanner.nextLine();
-            objClass.addField(fieldName, fieldType);
-        }
-    }
-
-    private void addMethod() {
-        System.out.print("Class name: ");
-        String input = this.scanner.nextLine();
-        Class objClass = this.storage.getClass(input);
-        if(objClass == null) {
-            System.out.println("Invalid name");
-        }
-        else {
-            System.out.print("Enter method name:" );
-            input = this.scanner.nextLine();
-            objClass.addMethod(input);
-        }
-    }
-
-    private void addParameter() {
-        System.out.print("Enter class name: ");
-        String input = this.scanner.nextLine();
-        Class objClass = this.storage.getClass(input);
-        if(objClass == null) {
-            System.out.println("Invalid name");
-        }
-        else {
-            System.out.print("Enter method name: ");
-            input = this.scanner.nextLine();
-            ArrayList<Method> methods = objClass.methodlist;
-            Method objMethod;
-            for (Method method : methods) {
-                if(method.getName().equals(input)) {
-                    objMethod = method;
-                    System.out.print("Enter parameter name:" );
-                    String parameterName = this.scanner.nextLine();
-                    System.out.print("Enter parameter type:");
-                     String parameterType = this.scanner.nextLine();
-                    objMethod.addParameter(parameterName, parameterType);
-                } else {
-                    System.out.println("Invalid input");
-                }
-            }
-            
-        }
-    }
-
-    private void addRelationship() {
-        System.out.println("Please enter the class name of the source class: ");
-        String input1 = this.scanner.nextLine();
-        Class obj1 = this.storage.list.get(input1);
-        if(input1 == null || input1.isBlank()){
-            System.out.println("Class does not exist.");
-        }
-        System.out.println("Please enter the class name of the destination class : ");
-        String input2 = this .scanner.nextLine();
-        if(input2 == null || input2.isBlank()){
-            System.out.println("Class does not exist.");
-        }
-        Class obj2 = this.storage.list.get(input2);
-        obj1.addRelation(input1,input2);
     }
 
     private void listCommand(String[] input) {
@@ -233,11 +158,25 @@ public class Menu {
             case "add":
                 System.out.println("Add command allows you to create a new class, method, field, relationship, or parameter.");
                 System.out.println("Syntax: add [object]");
-                System.out.println("Syntax: add class [name]");
+                System.out.println();
+                System.out.println("For class");
+                System.out.println("Syntax: add class [name] - creates class with [name] in single command");
+                System.out.println();
+                System.out.println("For method");
+                System.out.println("Syntax: add method [class name] - creates method and adds to class with [name]");
+                System.out.println();
+                System.out.println("For field");
+                System.out.println("Syntax: add field [class name] - creates field and add it to class with [name]");
                 return;
-            case "delete":
-                System.out.println("Delete command allows you to delete existing class, method, field, relationship");
-                System.out.println("Syntax: delete [object]");
+            case "remove":
+                System.out.println("Remove command allows you to delete existing class, method, field, relationship");
+                System.out.println("Syntax: remove class - prompts for class name to be removed");
+                System.out.println();
+                System.out.println("For class");
+                System.out.println("Syntax: remove class [name] - removes class with [name] in single command");
+                System.out.println();
+                System.out.println("For method");
+                System.out.println("Syntax: remove method [class name] [method name] - removes method with [method name] from class with [class name]");
                 return;
             case "rename":
                 System.out.println("Rename command allows you to rename existing class, method, field");
@@ -268,13 +207,13 @@ public class Menu {
         System.out.println();
         System.out.println("Existing commands are: ");
         System.out.println("- add:  create a new class, method, field, relationship, or parameter.");
-        System.out.println("- delete: delete existing class, method, field, relationship");
+        System.out.println("- remove: delete existing class, method, field, relationship");
         System.out.println("- rename: rename existing class, method, field");
         System.out.println("- save: save existing class");
         System.out.println("- load: load existing class");
-        System.out.println("- list class: list existing class");
-        System.out.println("- list classes: list existing classes");
-        System.out.println("- list relationships: list existing relationships");
+        System.out.println("- list: class: list existing class");
+        System.out.println("- list: classes: list existing classes");
+        System.out.println("- list: relationships: list existing relationships");
         System.out.println("- help: shows help message");
         System.out.println("- exit: exit application");
         return false;
