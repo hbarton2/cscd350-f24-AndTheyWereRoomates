@@ -72,6 +72,10 @@ public class ParameterCommands {
             return;
         }
 
+        if(!method.hasParameter(parameterName)) {
+            System.out.println("Parameter " + parameterName + " does not exist");
+        }
+
         method.deleteParameter(parameterName);
         System.out.println("Parameter " + parameterName + " removed from " + className + " " + methodName);
 
