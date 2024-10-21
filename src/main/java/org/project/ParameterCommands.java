@@ -41,7 +41,7 @@ public class ParameterCommands {
         }
 
         method.addParameter(parameterName, parameterType);
-        System.out.println("Parameter " + parameterName + " added to " + className + "." + methodName);
+        System.out.println("Parameter " + parameterName + " added to " + className + " " + methodName);
     }
 
 }

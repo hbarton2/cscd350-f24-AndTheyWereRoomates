@@ -63,7 +63,7 @@ public class Menu {
             case "class" -> ClassCommands.addClass(this.scanner, this.storage, input);
             case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
             case "field" -> FieldCommands.addField(this.scanner, this.storage, input);
-            case "parameter" -> addParameter();
+            case "parameter" -> ParameterCommands.addParameter(this.scanner, this.storage, input);
             case "relationship" -> addRelationship();
         }
     }
