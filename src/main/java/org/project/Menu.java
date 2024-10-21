@@ -93,15 +93,21 @@ public class Menu {
     }
 
     private void listCommand(String[] input) {
-        if(input[1].equals("class")) {
-            listClass(input);
+        switch(input[1]) {
+            case "class" -> listClass(input);
+            case "classes" -> listClasses();
+            case "relationships" -> listRelationship();
+            default -> System.out.println("Invalid input");
         }
-        else if(input[1].equals("classes")) {
-            listClasses();
-        }
-        else {
-            System.out.println("Invalid input");
-        }
+//        if(input[1].equals("class")) {
+//            listClass(input);
+//        }
+//        else if(input[1].equals("classes")) {
+//            listClasses();
+//        }
+//        else {
+//            System.out.println("Invalid input");
+//        }
     }
 
     public void listClass(String[] input) {
@@ -150,6 +156,14 @@ public class Menu {
         System.out.println("Number of classes: " + this.storage.list.size());
         for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
             System.out.println(entry.getValue().getName());
+        }
+    }
+
+    public void listRelationship() {
+        for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
+            for(Relationship relationship : entry.getValue().relation){
+                System.out.println(relationship.getSource() + " -> " + relationship.getDestination());
+            }
         }
     }
 
