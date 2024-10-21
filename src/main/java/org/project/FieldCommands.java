@@ -46,4 +46,38 @@ public class FieldCommands {
             }
         }
     }
+
+    public static void removeField(Scanner scanner, Storage storage, String[] input) {
+        if(input.length != 3) {
+            System.out.println("Invalid number of arguments");
+        } else {
+            String className = input[2];
+            if(!storage.list.containsKey(className)) {
+                System.out.println("Class " + className + " does not exist");
+            } else {
+                Class classObject = storage.getClass(className);
+                String fieldName;
+
+                if(classObject.fields.isEmpty()) {
+                    System.out.println("Class " + className + " does not have any fields");
+                    return;
+                }
+
+                System.out.print("Enter field name: ");
+                fieldName = scanner.nextLine().toLowerCase().trim();
+                if(fieldName.isEmpty()) {
+                    System.out.println("Invalid field name");
+                } else {
+                    if(!classObject.removeField(fieldName)) {
+                        System.out.println("Field " + fieldName + " does not exist");
+                    } else {
+                        classObject.removeField(fieldName);
+                        System.out.println(fieldName + " removed successfully from " + className );
+                    }
+                }
+
+
+            }
+        }
+    }
 }

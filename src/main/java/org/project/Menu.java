@@ -71,6 +71,7 @@ public class Menu {
         switch(input[1]) {
             case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
             case "method" -> MethodCommands.removeMethod(this.scanner, this.storage, input);
+            case "field" -> FieldCommands.removeField(this.scanner, this.storage, input);
         }
     }
 
