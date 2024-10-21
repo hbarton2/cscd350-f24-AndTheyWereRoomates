@@ -181,6 +181,9 @@ public class Menu {
             case "rename":
                 System.out.println("Rename command allows you to rename existing class, method, field");
                 System.out.println("Syntax: rename [object]");
+                System.out.println();
+                System.out.println("For method");
+                System.out.println("Syntax: rename method [class name] [method name] - renames method with [method name] from class with [class name]");
                 return;
             case "save":
                 System.out.println("Save command allows you to save existing class");
