@@ -1,5 +1,6 @@
 package org.project;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -170,8 +171,6 @@ public class Menu {
     }
 
     public void listClass(String[] input) {
-//        System.out.print("You class is: " );
-
         String className = input[2];
         if(className.isEmpty()) {
             System.out.println("Class name cannot be empty");
@@ -204,7 +203,7 @@ public class Menu {
                 for (Parameter parameter : method.parameters) {
                     System.out.println("----------------------");
                     System.out.println("Name: " + parameter.getName());
-                    System.out.println("Type" + parameter.getType());
+                    System.out.println("Type: " + parameter.getType());
                 }
 
             }

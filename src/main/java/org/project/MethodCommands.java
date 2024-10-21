@@ -32,19 +32,15 @@ public class MethodCommands {
                         if (userInputParts.length < 3 || (userInputParts.length - 1) % 2 != 0) {
                             System.out.println("Invalid parameter list format.");
                         } else {
-
-                            Method method = new Method(methodName);
-
                             // Parse parameter pairs
-                            List<Parameter> parameterList = new ArrayList<>();
+                            classObject.addMethod(methodName);
+                            Method method = classObject.getMethod(methodName);
                             for (int i = 1; i < userInputParts.length - 1; i += 2) {
                                 String paramName = userInputParts[i];
                                 String paramType = userInputParts[i + 1];
                                 method.addParameter(paramName, paramType);
                             }
 
-                            // Add the method to the class
-                            classObject.addMethod(methodName);
                             System.out.println("Method added successfully.");
                             result = true;
                         }
