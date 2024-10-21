@@ -197,6 +197,9 @@ public class Menu {
             case "list":
                 System.out.println("List command allows you to list existing class");
                 System.out.println("Syntax: list [object]");
+                System.out.println();
+                System.out.println("For class");
+                System.out.println("Syntax: list [class name] - list info about class with [class name]");
                 return;
             case "exit":
                 System.out.println("Exits the program");
