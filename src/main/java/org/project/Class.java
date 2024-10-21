@@ -61,8 +61,13 @@ public class Class {
       if (matchingMethods.isEmpty()) {
          return false;
       }
+      if (matchingMethods.size() == 1) {
+         methodlist.remove(matchingMethods.get(0));
+         System.out.println("Removed method " + overloadHelper(matchingMethods.get(0)));
+         return true;
+      }
 
-      if (matchingMethods.size() > 1) {
+
          for (int i = 0; i < matchingMethods.size(); i++) {
             Method method = matchingMethods.get(i);
             System.out.println((i + 1) + ": " + overloadHelper(method));
@@ -78,8 +83,6 @@ public class Class {
          methodlist.remove(matchingMethods.get(choice - 1));
          System.out.println("Removed successfully");
          return true;
-      }
-      return false;
    }
    private String overloadHelper(Method method) {
       String data = method.getName() + "(";
