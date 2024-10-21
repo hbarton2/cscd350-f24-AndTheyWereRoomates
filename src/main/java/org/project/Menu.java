@@ -170,9 +170,15 @@ public class Menu {
     }
 
     public void listClass(String[] input) {
-        System.out.print("You class is: " );
-        String name = this.scanner.nextLine();
-        Class obj = this.storage.list.get(name);
+//        System.out.print("You class is: " );
+
+        String className = input[2];
+        if(className.isEmpty()) {
+            System.out.println("Class name cannot be empty");
+            return;
+        }
+
+        Class obj = this.storage.getClass(className);
         if(obj == null) {
             System.out.println("Class with this name does not exists");
         } else {
