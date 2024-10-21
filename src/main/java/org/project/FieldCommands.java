@@ -80,4 +80,44 @@ public class FieldCommands {
             }
         }
     }
+
+    public static void renameField(Scanner scanner, Storage storage, String[] input) {
+        if(input.length != 3) {
+            System.out.println("Invalid number of arguments");
+        } else {
+            String className = input[2];
+            if(!storage.list.containsKey(className)) {
+                System.out.println("Class " + className + " does not exist");
+            } else {
+                Class classObject = storage.getClass(className);
+                String oldFieldName;
+
+                if(classObject.fields.isEmpty()) {
+                    System.out.println("Class " + className + " does not have any fields");
+                } else {
+                    System.out.print("Enter field old name: ");
+                    oldFieldName = scanner.nextLine().toLowerCase().trim();
+                    if(oldFieldName.isEmpty()) {
+                        System.out.println("Invalid field name");
+                    } else {
+                        System.out.print("Enter field new name: ");
+                        String newFieldName = scanner.nextLine().toLowerCase().trim();
+
+                        if(oldFieldName.equals(newFieldName)) {
+                            System.out.println("Field " + oldFieldName + " already exists");
+                            return;
+                        }
+
+                        if(!classObject.renameField(oldFieldName, newFieldName)) {
+                            System.out.println("Field " + oldFieldName + " does not exist");
+                            return;
+                        }
+
+                        classObject.renameField(oldFieldName, newFieldName);
+                        System.out.println(oldFieldName + " renamed to " + newFieldName + " in class " + className );
+                    }
+                }
+            }
+        }
+    }
 }

@@ -78,6 +78,8 @@ public class Menu {
     private void renameCommand(String[] input) {
         switch(input[1]) {
             case "class" -> ClassCommands.renameClass(this.scanner, this.storage, input);
+            case "method" -> MethodCommands.renameMethod(this.scanner, this.storage, input);
+            case "field" -> FieldCommands.renameField(this.scanner, this.storage, input);
         }
     }
 
