@@ -61,7 +61,7 @@ public class Menu {
         switch(input[1]) {
             case "class" -> ClassCommands.addClass(this.scanner, this.storage, input);
             case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
-            case "field" -> addField();
+            case "field" -> FieldCommands.addField(this.scanner, this.storage, input);
             case "parameter" -> addParameter();
             case "relationship" -> addRelationship();
         }
