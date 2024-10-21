@@ -53,6 +53,7 @@ public class Menu {
             case "add" -> addCommand(input);
             case "remove" -> removeCommand(input);
             case "rename" ->renameCommand(input);
+            case "change" -> changeCommand(input);
             case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
         };
@@ -82,6 +83,12 @@ public class Menu {
             case "class" -> ClassCommands.renameClass(this.scanner, this.storage, input);
             case "method" -> MethodCommands.renameMethod(this.scanner, this.storage, input);
             case "field" -> FieldCommands.renameField(this.scanner, this.storage, input);
+        }
+    }
+
+    private void changeCommand(String[] input) {
+        switch(input[1]) {
+            case "parameter" -> ParameterCommands.changeParameter(this.scanner, this.storage, input);
         }
     }
 
