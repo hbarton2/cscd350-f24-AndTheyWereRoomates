@@ -132,6 +132,26 @@ public class Class {
       return false;
    }
 
+   public boolean hasMethod(String methodName){
+      for(Method method: methodlist){
+         if(method.getName().equals(methodName)){
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   public Method getMethod(String methodName){
+      for(Method method: methodlist){
+         if(method.getName().equals(methodName)){
+            return method;
+
+         }
+      }
+      return null;
+   }
+
    public boolean addRelation(final String source, final String dest){
       if(source == null || source.isEmpty()) throw new IllegalArgumentException("Invalid source, try again");
       if(dest == null || dest.isEmpty()) throw new IllegalArgumentException("Invalid destination, try again");
