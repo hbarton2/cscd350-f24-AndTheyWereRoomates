@@ -54,6 +54,8 @@ public class Menu {
             case "change" -> changeCommand(input);
             case "help" -> helpCommand(input);
             case "list" -> listCommand(input);
+            case "save" -> saveCommand(input);
+            case "load" -> loadCommand(input);
         };
     }
 
@@ -99,15 +101,6 @@ public class Menu {
             case "relationships" -> listRelationship();
             default -> System.out.println("Invalid input");
         }
-//        if(input[1].equals("class")) {
-//            listClass(input);
-//        }
-//        else if(input[1].equals("classes")) {
-//            listClasses();
-//        }
-//        else {
-//            System.out.println("Invalid input");
-//        }
     }
 
     public void listClass(String[] input) {
@@ -165,6 +158,20 @@ public class Menu {
                 System.out.println(relationship.getSource() + " -> " + relationship.getDestination());
             }
         }
+    }
+
+    public void saveCommand(String[] input) {
+        Save save = new Save(this.storage);
+        System.out.print("Enter file name:");
+        String filePath = scanner.nextLine().concat(".json");
+        save.save(filePath);
+    }
+
+    public void loadCommand(String[] input) {
+        Load load = new Load(this.storage);
+        System.out.print("Enter file name:");
+        String filePath = scanner.nextLine().concat(".json");
+        load.Load(filePath);
     }
 
     private void helpCommand(String[] command) {

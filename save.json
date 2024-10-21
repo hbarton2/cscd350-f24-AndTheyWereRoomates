@@ -1,0 +1,13 @@
+{
+  "apple": {
+    "name": "apple",
+    "methodlist": [],
+    "fields": [
+      {
+        "name": "seeds",
+        "type": "int[]"
+      }
+    ],
+    "relation": []
+  }
+}
