@@ -1,14 +1,34 @@
 package org.project;
 import java.util.*;
 
+/**
+ * Represents a method
+ */
 public class Method {
+    /**
+     * The name of the method.
+     */
     private String name;
-    private ArrayList<Parameter> parameters;
+    /**
+     * A list of parameters.
+     */
+    public ArrayList<Parameter> parameters;
+
+    /**
+     * Constructor to create a new Method.
+     * @param name - The name of the method.
+     */
     public Method(final String name){
         this.name = name;
         this.parameters = new ArrayList<>();
     }
 
+    /**
+     * Adds a parameter to the method.
+     * @param parameterName - The name of the parameter.
+     * @param parameterType - The type of the parameter.
+     * @return true if the parameter was added, otherwise returns false.
+     */
     public boolean addParameter(final String parameterName, final String parameterType){
 
         if(parameterName.isBlank() || parameterName == null || parameterType.isBlank() || parameterType == null){
@@ -25,6 +45,13 @@ public class Method {
         return true;
     }
 
+    /**
+     * Changes an existing parameter with a new name and type.
+     * @param oldParamName - Current name of the parameter.
+     * @param newParamName - New name for the parameter.
+     * @param newParamType - The new type of the parameter.
+     * @return true if the parameter was successfully changed, otherwise returns false.
+     */
     public boolean changeParameter(final String oldParamName, final String newParamName, final String newParamType){
 
         if(newParamName.isBlank() || newParamName == null || newParamType.isBlank() || newParamType == null || oldParamName.isBlank() || oldParamName == null){
@@ -50,6 +77,11 @@ public class Method {
         return false;
     }
 
+    /**
+     * Deletes a parameter from the method by its name.
+     * @param parameterName - The name of the parameter.
+     * @return true if the parameter was successfully deleted, otherwise returns false.
+     */
     public boolean deleteParameter(final String parameterName){
 
         if(parameterName.isBlank() || parameterName == null){
@@ -60,7 +92,6 @@ public class Method {
         for(Parameter param: parameters){
             if(param.getName().equals(parameterName)){
                 parameters.remove(param);
-                System.out.println("The parameter has been deleted");
                 return true;
             }
         }
@@ -69,11 +100,19 @@ public class Method {
         return false;
     }
 
+    /**
+     * Deletes all the parameters from the method.
+     */
     public void deleteAllParameter(){
         this.parameters.clear();
         System.out.println("All parameters in method has been deleted");
     }
 
+    /**
+     * Checks if a parameter with the name provided exists.
+     * @param parameterName - The name of the parameter.
+     * @return true if the parameter exists, otherwise returns false.
+     */
     public boolean hasParameter(final String parameterName){
 
         if(parameterName.isBlank() || parameterName == null){
@@ -89,14 +128,26 @@ public class Method {
         return false;
     }
 
+    /**
+     * Gets the name of the method.
+     * @return the name of the method.
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Sets the name of the method.
+     * @param name - The new name for the method.
+     */
     public void setName(final String name){
         this.name = name;
     }
 
+    /**
+     * Gets the list of parameters of the method.
+     * @return the list of parameters.
+     */
     public ArrayList<Parameter> getParameter(){
         return parameters;
     }

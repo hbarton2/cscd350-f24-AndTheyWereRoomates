@@ -1,7 +1,13 @@
 package org.project;
 import java.util.TreeMap;
 
-public class Storage extends TreeMap<String, Class> {
+/**
+ * Represents a storage for managing a collection of classes.
+ */
+public class Storage {
+    /**
+     * A map to store the classes.
+     */
     public TreeMap<String, Class> list = new TreeMap<>();
 
     /**
@@ -13,6 +19,15 @@ public class Storage extends TreeMap<String, Class> {
         if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
         list.put(name, new Class(name));
         return true;
+    }
+
+    /**
+     * Retrieves a class.
+     * @param name - The name of the class.
+     * @return the class if found.
+     */
+    public Class getClass(String name) {
+        return this.list.get(name);
     }
 
     /**
