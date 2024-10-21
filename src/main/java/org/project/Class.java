@@ -2,6 +2,7 @@ package org.project;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Represents Class with its constructor, fields, and methods.
@@ -50,15 +51,50 @@ public class Class {
       if (methodName == null || methodName.isEmpty()) {
          throw new IllegalArgumentException("Invalid method name, try again");
       }
-      Iterator<Method> iterator = methodlist.iterator();
-      while (iterator.hasNext()) {
-         Method method = iterator.next();
+      ArrayList<Method> matchingMethods = new ArrayList<>();
+
+      for (Method method : methodlist) {
          if (method.getName().equals(methodName)) {
-            iterator.remove();
-            return true;
+            matchingMethods.add(method);
          }
       }
+      if (matchingMethods.isEmpty()) {
+         return false;
+      }
+
+      if (matchingMethods.size() > 1) {
+         for (int i = 0; i < matchingMethods.size(); i++) {
+            Method method = matchingMethods.get(i);
+            System.out.println((i + 1) + ": " + overloadHelper(method));
+         }
+         Scanner scanner = new Scanner(System.in);
+         System.out.println("Choose a number to delete that method: ");
+         int choice = scanner.nextInt();
+
+         if (choice < 1 || choice > matchingMethods.size()) {
+            System.out.println("Try again");
+            return false;
+         }
+         methodlist.remove(matchingMethods.get(choice - 1));
+         System.out.println("Removed successfully");
+         return true;
+      }
       return false;
+   }
+   private String overloadHelper(Method method) {
+      String data = method.getName() + "(";
+      ArrayList<Parameter> params = method.getParameter();
+
+      for (int i = 0; i < params.size(); i++) {
+         Parameter param = params.get(i);
+         data += param.getType() + " " + param.getType();
+
+         if (i < params.size() - 1) {
+            data += ", ";
+         }
+      }
+      data += ")";
+      return data;
    }
 
    /**
