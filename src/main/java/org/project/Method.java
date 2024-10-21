@@ -60,7 +60,6 @@ public class Method {
         for(Parameter param: parameters){
             if(param.getName().equals(parameterName)){
                 parameters.remove(param);
-                System.out.println("The parameter has been deleted");
                 return true;
             }
         }
