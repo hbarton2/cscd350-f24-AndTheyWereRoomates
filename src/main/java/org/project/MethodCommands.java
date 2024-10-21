@@ -79,13 +79,27 @@ public class MethodCommands {
             System.out.println("Invalid number of arguments");
         } else {
             String className = input[2];
-            String methodName = input[3];
+            String oldMethodName = input[3];
             if(!storage.list.containsKey(className)) {
                 System.out.println("Class " + className + " does not exist");
-            } else {
-                Class classObject = storage.getClass(className);
-                classObject.renameMethod(methodName, className);
+                return;
             }
+
+            System.out.print("Enter new method name: ");
+            String newMethodName = scanner.nextLine().toLowerCase().trim();
+            if(newMethodName.isEmpty()) {
+                System.out.println("Empty input");
+                return;
+            }
+
+            if(oldMethodName.equals(newMethodName)) {
+                System.out.println("Method " + oldMethodName + " already exists");
+                return;
+            }
+
+            Class classObject = storage.getClass(className);
+            classObject.renameMethod(oldMethodName, newMethodName);
+            System.out.println("Method " + oldMethodName + " renamed to " + newMethodName);
         }
     }
 }
