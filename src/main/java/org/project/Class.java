@@ -230,6 +230,13 @@ public class Class {
       return null;
    }
 
+   /**
+    * Adds a relationship between the source and destination classes.
+    * @param source - The source class
+    * @param dest - The destination class.
+    * @return true if the relationships was added successfully, otherwise returns false.
+    * @throws IllegalArgumentException if the source or destination is null or empty.
+    */
    public boolean addRelation(final String source, final String dest){
       if(source == null || source.isEmpty()) throw new IllegalArgumentException("Invalid source, try again");
       if(dest == null || dest.isEmpty()) throw new IllegalArgumentException("Invalid destination, try again");
