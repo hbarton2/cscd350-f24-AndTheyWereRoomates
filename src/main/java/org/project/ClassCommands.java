@@ -87,6 +87,7 @@ public class ClassCommands {
                         System.out.println("Class with that name already exists");
                     } else {
                         storage.renameClass(oldClassName, newClassName);
+                        System.out.println("The Class has been renamed to: " + newClassName);
                         result = true;
                     }
                 }
@@ -105,6 +106,7 @@ public class ClassCommands {
                 System.out.println("Class with name " + newClassName +  " already exists");
             } else {
                 storage.renameClass(oldClassName, newClassName);
+                System.out.println("The Class has been renamed to: " + newClassName);
             }
         }
     }
