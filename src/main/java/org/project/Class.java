@@ -90,7 +90,7 @@ public class Class {
 
       for (int i = 0; i < params.size(); i++) {
          Parameter param = params.get(i);
-         data += param.getType() + " " + param.getType();
+         data += param.getName() + " " + param.getType();
 
          if (i < params.size() - 1) {
             data += ", ";
@@ -261,9 +261,8 @@ public class Class {
 
    public Method getMethod(String methodName){
       for(Method method: methodlist){
-         if(method.getName().equals(methodName)){
+         if(method.getName().equals(methodName) && (method.getParameter().isEmpty())) {
             return method;
-
          }
       }
       return null;

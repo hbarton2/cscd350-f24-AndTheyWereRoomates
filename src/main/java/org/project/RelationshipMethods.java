@@ -4,9 +4,10 @@ import java.util.Scanner;
 
 public class RelationshipMethods {
 
-    public static void addRelationship(Scanner scanner, Storage storage, String[] input){
+    public static boolean addRelationship(Scanner scanner, Storage storage, String[] input){
         if(input.length != 4){
             System.out.println("Invalid number of arguments");
+            return false;
 
         }else{
             String source = input[2];
@@ -19,13 +20,18 @@ public class RelationshipMethods {
 
             Class srcClass = storage.getClass(source);
 
+
+
             srcClass.addRelation(srcClass.getName(), destination);
+            System.out.println("Successful");
+            return true;
         }
     }
 
-    public static void removeRelationship(Scanner scanner, Storage storage, String[] input){
+    public static boolean removeRelationship(Scanner scanner, Storage storage, String[] input){
         if(input.length != 4){
             System.out.println("Invalid number of arguments");
+            return false;
         }else{
 
             String source = input[2];
@@ -37,6 +43,8 @@ public class RelationshipMethods {
             Class srcClass = storage.getClass(source);
 
             srcClass.removeRelation(srcClass.getName(), destination);
+            System.out.println("Successful");
+            return true;
         }
     }
 }
