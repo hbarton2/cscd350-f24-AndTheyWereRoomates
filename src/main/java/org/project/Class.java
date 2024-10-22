@@ -90,7 +90,7 @@ public class Class {
 
       for (int i = 0; i < params.size(); i++) {
          Parameter param = params.get(i);
-         data += param.getType() + " " + param.getType();
+         data += param.getName() + " " + param.getType();
 
          if (i < params.size() - 1) {
             data += ", ";
