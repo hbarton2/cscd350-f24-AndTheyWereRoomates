@@ -261,9 +261,8 @@ public class Class {
 
    public Method getMethod(String methodName){
       for(Method method: methodlist){
-         if(method.getName().equals(methodName)){
+         if(method.getName().equals(methodName) && (method.getParameter().isEmpty())) {
             return method;
-
          }
       }
       return null;
