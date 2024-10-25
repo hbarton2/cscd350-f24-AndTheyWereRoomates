@@ -49,7 +49,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.project.UMLclass</mainClass> <!-- change this to GUI class when done with class-->
+                    <mainClass>org.project.GUIView</mainClass> <!-- change this to GUI class when done with class-->
                 </configuration>
                 <executions>
                     <execution>
