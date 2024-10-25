@@ -12,7 +12,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>17.0.2</javafx.version>
+        <javafx.version>21</javafx.version>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -22,150 +23,28 @@
             <artifactId>gson</artifactId>
             <version>2.8.9</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
-            <classifier>linux-arm32</classifier> <!-- Use ARM32-specific binaries -->
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>linux-arm32</classifier> <!-- Use ARM32-specific binaries -->
-        </dependency>
+
 
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- Maven Compiler Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                </configuration>
-            </plugin>
 
-            <!-- JavaFX Maven Plugin -->
+        <plugins>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>org.project.UMLApp</mainClass> <!-- Main class for JavaFX application -->
+                    <mainClass>org.project.GUIView</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <profiles>
-        <!-- Profile for Intel (x86/x64) on Linux -->
-        <profile>
-            <id>intel-linux</id>
-            <activation>
-                <os>
-                    <family>linux</family>
-                    <arch>x86_64</arch> <!-- For Intel Linux x86/x64 -->
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>linux</classifier> <!-- JavaFX Linux binaries for Intel -->
-                </dependency>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>linux</classifier>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- Profile for ARM32 on Linux (e.g., Raspberry Pi) -->
-        <profile>
-            <id>arm-linux</id>
-            <activation>
-                <os>
-                    <family>linux</family>
-                    <arch>arm</arch> <!-- For ARM32 (Linux) -->
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>linux-arm32</classifier> <!-- JavaFX ARM32 binaries for Linux -->
-                </dependency>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>linux-arm32</classifier>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- Profile for macOS on Intel (x86/x64) -->
-        <profile>
-            <id>intel-mac</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>x86_64</arch> <!-- For Intel macOS x86/x64 -->
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>mac</classifier> <!-- JavaFX macOS binaries for Intel -->
-                </dependency>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>mac</classifier>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- Profile for macOS on ARM (Apple Silicon) -->
-        <profile>
-            <id>arm-mac</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>aarch64</arch> <!-- For ARM macOS (Apple Silicon) -->
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-controls</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>mac-aarch64</classifier> <!-- JavaFX macOS ARM binaries -->
-                </dependency>
-                <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                    <version>${javafx.version}</version>
-                    <classifier>mac-aarch64</classifier>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>
