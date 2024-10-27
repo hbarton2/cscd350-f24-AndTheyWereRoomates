@@ -18,7 +18,7 @@ public class GUIView extends Application {
 
         try{
             Parent root = FXMLLoader.load(getClass().getResource("/yes.fxml"));
-            Scene scene = new Scene(root, 400 , 400);
+            Scene scene = new Scene(root, 1000 , 1000);
             stage.setScene(scene);
             stage.show();
         }catch(Exception e){
