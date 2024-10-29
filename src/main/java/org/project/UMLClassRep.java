@@ -20,19 +20,17 @@ public class UMLClassRep extends VBox {
         this.setSpacing(5);
         this.setAlignment(Pos.TOP_CENTER);
         this.setFillWidth(true);
-        this.maxWidth(100);
+        this.maxWidth(50);
+        this.setPrefHeight(400);
 
         this.className = new Label(className);
         this.className.setStyle("fx-font-weight: bold; fx-font-size: 18px");
 
         this.fieldList = new ListView<>();
-        this.fieldList.maxHeight(50);
 
         this.methodList = new ListView<>();
-        this.methodList.maxHeight(50);
 
         this.relationList = new ListView<>();
-        this.relationList.maxHeight(50);
 
         this.getChildren().addAll(this.className, fieldList, methodList, relationList);
 
@@ -74,8 +72,7 @@ public class UMLClassRep extends VBox {
     }
 
     public boolean addClassName(String name){
-        Label newName = new Label(name);
-        return this.setClassName(newName);
+        return this.setClassName(name);
     }
 
     public boolean addMethod(String method){

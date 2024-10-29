@@ -15,6 +15,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.util.Map;
 
@@ -27,6 +28,8 @@ public class GUIView extends Application {
     private UMLClassRep selectedClassNode;
     @Override
     public void start(Stage stage) {
+
+
         BorderPane root = new BorderPane();
         MenuBar menuBar = new MenuBar();
 
@@ -71,6 +74,16 @@ public class GUIView extends Application {
 
             umlClass.setOnMouseClicked(e -> showClassProperties(umlClass));
         });
+
+
+
+
+
+
+
+
+
+
     }
 
     private void setupDrawer(BorderPane root) {
@@ -83,6 +96,7 @@ public class GUIView extends Application {
         Label propertiesTitle = new Label("Class Properties");
         classNameField = new TextField();
         classNameField.setPromptText("Class Name");
+        Button saveClassName = new Button("Save");
 
         attributesList = new ListView<>();
         Button addAttributeButton = new Button("Add Attribute");
@@ -111,10 +125,22 @@ public class GUIView extends Application {
             }
         });
 
-        drawer.getChildren().addAll(propertiesTitle, classNameField, new Label("Attributes:"), attributesList, addAttributeButton,
+        saveClassName.setOnAction(actionEvent -> {
+
+            if (selectedClassNode != null) {
+                String newClassName = classNameField.getText();
+                classNameField = new TextField(newClassName);
+            }
+
+        });
+
+        drawer.getChildren().addAll(propertiesTitle, classNameField, saveClassName, new Label("Attributes:"), attributesList, addAttributeButton,
                 new Label("Methods:"), methodsList, addMethodButton, new Label("Relations:"), relationsList);
         drawer.setVisible(false);
         root.setRight(drawer);
+
+
+
     }
 
     private void showClassProperties(UMLClassRep umlClass) {
