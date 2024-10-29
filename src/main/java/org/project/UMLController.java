@@ -4,7 +4,17 @@ import java.util.Scanner;
 
 public class UMLController {
 
-    /**Commands tied to Class*/
+
+    private UMLModel.Storage storage;
+    private UMLModel.Save save;
+    private UMLModel.Load load;
+
+    public UMLController(){
+
+        this.storage = new UMLModel.Storage();
+        this.save = new UMLModel.Save(storage);
+        this.load = new UMLModel.Load(storage);
+    }
     class ClassCommands{
 
         public ClassCommands(final String name){
