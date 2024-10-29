@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 public class UMLModel {
-    public class Class {
+    public static class Class {
         /** Name of the class. */
         private String name;
         /** A list of methods. */
@@ -287,7 +287,7 @@ public class UMLModel {
 
         }
     }
-    public class Field {
+    public static class Field {
         /**
          * The name of the field.
          */
@@ -339,7 +339,7 @@ public class UMLModel {
             this.type = type;
         }
     }
-    public class Method {
+    public static class Method {
         /**
          * The name of the method.
          */
@@ -487,7 +487,7 @@ public class UMLModel {
             return parameters;
         }
     }
-    public class Parameter {
+    public static class Parameter {
         /**
          * The name of the parameter.
          */
@@ -538,7 +538,7 @@ public class UMLModel {
             this.type = type;
         }
     }
-    public class Relationship {
+    public static class Relationship {
         /**
          * The source of the relationship.
          */
@@ -651,7 +651,7 @@ public class UMLModel {
         /**
          * A map to store the classes.
          */
-        public TreeMap<String, org.project.Class> list = new TreeMap<>();
+        public TreeMap<String, UMLModel.Class> list = new TreeMap<>();
 
         /**
          * addClass adds a class to the stored list.
@@ -660,7 +660,7 @@ public class UMLModel {
          */
         public boolean addClass(String name) throws IllegalArgumentException{
             if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
-            list.put(name, new org.project.Class(name));
+            list.put(name, new UMLModel.Class(name));
             return true;
         }
 
@@ -669,7 +669,7 @@ public class UMLModel {
          * @param name - The name of the class.
          * @return the class if found.
          */
-        public org.project.Class getClass(String name) {
+        public UMLModel.Class getClass(final String name) {
             return this.list.get(name);
         }
 
@@ -702,7 +702,7 @@ public class UMLModel {
                 System.out.println("Old name is not a valid option in the list");
                 return false;
             }
-            org.project.Class placeholder = list.remove(oldName);
+            UMLModel.Class placeholder = list.remove(oldName);
             placeholder.setName(newName);
             list.put(newName, placeholder);
             return true;

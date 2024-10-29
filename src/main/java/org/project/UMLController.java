@@ -5,44 +5,42 @@ import java.util.Scanner;
 public class UMLController {
 
 
-    private UMLModel.Storage storage;
-    private UMLModel.Save save;
-    private UMLModel.Load load;
+    private final UMLModel.Storage storage;
+    private final UMLModel.Save save;
+    private final UMLModel.Load load;
+    public final ClassCommands classCommands;
+    public final FieldCommands fieldCommands;
+    public final MethodCommands methodCommands;
+    public final RelationshipCommands relationshipCommands;
+    public final ParameterCommands parameterCommands;
 
     public UMLController(){
 
         this.storage = new UMLModel.Storage();
         this.save = new UMLModel.Save(storage);
         this.load = new UMLModel.Load(storage);
+        this.classCommands = new ClassCommands(storage);
+        this.parameterCommands = new ParameterCommands(storage);
+        this.methodCommands = new MethodCommands(storage);
+        this.relationshipCommands = new RelationshipCommands(storage);
+        this.fieldCommands = new FieldCommands(storage);
     }
-    class ClassCommands{
+    public UMLModel.Storage getStorage(){
+        return this.storage;
+    }
+    public class ClassCommands{
+        private final UMLModel.Storage storage;
 
-        public ClassCommands(final String name){
-
-
+        public ClassCommands(final UMLModel.Storage storage){
+            this.storage = storage;
         }
 
-        public void addClass(Scanner scanner, Storage storage, String[] input) {
 
-            String userInput = "";
-            boolean result = false;
 
-            if(input.length == 2) {
-                do {
-                    System.out.print("Enter class name: ");
-                    userInput = scanner.nextLine();
-                    if(userInput.isEmpty()) {
-                        System.out.println("Enter valid class name");
-                    } else {
-                        if(storage.list.containsKey(userInput)) {
-                            System.out.println();
-                            System.out.println("Class already exists");
-                        } else {
-                            storage.addClass(userInput);
-                            result = true;
-                        }
-                    }
-                } while(!result);
+        public void addClass(final String[] input) {
+
+            if(input.length <= 2) {
+                System.out.println("Invalid number of arguments. Useage: add class <classname>");
             }
             else if(input.length == 3) {
                 String className = input[2];
@@ -54,22 +52,10 @@ public class UMLController {
             }
         }
 
-        public void removeClass(Scanner scanner, Storage storage, String[] input) {
-            String userInput = "";
-            boolean result = false;
-            if(input.length == 2) {
-                do {
-                    System.out.print("Enter class name: ");
-                    userInput = scanner.nextLine().toLowerCase().trim();
-                    if(userInput.isEmpty()) {
-                        System.out.println("Enter non-empty class name");
-                    } else if(!storage.list.containsKey(userInput)) {
-                        System.out.println("Class does not exist");
-                    } else {
-                        result = storage.deleteClass(userInput);
-                        System.out.println("Class removed: " + userInput);
-                    }
-                } while(!result);
+        public void removeClass(String[] input) {
+
+            if(input.length <= 2) {
+                System.out.println("Invalid number of arguments. Useage: remove class <classname>");
             } else if(input.length == 3) {
                 String className = input[2];
                 if(!storage.list.containsKey(className)) {
@@ -81,56 +67,39 @@ public class UMLController {
             }
         }
 
-        public void renameClass(Scanner scanner, Storage storage, String[] input) {
-            String userInput = "";
-            boolean result = false;
-            if(input.length == 2) {
-                do {
-                    System.out.print("Enter class name: ");
-                    userInput = scanner.nextLine().toLowerCase().trim();
-                    if(userInput.isEmpty()) {
-                        System.out.println("Enter non-empty class name");
-                    } else if(!storage.list.containsKey(userInput)) {
-                        System.out.println("Class does not exist");
-                    } else {
-                        String oldClassName = userInput;
-                        System.out.print("Enter new name: ");
-                        String newClassName = scanner.nextLine().toLowerCase().trim();
+        public void renameClass(String[] input) {
 
-                        if(newClassName.isEmpty()) {
-                            System.out.println("Enter non-empty class name");
-                        } else if(storage.list.containsKey(newClassName)) {
-                            System.out.println("Class with that name already exists");
-                        } else {
-                            storage.renameClass(oldClassName, newClassName);
-                            System.out.println("The Class has been renamed to: " + newClassName);
-                            result = true;
-                        }
-                    }
-                } while(!result);
-            } else if(input.length == 3 || input.length > 4) {
-                System.out.println("Invalid number of arguments ");
-            } else if(input.length == 4) {
-                String oldClassName = input[2];
-                String newClassName = input[3];
-
-                if(oldClassName.equals(newClassName)) {
-                    System.out.println("Class with name " + oldClassName +  " already exists");
-                } else if(!storage.list.containsKey(oldClassName)) {
-                    System.out.println("Class" + oldClassName +  " does not exist");
-                } else if(storage.list.containsKey(newClassName)) {
-                    System.out.println("Class with name " + newClassName +  " already exists");
-                } else {
-                    storage.renameClass(oldClassName, newClassName);
-                    System.out.println("The Class has been renamed to: " + newClassName);
-                }
+            if(input.length <= 3) {
+                System.out.println("Invalid number of arguments. Useage: rename class <old classname> <new classname>");
             }
+
+
+            String oldClassName = input[2];
+            String newClassName = input[3];
+
+            if(oldClassName.equals(newClassName)) {
+                System.out.println("Class with name " + oldClassName +  " already exists");
+            } else if(!storage.list.containsKey(oldClassName)) {
+                System.out.println("Class" + oldClassName +  " does not exist");
+            } else if(storage.list.containsKey(newClassName)) {
+                System.out.println("Class with name " + newClassName +  " already exists");
+            } else {
+                storage.renameClass(oldClassName, newClassName);
+                System.out.println("The Class has been renamed to: " + newClassName);
+            }
+
         }
     }
 
     /**Commands tied to Field*/
-    class FieldCommands{
-        public void addField(Scanner scanner, Storage storage, String[] input) {
+    public class FieldCommands{
+        private final UMLModel.Storage storage;
+
+        public FieldCommands(UMLModel.Storage storage){
+            this.storage = storage;
+        }
+
+        public void addField(final String[] input) {
             if(input.length != 3) {
                 System.out.println("Invalid number of arguments");
             } else {
@@ -138,7 +107,7 @@ public class UMLController {
                 if(!storage.list.containsKey(className)) {
                     System.out.println("Class " + className + " does not exist");
                 } else {
-                    Class classObject = storage.getClass(className);
+                    UMLModel.Class classObject = storage.getClass(className);
                     String fieldName;
                     String fieldType;
                     boolean result = false;
@@ -249,8 +218,13 @@ public class UMLController {
     }
 
     /**Commands tied to Methods*/
-    class MethodCommands{
-        public void addMethod(Scanner scanner, Storage storage, String[] input) {
+    public class MethodCommands{
+        private final UMLModel.Storage storage;
+
+        public MethodCommands(UMLModel.Storage storage){
+            this.storage = storage;
+        }
+        public void addMethod(final String[] input) {
             if(input.length < 3) {
                 System.out.println("Invalid number of arguments");
             } else {
@@ -345,8 +319,13 @@ public class UMLController {
     }
 
     /**Commands tied to Parameters*/
-    class ParameterCommands{
-        public void addParameter(Scanner scanner, Storage storage, String[] input) {
+    public class ParameterCommands{
+        private final UMLModel.Storage storage;
+
+        public ParameterCommands(UMLModel.Storage storage){
+            this.storage = storage;
+        }
+        public void addParameter(final String[] input) {
             if (input.length != 4) {
                 System.out.println("Invalid number of arguments");
                 return;
@@ -487,8 +466,13 @@ public class UMLController {
     }
 
     /**Commands tied to Relationship*/
-    class RelationshipCommands{
-        public boolean addRelationship(Scanner scanner, Storage storage, String[] input){
+    public class RelationshipCommands{
+        private final UMLModel.Storage storage;
+
+        public RelationshipCommands(UMLModel.Storage storage){
+            this.storage = storage;
+        }
+        public boolean addRelationship(final String[] input){
             if(input.length != 4){
                 System.out.println("Invalid number of arguments");
                 return false;
@@ -512,7 +496,7 @@ public class UMLController {
             }
         }
 
-        public boolean removeRelationship(Scanner scanner, Storage storage, String[] input){
+        public boolean removeRelationship(final String[] input){
             if(input.length != 4){
                 System.out.println("Invalid number of arguments");
                 return false;

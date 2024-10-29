@@ -5,11 +5,11 @@ import java.util.Scanner;
 
 public class Menu {
 
-    Scanner scanner;
-    Storage storage;
-    public Menu(Storage storage) {
+    private Scanner scanner;
+    private UMLController controller;
+    public Menu() {
         this.scanner = new Scanner(System.in);
-        this.storage = storage;
+        this.controller = new UMLController();
     }
     public void runMenu() {
         System.out.println("Welcome to our UML Editor application");
@@ -62,29 +62,29 @@ public class Menu {
 
     private void addCommand(String[] input) {
         switch(input[1]) {
-            case "class" -> ClassCommands.addClass(this.scanner, this.storage, input);
-            case "method" -> MethodCommands.addMethod(this.scanner, this.storage, input);
-            case "field" -> FieldCommands.addField(this.scanner, this.storage, input);
-            case "parameter" -> ParameterCommands.addParameter(this.scanner, this.storage, input);
-            case "relationship" -> RelationshipMethods.addRelationship(this.scanner, this.storage, input);
+            case "class" -> controller.classCommands.addClass(input);
+            case "method" -> controller.methodCommands.addMethod(input);
+            case "field" -> controller.fieldCommands.addField(input);
+            case "parameter" -> controller.parameterCommands.addParameter(input);
+            case "relationship" -> controller.relationshipCommands.addRelationship(input);
         }
     }
 
     private void removeCommand(String[] input) {
         switch(input[1]) {
-            case "class" -> ClassCommands.removeClass(this.scanner, this.storage, input);
-            case "method" -> MethodCommands.removeMethod(this.scanner, this.storage, input);
-            case "field" -> FieldCommands.removeField(this.scanner, this.storage, input);
-            case "parameter" -> ParameterCommands.removeParameter(this.scanner, this.storage, input);
-            case "relationship" -> RelationshipMethods.removeRelationship(this.scanner, this.storage, input);
+            case "class" -> controller.classCommands.removeClass(input);
+            case "method" -> controller.methodCommands.removeMethod(input);
+            case "field" -> controller.fieldCommands.removeField(input);
+            case "parameter" -> controller.parameterCommands.removeParameter(input);
+            case "relationship" -> controller.relationshipCommands.removeRelationship(input);
         }
     }
 
     private void renameCommand(String[] input) {
         switch(input[1]) {
-            case "class" -> ClassCommands.renameClass(this.scanner, this.storage, input);
-            case "method" -> MethodCommands.renameMethod(this.scanner, this.storage, input);
-            case "field" -> FieldCommands.renameField(this.scanner, this.storage, input);
+            case "class" -> controller.classCommands.renameClass(input);
+            case "method" -> controller.methodCommands.renameMethod(input);
+            case "field" -> controller.fieldCommands.renameField(input);
         }
     }
 
@@ -110,7 +110,7 @@ public class Menu {
             return;
         }
 
-        Class obj = this.storage.getClass(className);
+        UMLModel.Class obj = controller.g
         if(obj == null) {
             System.out.println("Class with this name does not exists");
         } else {
