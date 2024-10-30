@@ -40,7 +40,7 @@ public class UMLController {
         public void addClass(final String[] input) {
 
             if(input.length <= 2) {
-                System.out.println("Invalid number of arguments. Useage: add class <classname>");
+                System.out.println("Invalid number of arguments. Usage: add class <classname>");
             }
             else if(input.length == 3) {
                 String className = input[2];
@@ -55,7 +55,7 @@ public class UMLController {
         public void removeClass(String[] input) {
 
             if(input.length <= 2) {
-                System.out.println("Invalid number of arguments. Useage: remove class <classname>");
+                System.out.println("Invalid number of arguments. Usage: remove class <classname>");
             } else if(input.length == 3) {
                 String className = input[2];
                 if(!storage.list.containsKey(className)) {
@@ -70,7 +70,7 @@ public class UMLController {
         public void renameClass(String[] input) {
 
             if(input.length <= 3) {
-                System.out.println("Invalid number of arguments. Useage: rename class <old classname> <new classname>");
+                System.out.println("Invalid number of arguments. Usage: rename class <old classname> <new classname>");
             }
 
 
@@ -101,7 +101,7 @@ public class UMLController {
 
         public void addField(final String[] input) {
             if(input.length <= 3) {
-                System.out.println("Invalid number of arguments. Useage: add field <classname> <fieldname> <fieldtype>");
+                System.out.println("Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>");
             } else {
                 String className = input[2];
                 String fieldName = input[3];
@@ -115,7 +115,6 @@ public class UMLController {
                 }else{
                     classObject.addField(fieldName,fieldType);
                     System.out.println("Field added. Field name: " + fieldName + " Field type: " + fieldType);
-
                 }
             }
         }
@@ -141,7 +140,7 @@ public class UMLController {
 
         public void renameField(final String[] input) {
             if(input.length >= 3) {
-                System.out.println("Invalid number of arguments. Useage: rename field <className> <oldFieldName> <newFieldName>");
+                System.out.println("Invalid number of arguments. Usage: rename field <className> <oldFieldName> <newFieldName>");
             } else {
                 String className = input[2];
                 String oldFieldName = input[3];
@@ -167,96 +166,83 @@ public class UMLController {
         public MethodCommands(UMLModel.Storage storage){
             this.storage = storage;
         }
+
+        // add(0) method(1) Class Name(2) Method Name(3)
         public void addMethod(final String[] input) {
             if(input.length < 3) {
-                System.out.println("Invalid number of arguments");
+                System.out.println("Invalid number of arguments. Usage: add method <className> <newMethodName>");
             } else {
                 String className = input[2];
                 if(!storage.list.containsKey(className)) {
                     System.out.println("Class " + className + " does not exist");
                 } else {
+                    String methodName = input[3];
+                    UMLModel.Class classObject = storage.getClass(className);
 
-                    Class classObject = storage.getClass(className);
-                    boolean result = false;
-
-                    do {
-                        System.out.print("Enter method name and list of parameters (e.g., methodName param1 string param2 int): ");
-                        String userInput = scanner.nextLine().toLowerCase().trim();
-
-                        if(userInput.isEmpty()) {
-                            System.out.println("Empty input");
-                        } else {
-                            String[] userInputParts = userInput.split(" ");
-                            String methodName = userInputParts[0];
-
-                            // Check if there are parameters to process
-                            if (userInputParts.length < 3 || (userInputParts.length - 1) % 2 != 0) {
-                                System.out.println("Invalid parameter list format.");
-                            } else {
-                                // Parse parameter pairs
-                                classObject.addMethod(methodName);
-                                Method method = classObject.getMethod(methodName);
-                                for (int i = 1; i < userInputParts.length - 1; i += 2) {
-                                    String paramName = userInputParts[i];
-                                    String paramType = userInputParts[i + 1];
-                                    method.addParameter(paramName, paramType);
-                                }
-
-                                System.out.println("Method added successfully.");
-                                result = true;
-                            }
-                        }
-                    }while(!result);
-
-
+                    if(classObject == null){
+                        System.out.println("Class does not exist");
+                    }else if(classObject.hasMethod(methodName)){
+                        System.out.println("Class already contains this method");
+                    }else{
+                        classObject.addMethod(methodName);
+                        System.out.println("Method added. Field name: " + methodName);
+                    }
                 }
-
-
             }
         }
 
-        public void removeMethod(Scanner scanner, Storage storage, String[] input) {
-            if(input.length < 4) {
-                System.out.println("Invalid number of arguments");
+        // add(0) method(1) Class Name(2) Method Name(3)
+        public void removeMethod(final String[] input) {
+            if(input.length < 3) {
+                System.out.println("Invalid number of arguments. Usage: add method <className> <removingMethodName>");
             } else {
                 String className = input[2];
-                String methodName = input[3];
-
                 if(!storage.list.containsKey(className)) {
                     System.out.println("Class " + className + " does not exist");
                 } else {
-                    Class classObject = storage.getClass(className);
-                    classObject.removeMethod(methodName);
+                    String methodName = input[3];
+                    UMLModel.Class classObject = storage.getClass(className);
+
+                    if(classObject == null){
+                        System.out.println("Class does not exist");
+                    }else if(!classObject.hasMethod(methodName)){
+                        System.out.println("Class doesn't contains this method");
+                    }else{
+                        classObject.addMethod(methodName);
+                        System.out.println("Method " + methodName + " removed");
+                    }
                 }
             }
         }
 
-        public void renameMethod(Scanner scanner, Storage storage, String[] input) {
+        // add(0) method(1) Class Name(2) Method Name(3) NewMethod Name(4)
+        public void renameMethod(final String[] input) {
             if(input.length < 4) {
-                System.out.println("Invalid number of arguments");
+                System.out.println("Invalid number of arguments. Usage: add method <className> <oldMethodName> <newMethodName>");
             } else {
                 String className = input[2];
-                String oldMethodName = input[3];
+
                 if(!storage.list.containsKey(className)) {
                     System.out.println("Class " + className + " does not exist");
-                    return;
-                }
+                }else{
+                    String oldMethodName = input[3];
+                    String newMethodName = input[4];
+                    UMLModel.Class classObject = storage.getClass(className);
 
-                System.out.print("Enter new method name: ");
-                String newMethodName = scanner.nextLine().toLowerCase().trim();
-                if(newMethodName.isEmpty()) {
-                    System.out.println("Empty input");
-                    return;
-                }
+                    if(classObject == null){
+                        System.out.println("Class does not exist");
+                        //Checks if the new name already exists
+                    }else if(classObject.hasMethod(newMethodName)){
+                        System.out.println("Class already contains method: " + newMethodName);
+                        //Checks if the old name exists
+                    }else if(!classObject.hasMethod(oldMethodName)) {
+                        System.out.println("Class doesn't contains method: " + oldMethodName);
+                    }else{
 
-                if(oldMethodName.equals(newMethodName)) {
-                    System.out.println("Method " + oldMethodName + " already exists");
-                    return;
+                        classObject.renameMethod(oldMethodName,newMethodName);
+                        System.out.println("Method " + oldMethodName + " has been renamed to " + newMethodName);
+                    }
                 }
-
-                Class classObject = storage.getClass(className);
-                classObject.renameMethod(oldMethodName, newMethodName);
-                System.out.println("Method " + oldMethodName + " renamed to " + newMethodName);
             }
         }
     }
@@ -282,7 +268,7 @@ public class UMLController {
                 return;
             }
 
-            Class classObject = storage.getClass(className);
+            UMLModel.Class classObject = storage.getClass(className);
             if(!classObject.hasMethod(methodName)) {
                 System.out.println("Method " + methodName + " does not exist");
                 return;
@@ -429,7 +415,7 @@ public class UMLController {
                 if(!storage.list.containsKey(source))System.out.println("Source Class does not exist");
                 if(!storage.list.containsKey(destination)) System.out.println("Destination Class does not exist");
 
-                Class srcClass = storage.getClass(source);
+                UMLModel.Class srcClass = storage.getClass(source);
 
 
 
@@ -451,7 +437,7 @@ public class UMLController {
                 //Checks to see the source class exists
                 if(!storage.list.containsKey(source)) System.out.println("source class does not exist");
 
-                Class srcClass = storage.getClass(source);
+                UMLModel.Class srcClass = storage.getClass(source);
 
                 srcClass.removeRelation(srcClass.getName(), destination);
                 System.out.println("Successful");
