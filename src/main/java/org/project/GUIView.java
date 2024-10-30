@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.fxml.FXMLLoader;
@@ -78,16 +79,6 @@ public class GUIView extends Application {
         });
 
 
-
-
-
-
-
-
-
-
-
-
     }
 
     private void setupDrawer(BorderPane root) {
@@ -112,13 +103,22 @@ public class GUIView extends Application {
 
         fieldList = new ListView<>();
         Button addFieldButton = new Button("Add Field");
+        Button renameFieldButton = new Button("Rename Field");
+        fieldList.setCellFactory(TextFieldListCell.forListView());
+
+        renameFieldButton.setOnAction(actionEvent -> {
+
+            int selectIndex = fieldList.getSelectionModel().getSelectedIndex();
+            if(selectIndex != -1){
+                fieldList.setEditable(true);
+                selectedClassNode.getFieldList().getItems().add(selectIndex, fieldList.getItems().get(selectIndex));
+            }
+        });
 
         addFieldButton.setOnAction(e -> {
             if (selectedClassNode != null) {
                 fieldList.getItems().add("NewField");
-                selectedClassNode.setOnMouseClicked(mouseEvent -> {
-                    selectedClassNode.getFieldList().getItems().add("NewField");
-                });
+                selectedClassNode.getFieldList().getItems().add("NewField");
             }
         });
 
@@ -141,7 +141,7 @@ public class GUIView extends Application {
         });
 
 
-        drawer.getChildren().addAll(propertiesTitle, classNameField, saveClassButton, new Label("Attributes:"), fieldList, addFieldButton,
+        drawer.getChildren().addAll(propertiesTitle, classNameField, saveClassButton, new Label("Attributes:"), fieldList, addFieldButton, renameFieldButton,
                 new Label("Methods:"), methodsList, addMethodButton, new Label("Relations:"), relationsList);
         drawer.setVisible(false);
         root.setRight(drawer);
