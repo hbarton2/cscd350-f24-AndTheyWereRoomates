@@ -10,6 +10,35 @@ Help Command
 <br>Relationship.java
 <br>Storage.java
 
+
+# How to use Program
+Type in the text bar with the text "Enter Command" above it. Once you typed out, click "Execute Command"
+
+## List of Commands
+
+### Class Commands
+- Add Class - add class (class name) - This creates a new class
+- Remove Class - remove class (class name) - This removes an existing class with the name
+- Rename Class - rename class (old class name) (new class name) - This renames an existing class with the new name
+### Field Commands
+This requires an existing class exist before altering a field. 
+- Add Field - add field (existing class name) (field name) (field type) - This creates a field in an existing class. This requires a field type to be clarified.
+- Remove Field - remove field (existing class name) (field name)  (field type) - This removes an existing field in an existing class
+- Rename Field - rename field (existing class name) (old field name) (new field name) - This renames an existing field in an existing class with the new name
+### Method Commands
+This requires an existing class before altering a method.
+- Add Method - add method (existing class name) (method name) - This creates a method in an existing class
+- Remove Method - remove method (existing class name) (method name) - This removes an existing method in an existing class
+- Rename Method - rename field (existing class name) (old method name) (new method name) -  This renames an existing method in an existing class with the new name
+### Parameter Commands
+This requires an existing class and an existing method to alter a parameter
+- Add Parameter - add parameter (existing class name) (existing method name) (parameter name) - This creates a parameter in an existing method in an existing class
+- Remove Parameter - remove parameter (existing class name) (existing method name) (parameter name) - This removes an existing parameter in an existing method in an existing class
+- Rename Parameter - remove parameter (existing class name) (existing method name) (new parameter name) (old parameter name) - This renames  an existing parameter in an existing method in an existing class
+### Relationship Commands
+- Add Relationship - WIP
+- Remove Relationship - WIP
+
 ## Help Command
 #### Commands
 Help - Brings up a detailed list of usable commands 
