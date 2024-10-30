@@ -90,7 +90,7 @@ public class Menu {
 
     private void changeCommand(String[] input) {
         switch(input[1]) {
-            case "parameter" -> ParameterCommands.changeParameter(this.scanner, this.storage, input);
+            case "parameter" -> controller.parameterCommands(input);
         }
     }
 
@@ -110,7 +110,7 @@ public class Menu {
             return;
         }
 
-        UMLModel.Class obj = controller.g
+        //UMLModel.Class obj = controller
         if(obj == null) {
             System.out.println("Class with this name does not exists");
         } else {

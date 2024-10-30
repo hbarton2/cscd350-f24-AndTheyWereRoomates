@@ -100,118 +100,61 @@ public class UMLController {
         }
 
         public void addField(final String[] input) {
-            if(input.length != 3) {
-                System.out.println("Invalid number of arguments");
+            if(input.length <= 3) {
+                System.out.println("Invalid number of arguments. Useage: add field <classname> <fieldname> <fieldtype>");
             } else {
                 String className = input[2];
-                if(!storage.list.containsKey(className)) {
-                    System.out.println("Class " + className + " does not exist");
-                } else {
-                    UMLModel.Class classObject = storage.getClass(className);
-                    String fieldName;
-                    String fieldType;
-                    boolean result = false;
-                    do{
-                        System.out.print("Enter field name: ");
-                        fieldName = scanner.nextLine().toLowerCase().trim();
+                String fieldName = input[3];
+                String fieldType = input[4];
 
-                        if(fieldName.isEmpty()) {
-                            System.out.println("Invalid field name");
-                            continue;
-                        }
-
-                        System.out.print("Enter field type: ");
-                        fieldType = scanner.nextLine().toLowerCase().trim();
-
-                        if(fieldType.isEmpty()) {
-                            System.out.println("Invalid field type");
-                            continue;
-                        }
-
-                        if(!classObject.addField(fieldName, fieldType)) {
-                            System.out.println("Field " + fieldName + " already exists");
-                            continue;
-                        }
-
-                        classObject.addField(fieldName, fieldType);
-                        System.out.println(fieldName + " added successfully to " + className );
-                        result = true;
-
-                    }while(!result);
-                }
-            }
-        }
-
-        public void removeField(Scanner scanner, Storage storage, String[] input) {
-            if(input.length != 3) {
-                System.out.println("Invalid number of arguments");
-            } else {
-                String className = input[2];
-                if(!storage.list.containsKey(className)) {
-                    System.out.println("Class " + className + " does not exist");
-                } else {
-                    Class classObject = storage.getClass(className);
-                    String fieldName;
-
-                    if(classObject.fields.isEmpty()) {
-                        System.out.println("Class " + className + " does not have any fields");
-                        return;
-                    }
-
-                    System.out.print("Enter field name: ");
-                    fieldName = scanner.nextLine().toLowerCase().trim();
-                    if(fieldName.isEmpty()) {
-                        System.out.println("Invalid field name");
-                    } else {
-                        if(!classObject.removeField(fieldName)) {
-                            System.out.println("Field " + fieldName + " does not exist");
-                        } else {
-                            classObject.removeField(fieldName);
-                            System.out.println(fieldName + " removed successfully from " + className );
-                        }
-                    }
-
+                UMLModel.Class classObject = storage.getClass(className);
+                if(classObject == null){
+                    System.out.println("Class does not exist");
+                }else if(classObject.hasField(fieldName)){
+                    System.out.println("Class already contains this field");
+                }else{
+                    classObject.addField(fieldName,fieldType);
+                    System.out.println("Field added. Field name: " + fieldName + " Field type: " + fieldType);
 
                 }
             }
         }
 
-        public void renameField(Scanner scanner, Storage storage, String[] input) {
-            if(input.length != 3) {
+        public void removeField(final String[] input) {
+            if(input.length >= 3) {
                 System.out.println("Invalid number of arguments");
             } else {
                 String className = input[2];
-                if(!storage.list.containsKey(className)) {
-                    System.out.println("Class " + className + " does not exist");
-                } else {
-                    Class classObject = storage.getClass(className);
-                    String oldFieldName;
+                String fieldName = input[3];
 
-                    if(classObject.fields.isEmpty()) {
-                        System.out.println("Class " + className + " does not have any fields");
-                    } else {
-                        System.out.print("Enter field old name: ");
-                        oldFieldName = scanner.nextLine().toLowerCase().trim();
-                        if(oldFieldName.isEmpty()) {
-                            System.out.println("Invalid field name");
-                        } else {
-                            System.out.print("Enter field new name: ");
-                            String newFieldName = scanner.nextLine().toLowerCase().trim();
+                UMLModel.Class classObject = storage.getClass(className);
+                if (classObject == null){
+                    System.out.println("Class does not exist");
+                }else if(!classObject.hasField(fieldName)){
+                    System.out.println("Field does not exist");
+                }else{
+                    classObject.removeField(fieldName);
+                    System.out.println("field has been removed: " + fieldName);
+                }
+            }
+        }
 
-                            if(oldFieldName.equals(newFieldName)) {
-                                System.out.println("Field " + oldFieldName + " already exists");
-                                return;
-                            }
+        public void renameField(final String[] input) {
+            if(input.length >= 3) {
+                System.out.println("Invalid number of arguments. Useage: rename field <className> <oldFieldName> <newFieldName>");
+            } else {
+                String className = input[2];
+                String oldFieldName = input[3];
+                String newFieldName = input[3];
 
-                            if(!classObject.renameField(oldFieldName, newFieldName)) {
-                                System.out.println("Field " + oldFieldName + " does not exist");
-                                return;
-                            }
-
-                            classObject.renameField(oldFieldName, newFieldName);
-                            System.out.println(oldFieldName + " renamed to " + newFieldName + " in class " + className );
-                        }
-                    }
+                UMLModel.Class classObject = storage.getClass(className);
+                if (classObject == null){
+                    System.out.println("Class does not exist");
+                }else if(!classObject.hasField(oldFieldName)){
+                    System.out.println("Field does not exist");
+                }else{
+                    classObject.renameField(oldFieldName,newFieldName);
+                    System.out.println("the field called: " + oldFieldName + " has been renamed to: " + newFieldName);
                 }
             }
         }

@@ -6,8 +6,7 @@ import java.io.IOException;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args)  {
-        Storage storage = new Storage();
-        Menu menu = new Menu(storage);
+        Menu menu = new Menu();
         menu.runMenu();
     }
 }

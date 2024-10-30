@@ -236,7 +236,7 @@ public class UMLModel {
          * @param name - The name of the field
          * @return true if the field exists, otherwise returns false.
          */
-        private boolean hasField(final String name){
+        boolean hasField(final String name){
             for(Field field: fields){
                 if(field.getName().equals(name)){
                     return true;
@@ -338,6 +338,7 @@ public class UMLModel {
         public void setType(final String type) {
             this.type = type;
         }
+
     }
     public static class Method {
         /**
