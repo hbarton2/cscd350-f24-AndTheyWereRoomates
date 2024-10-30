@@ -1,14 +1,71 @@
 # cscd350-f24-AndTheyWereRoomates
 [Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
-# TABLE OF CONTENTS
-Help Command
-<br>Class.java 
-<br>Field.java
-<br>Menu.java
-<br>Method.java
-<br>Parameter.java
-<br>Relationship.java
-<br>Storage.java
+
+# Command Line Interface Instructions
+Upon selecting CLI, you'll be brought to the Command Line Interface.
+
+## List of Commands
+These are the commands you type into the command line interface add/adjust code in the UML.
+If you wish to pull up a menu to see commands while running the UML editor, type ```help``` into the command window to pull up a list of commands.
+
+### Class Commands
+These are the commands you use
+- Add Class -
+  <br>```add class (class name)```
+  <br>This creates a new class
+- Remove Class -
+  <br>```remove class (class name)```
+  <br>This removes an existing class with the name
+- Rename Class -
+  <br>```rename class (old class name) (new class name)```
+  <br>This renames an existing class with the new name
+### Field Commands
+**To use any of the Field commands, there needs to be an existing class first**
+- Add Field -
+  <br>```add field (existing class name) (field name) (field type)```
+  <br>This creates a field in an existing class. This requires a field type to be clarified.
+- Remove Field -
+  <br>```remove field (existing class name) (field name)  (field type)```
+  <br>This removes an existing field in an existing class
+- Rename Field -
+  <br>```rename field (existing class name) (old field name) (new field name)```
+  <br>This renames an existing field in an existing class with the new name
+### Method Commands
+**To use any of the Method commands, there needs to be an existing class first**
+- Add Method -
+  <br>```add method (existing class name) (method name)```
+  <br>This creates a method in an existing class
+- Remove Method -
+  <br>```remove method (existing class name) (method name)```
+  <br>This removes an existing method in an existing class
+- Rename Method -
+  <br>```rename field (existing class name) (old method name) (new method name)```
+  <br>This renames an existing method in an existing class with the new name
+### Parameter Commands
+**To use any of the Parameter commands, there needs to be an existing class and an existing method**
+- Add Parameter -
+  <br>a```dd parameter (existing class name) (existing method name) (parameter name) (parameter type)```
+  <br>This creates a parameter in an existing method in an existing class
+- Remove Parameter -
+  <br>```remove parameter (existing class name) (existing method name) (parameter name)```
+  <br>This removes an existing parameter in an existing method in an existing class
+- Rename Parameter -
+  <br>```remove parameter (existing class name) (existing method name) (old parameter name) (new parameter name) (new parameter type)```
+  <br>This renames and changes parameter type of an existing parameter in an existing method in an existing class
+### Relationship Commands
+**To use any of the Relationship commands, there needs to be two existing classes**
+- Add Relationship -
+  <br>```add relationship (class source) (class destination)```
+  <br>This defines a connection between one class to another
+- Remove Relationship -
+  <br>```remove relationship (class source)```
+  <br>This removes a connection between one class to another
+
+### Misc. Commands
+These are commands that don't fall under any given category and are for actions such as save and load.
+WIP
+
+**-Editor note: Everything Below here is more than likely to be gutted and removed as it's covering stuff from Sprint 1.**
 
 ## Help Command
 #### Commands
