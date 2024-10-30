@@ -39,7 +39,7 @@ public class UMLClassRep extends VBox {
 
     }
 
-    public String getClassName(){return this.className.getText();}
+    public Label getClassName(){return this.className;}
 
     public ListView<String> getFieldList(){
         return this.fieldList;
@@ -51,8 +51,7 @@ public class UMLClassRep extends VBox {
 
     public boolean setClassName(String className){
 
-        Label label = new Label(className);
-        this.className = label;
+        this.className.setText(className);
         return true;
     }
 

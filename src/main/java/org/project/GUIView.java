@@ -22,7 +22,7 @@ import java.util.Map;
 public class GUIView extends Application {
     private VBox drawer;
     private TextField classNameField;
-    private ListView<String> attributesList;
+    private ListView<String> fieldList;
     private ListView<String> methodsList;
     private ListView<String> relationsList;
     private UMLClassRep selectedClassNode;
@@ -44,7 +44,8 @@ public class GUIView extends Application {
 
         Menu classMenu = new Menu("Class");
         MenuItem addClassItem = new MenuItem("Add");
-        classMenu.getItems().add(addClassItem);
+        classMenu.getItems().addAll(addClassItem);
+
 
         Menu exitMenu = new Menu("Exit");
         MenuItem exitItem = new MenuItem("Exit");
@@ -66,6 +67,7 @@ public class GUIView extends Application {
         stage.setScene(scene);
         stage.show();
 
+
         addClassItem.setOnAction(event -> {
             UMLClassRep umlClass = new UMLClassRep("NewClass" + (canvas.getChildren().size() + 1));
             umlClass.setLayoutX(100 + canvas.getChildren().size() * 20);
@@ -74,6 +76,8 @@ public class GUIView extends Application {
 
             umlClass.setOnMouseClicked(e -> showClassProperties(umlClass));
         });
+
+
 
 
 
@@ -96,14 +100,25 @@ public class GUIView extends Application {
         Label propertiesTitle = new Label("Class Properties");
         classNameField = new TextField();
         classNameField.setPromptText("Class Name");
-        Button saveClassName = new Button("Save");
+        Button saveClassButton = new Button("Save Class Name");
 
-        attributesList = new ListView<>();
-        Button addAttributeButton = new Button("Add Attribute");
-        addAttributeButton.setOnAction(e -> {
+        saveClassButton.setOnAction(actionEvent -> {
+            String className = classNameField.getText();
+            selectedClassNode.setClassName(className);
+
+        });
+
+
+
+        fieldList = new ListView<>();
+        Button addFieldButton = new Button("Add Field");
+
+        addFieldButton.setOnAction(e -> {
             if (selectedClassNode != null) {
-                attributesList.getItems().add("NewAttribute");
-                selectedClassNode.getFieldList().getItems().add("NewAttribute");
+                fieldList.getItems().add("NewField");
+                selectedClassNode.setOnMouseClicked(mouseEvent -> {
+                    selectedClassNode.getFieldList().getItems().add("NewField");
+                });
             }
         });
 
@@ -125,16 +140,8 @@ public class GUIView extends Application {
             }
         });
 
-        saveClassName.setOnAction(actionEvent -> {
 
-            if (selectedClassNode != null) {
-                String newClassName = classNameField.getText();
-                classNameField = new TextField(newClassName);
-            }
-
-        });
-
-        drawer.getChildren().addAll(propertiesTitle, classNameField, saveClassName, new Label("Attributes:"), attributesList, addAttributeButton,
+        drawer.getChildren().addAll(propertiesTitle, classNameField, saveClassButton, new Label("Attributes:"), fieldList, addFieldButton,
                 new Label("Methods:"), methodsList, addMethodButton, new Label("Relations:"), relationsList);
         drawer.setVisible(false);
         root.setRight(drawer);
@@ -147,16 +154,11 @@ public class GUIView extends Application {
         selectedClassNode = umlClass;
         drawer.setVisible(true);
 
-        classNameField.setText(umlClass.getClassName());
-        attributesList.getItems().setAll(umlClass.getFieldList().getItems());
+        classNameField.setText(umlClass.getClassName().getText());
+        fieldList.getItems().setAll(umlClass.getFieldList().getItems());
         methodsList.getItems().setAll(umlClass.getMethodList().getItems());
         relationsList.getItems().setAll(umlClass.getFieldList().getItems());
 
-        classNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (selectedClassNode != null) {
-                selectedClassNode.setClassName(newValue);
-            }
-        });
     }
     public static void main(String[] args) {
         launch(args);
