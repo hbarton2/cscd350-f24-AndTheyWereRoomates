@@ -37,6 +37,8 @@ public class UMLModel {
          * @return - True if the method was added successfully, otherwise returns false.
          * @throws IllegalArgumentException if the methodName is null or empty.
          */
+
+
         public boolean addMethod(final String methodName) {
             if (methodName == null || methodName.isEmpty()) {
                 throw new IllegalArgumentException("Invalid method name, try again");
@@ -285,6 +287,9 @@ public class UMLModel {
             return relation.add(new Relationship(source, dest));
 
 
+        }
+        public ArrayList<Relationship> getRelationships(){
+            return relation;
         }
     }
     public static class Field {
@@ -606,7 +611,11 @@ public class UMLModel {
                 FileReader reader = new FileReader(fileName);
                 Gson gson = new Gson();
                 Type type = new TypeToken<TreeMap<String, org.project.Class>>() {}.getType();
-                this.storage.list = gson.fromJson(reader, type);
+                TreeMap<String, UMLModel.Class> loadedData = gson.fromJson(reader, type);
+                if(loadedData != null){
+                    storage.clearClasses();
+                    storage.getClasses().putAll(loadedData);
+                }
                 reader.close();
                 return true;
             }catch(IOException e){
@@ -631,7 +640,7 @@ public class UMLModel {
             try{
                 FileWriter writer = new FileWriter(fileName);
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                gson.toJson(this.storage.list, writer);
+                gson.toJson(storage.getClasses(), writer);
 
                 writer.close();
 
@@ -652,7 +661,7 @@ public class UMLModel {
         /**
          * A map to store the classes.
          */
-        public TreeMap<String, UMLModel.Class> list = new TreeMap<>();
+        public final TreeMap<String, UMLModel.Class> list = new TreeMap<>();
 
         /**
          * addClass adds a class to the stored list.
@@ -710,5 +719,12 @@ public class UMLModel {
 
 
         }
+        public Map<String, UMLModel.Class> getClasses(){
+            return list;
+        }
+        public void clearClasses(){
+            list.clear();
+        }
     }
+
 }

@@ -89,8 +89,10 @@ public class Menu {
     }
 
     private void changeCommand(String[] input) {
-        switch(input[1]) {
-            case "parameter" -> controller.parameterCommands(input);
+        if("parameter".equals(input[1])){
+            controller.parameterCommands.changeParameter(input);
+        }else{
+            System.out.println("Invalid change command.");
         }
     }
 
@@ -104,36 +106,36 @@ public class Menu {
     }
 
     public void listClass(String[] input) {
-        String className = input[2];
-        if(className.isEmpty()) {
+
+        if(input.length < 3) {
             System.out.println("Class name cannot be empty");
             return;
         }
-
-        //UMLModel.Class obj = controller
+        String className = input[2];
+        UMLModel.Class obj = controller.getStorage().getClass(className);
         if(obj == null) {
             System.out.println("Class with this name does not exists");
         } else {
             System.out.println("Class name: " + obj.getName());
             System.out.println("Relationships: ");
-            for (Relationship relate: obj.relation){
+            for (UMLModel.Relationship relate: obj.relation){
                 System.out.println("----------------------");
                 System.out.println("Source Class: " + relate.getSource());
                 System.out.println("Destination class: " + relate.getDestination());
             }
             System.out.println("Fields:");
-            for (Field field : obj.fields) {
+            for (UMLModel.Field field : obj.fields) {
                 System.out.println("----------------------");
                 System.out.println("Field name: " + field.getName());
                 System.out.println("Field type: " + field.getType());
             }
             System.out.println("Methods: ");
-            for (Method method : obj.methodlist) {
+            for (UMLModel.Method method : obj.methodlist) {
                 System.out.println("----------------------");
                 System.out.println("Method: " + method.getName());
                 System.out.println();
                 System.out.println("Parameters:");
-                for (Parameter parameter : method.parameters) {
+                for (UMLModel.Parameter parameter : method.parameters) {
                     System.out.println("----------------------");
                     System.out.println("Name: " + parameter.getName());
                     System.out.println("Type: " + parameter.getType());
@@ -146,32 +148,42 @@ public class Menu {
     }
 
     public void listClasses() {
-        System.out.println("Number of classes: " + this.storage.list.size());
-        for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
-            System.out.println(entry.getValue().getName());
+        Map<String, UMLModel.Class> classes = controller.getStorage().getClasses();
+        for(String className : classes.keySet()){
+            System.out.println(className);
         }
     }
 
     public void listRelationship() {
-        for (Map.Entry<String,Class> entry : this.storage.list.entrySet()) {
-            for(Relationship relationship : entry.getValue().relation){
+        Map<String, UMLModel.Class> classes = controller.getStorage().getClasses();
+        for (UMLModel.Class clazz : classes.values()) {
+            for(UMLModel.Relationship relationship : clazz.getRelationships()){
                 System.out.println(relationship.getSource() + " -> " + relationship.getDestination());
             }
         }
     }
 
     public void saveCommand(String[] input) {
-        Save save = new Save(this.storage);
-        System.out.print("Enter file name:");
+        UMLModel.Save save = new UMLModel.Save(controller.getStorage());
+        System.out.print("Enter file name: ");
         String filePath = scanner.nextLine().concat(".json");
-        save.save(filePath);
+        if(save.save(filePath)){
+            System.out.println("Sucessfully Saved");
+        }else{
+            System.out.println("Not Sucessfully Saved");
+        }
     }
 
     public void loadCommand(String[] input) {
-        Load load = new Load(this.storage);
+        UMLModel.Load load = new UMLModel.Load(controller.getStorage());
         System.out.print("Enter file name:");
         String filePath = scanner.nextLine().concat(".json");
-        load.Load(filePath);
+        if (load.Load(filePath)){
+            System.out.println("Sucessfully Loaded");
+        }else{
+            System.out.println("Not Sucessfully Loaded");
+        }
+
     }
 
     private void helpCommand(String[] command) {

@@ -10,10 +10,14 @@ import javafx.stage.Stage;
 public class GUIView extends Application {
 
     private TextArea outputArea;
+    private UMLController controller; // UMLController instance
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("UML Editor");
+
+        // Initialize UMLController
+        controller = new UMLController();
 
         // Create GUI components
         Label inputLabel = new Label("Enter Command:");
@@ -54,109 +58,47 @@ public class GUIView extends Application {
             return false;
         }
 
-        String[] str = input.split(" ");
-        if (str[0].equals("help") && str.length < 2) {
-            return help();
-        }
-
-        if (str[0].equals("exit") && str.length < 2) {
-            System.exit(0);
-        }
-
-        if (str.length != 2) {
-            outputArea.appendText("Invalid number of arguments\n");
-            return false;
-        }
-
         return true;
     }
 
     private void commandCheck(String[] input) {
-        switch (input[0]) {
+        switch (input[0].toLowerCase()) {
             case "add" -> addCommand(input);
-            case "help" -> helpCommand(input[1]);
+            case "remove" -> removeCommand(input);
+            case "rename" -> renameCommand(input);
+            default -> outputArea.appendText("Unknown command\n");
         }
     }
 
     private void addCommand(String[] input) {
-        switch (input[1]) {
-            case "class" -> addClass();
-            case "method" -> addMethod();
-            case "field" -> addField();
-            case "parameter" -> addParameter();
-            case "relationship" -> addRelationship();
+        switch (input[1].toLowerCase()) {
+            case "class" -> controller.classCommands.addClass(input);
+            case "field" -> controller.fieldCommands.addField(input);
+            case "method" -> controller.methodCommands.addMethod(input);
+            case "parameter" -> controller.parameterCommands.addParameter(input);
+            case "relationship" -> controller.relationshipCommands.addRelationship(input);
+            default -> outputArea.appendText("Invalid add command\n");
         }
     }
 
-    private void addClass() {
-        outputArea.appendText("Please enter a class name: \n");
-        outputArea.appendText("added: Class Apple\n");
-    }
-
-    private void addField() {
-        outputArea.appendText("Please enter a field name and type: \n");
-        outputArea.appendText("added: seeds:int\n");
-    }
-
-    private void addMethod() {
-        outputArea.appendText("Please enter a method name: \n");
-        outputArea.appendText("added: Eat()\n");
-    }
-
-    private void addParameter() {
-        outputArea.appendText("Please enter a parameter name and type: \n");
-        outputArea.appendText("added: side:String\n");
-    }
-
-    private void addRelationship() {
-        outputArea.appendText("Please enter a relationship name: \n");
-        outputArea.appendText("added: destination = Orange\n");
-    }
-
-    private boolean helpCommand(String command) {
-        switch (command) {
-            case "add":
-                outputArea.appendText("Add command allows you to create a new class, method, field, relationship, or parameter.\n");
-                outputArea.appendText("Syntax: add [object]\n");
-                return true;
-            case "delete":
-                outputArea.appendText("Delete command allows you to delete existing class, method, field, relationship\n");
-                outputArea.appendText("Syntax: delete [object]\n");
-                return true;
-            case "rename":
-                outputArea.appendText("Rename command allows you to rename existing class, method, field\n");
-                outputArea.appendText("Syntax: rename [object]\n");
-                return true;
-            case "save":
-                outputArea.appendText("Save command allows you to save existing class\n");
-                outputArea.appendText("Syntax: save [object]\n");
-                return true;
-            case "load":
-                outputArea.appendText("Load command allows you to load existing class\n");
-                outputArea.appendText("Syntax: load [object]\n");
-                return true;
-            case "list":
-                outputArea.appendText("List command allows you to list existing class\n");
-                outputArea.appendText("Syntax: list [object]\n");
-                return true;
-            case "exit":
-                System.exit(0);
-            default:
-                return false;
+    private void removeCommand(String[] input) {
+        switch (input[1].toLowerCase()) {
+            case "class" -> controller.classCommands.removeClass(input);
+            case "field" -> controller.fieldCommands.removeField(input);
+            case "method" -> controller.methodCommands.removeMethod(input);
+            case "parameter" -> controller.parameterCommands.removeParameter(input);
+            case "relationship" -> controller.relationshipCommands.removeRelationship(input);
+            default -> outputArea.appendText("Invalid remove command\n");
         }
     }
 
-    private boolean help() {
-        outputArea.appendText("Syntax: help [command]\n");
-        outputArea.appendText("Existing commands are: \n");
-        outputArea.appendText("- add: create a new class, method, field, relationship, or parameter.\n");
-        outputArea.appendText("- delete: delete existing class, method, field, relationship\n");
-        outputArea.appendText("- rename: rename existing class, method, field\n");
-        outputArea.appendText("- save: save existing class\n");
-        outputArea.appendText("- load: load existing class\n");
-        outputArea.appendText("- list: list existing class\n");
-        outputArea.appendText("- exit: exit application\n");
-        return false;
+    private void renameCommand(String[] input) {
+        switch (input[1].toLowerCase()) {
+            case "class" -> controller.classCommands.renameClass(input);
+            case "field" -> controller.fieldCommands.renameField(input);
+            case "method" -> controller.methodCommands.renameMethod(input);
+            default -> outputArea.appendText("Invalid rename command\n");
+        }
     }
 
     public static void main(String[] args) {

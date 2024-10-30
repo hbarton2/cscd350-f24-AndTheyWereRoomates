@@ -1,5 +1,6 @@
 package org.project;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UMLController {
@@ -56,15 +57,17 @@ public class UMLController {
 
             if(input.length <= 2) {
                 System.out.println("Invalid number of arguments. Usage: remove class <classname>");
-            } else if(input.length == 3) {
-                String className = input[2];
-                if(!storage.list.containsKey(className)) {
-                    System.out.println("Class does not exist");
-                } else {
-                    storage.deleteClass(className);
-                    System.out.println("Class removed: " + className);
-                }
+                return;
             }
+            String className = input[2];
+
+            if(storage.getClass(className) == null) {
+                System.out.println("Class does not exist");
+            } else {
+                storage.deleteClass(className);
+                System.out.println("Class removed: " + className);
+            }
+
         }
 
         public void renameClass(String[] input) {
@@ -79,9 +82,9 @@ public class UMLController {
 
             if(oldClassName.equals(newClassName)) {
                 System.out.println("Class with name " + oldClassName +  " already exists");
-            } else if(!storage.list.containsKey(oldClassName)) {
+            } else if(storage.getClass(oldClassName) == null) {
                 System.out.println("Class" + oldClassName +  " does not exist");
-            } else if(storage.list.containsKey(newClassName)) {
+            } else if(storage.getClass(newClassName) != null) {
                 System.out.println("Class with name " + newClassName +  " already exists");
             } else {
                 storage.renameClass(oldClassName, newClassName);
@@ -89,6 +92,7 @@ public class UMLController {
             }
 
         }
+
     }
 
     /**Commands tied to Field*/
@@ -432,4 +436,5 @@ public class UMLController {
             }
         }
     }
+
 }
