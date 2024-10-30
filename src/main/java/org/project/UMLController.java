@@ -255,8 +255,8 @@ public class UMLController {
             this.storage = storage;
         }
         public void addParameter(final String[] input) {
-            if (input.length != 4) {
-                System.out.println("Invalid number of arguments");
+            if (input.length <= 5) {
+                System.out.println("Invalid number of arguments. Usage: add parameter <className> <methodName> <parameterName> <parameterType> ");
                 return;
             }
 
@@ -274,17 +274,17 @@ public class UMLController {
                 return;
             }
 
-            Method method = classObject.getMethod(methodName);
+            UMLModel.Method method = classObject.getMethod(methodName);
 
             System.out.print("Enter parameter name: ");
-            String parameterName = scanner.nextLine().toLowerCase().trim();
+            String parameterName = input[4];
             if(parameterName.isEmpty()) {
                 System.out.println("Parameter name cannot be empty");
                 return;
             }
 
             System.out.print("Enter parameter type: ");
-            String parameterType = scanner.nextLine().toLowerCase().trim();
+            String parameterType = input[5];
             if(parameterType.isEmpty()) {
                 System.out.println("Parameter type cannot be empty");
                 return;
@@ -294,9 +294,9 @@ public class UMLController {
             System.out.println("Parameter " + parameterName + " added to " + className + " " + methodName);
         }
 
-        public void removeParameter(Scanner scanner, Storage storage, String[] input) {
-            if (input.length != 4) {
-                System.out.println("Invalid number of arguments");
+        public void removeParameter(String[] input) {
+            if (input.length <= 4) {
+                System.out.println("Invalid number of arguments. Usage: add parameter <className> <methodName> <parameterName> ");
                 return;
             }
 
@@ -308,15 +308,15 @@ public class UMLController {
                 return;
             }
 
-            Class classObject = storage.getClass(className);
+            UMLModel.Class classObject = storage.getClass(className);
             if(!classObject.hasMethod(methodName)) {
                 System.out.println("Method " + methodName + " does not exist");
                 return;
             }
 
-            Method method = classObject.getMethod(methodName);
+            UMLModel.Method method = classObject.getMethod(methodName);
             System.out.print("Enter parameter name: ");
-            String parameterName = scanner.nextLine().toLowerCase().trim();
+            String parameterName = input[4];
             if(parameterName.isEmpty()) {
                 System.out.println("Parameter name cannot be empty");
                 return;
@@ -331,9 +331,9 @@ public class UMLController {
 
         }
 
-        public void changeParameter(Scanner scanner, Storage storage, String[] input) {
-            if (input.length != 4) {
-                System.out.println("Invalid number of arguments");
+        public void changeParameter(String[] input) {
+            if (input.length <= 6) {
+                System.out.println("Invalid number of arguments. Usage: add parameter <className> <methodName> <parameterName> <newParameterName> <newParameterType>");
                 return;
             }
 
@@ -344,53 +344,40 @@ public class UMLController {
                 return;
             }
 
-            Class classObject = storage.getClass(className);
+            UMLModel.Class classObject = storage.getClass(className);
             if(!classObject.hasMethod(methodName)) {
                 System.out.println("Method " + methodName + " does not exist");
                 return;
             }
+            String parameterName = input[4];
+            String newParamName = input[5];
+            String newParamType = input[6];
+            UMLModel.Method method = classObject.getMethod(methodName);
+            if(parameterName.isEmpty()) {
+                System.out.println("Parameter name cannot be empty");
+                return;
+            }
+            if(newParamName.isEmpty()) {
+                System.out.println("New parameter name cannot be empty");
+                return;
+            }
+            if(newParamType.isEmpty()) {
+                System.out.println("New parameter type cannot be empty");
+                return;
+            }
 
-            Method method = classObject.getMethod(methodName);
-//        System.out.print("Enter parameter name: ");
-//        String parameterName = scanner.nextLine().toLowerCase().trim();
-//        if(parameterName.isEmpty()) {
-//            System.out.println("Parameter name cannot be empty");
-//            return;
-//        }
 
-//        if(!method.hasParameter(parameterName)) {
-//            System.out.println("Parameter " + parameterName + " does not exist");
-//            return;
-//        }
+            if(!method.hasParameter(parameterName)) {
+                System.out.println("Parameter " + parameterName + " does not exist");
+                return;
+            }
+            method.changeParameter(parameterName,newParamName, newParamType);
+            System.out.println("Parameter " + parameterName + " renamed to " + newParamName + " with type " + newParamType);
 
-            method.deleteAllParameter();
-            boolean result = false;
-            do {
-                System.out.print("Enter list of parameters (e.g., param1 string param2 int): ");
-                String userInput = scanner.nextLine().toLowerCase().trim();
 
-                if(userInput.isEmpty()) {
-                    System.out.println("Empty input");
-                } else {
-                    String[] userInputParts = userInput.split(" ");
+            
 
-                    // Check if there are parameters to process
-                    if (userInputParts.length < 2 || (userInputParts.length) % 2 != 0) {
-                        System.out.println("Invalid parameter list format.");
-                    } else {
-                        // Parse parameter pairs
-                        method = classObject.getMethod(methodName);
-                        for (int i = 0; i < userInputParts.length - 1; i += 2) {
-                            String paramName = userInputParts[i];
-                            String paramType = userInputParts[i + 1];
-                            method.addParameter(paramName, paramType);
-                        }
 
-                        System.out.println("Method added successfully.");
-                        result = true;
-                    }
-                }
-            }while(!result);
         }
     }
 
