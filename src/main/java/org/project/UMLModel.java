@@ -218,6 +218,11 @@ public class UMLModel {
             return true;
         }
 
+        public ArrayList<Field> getFields() {
+            return fields;
+        }
+
+
         /**
          * Finds a field by its name
          * @param name - The name of the field
@@ -271,6 +276,9 @@ public class UMLModel {
                 }
             }
             return null;
+        }
+        public ArrayList<Method> getMethodList(){
+            return methodlist;
         }
 
         /**
