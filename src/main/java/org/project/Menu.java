@@ -90,7 +90,7 @@ public class Menu {
             case "method" -> controller.methodCommands.addMethod(new String[]{"add","method",currentClass.getName(),input[2],});
             case "field" -> controller.fieldCommands.addField(new String[]{"add","field", currentClass.getName(), input[2], input[3]});
             case "parameter" -> controller.parameterCommands.addParameter(new String[]{"add","parameter",currentClass.getName(),input[2],input[3],input[4]});
-            case "relationship" -> controller.relationshipCommands.addRelationship(new String[]{"add","relationship",currentClass.getName(),input[2],input[3]});
+            case "relationship" -> controller.relationshipCommands.addRelationship(new String[]{"add","relationship",input[2],input[3]});
         }
     }
 
@@ -104,7 +104,7 @@ public class Menu {
             case "method" -> controller.methodCommands.removeMethod(new String[]{"remove","method", currentClass.getName(), input[2]});
             case "field" -> controller.fieldCommands.removeField(new String[]{"remove","field", currentClass.getName(), input[2], input[3]});
             case "parameter" -> controller.parameterCommands.removeParameter(new String[]{"remove","parameter", currentClass.getName(), input[2], input[3]});
-            case "relationship" -> controller.relationshipCommands.removeRelationship(new String[]{"remove","relationship", currentClass.getName(), input[2], input[3]});
+            case "relationship" -> controller.relationshipCommands.removeRelationship(new String[]{"remove","relationship", input[2], input[3]});
         }
     }
 

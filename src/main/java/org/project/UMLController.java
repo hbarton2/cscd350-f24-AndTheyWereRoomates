@@ -7,6 +7,7 @@ public class UMLController {
 
 
     private final UMLModel.Storage storage;
+
     private final UMLModel.Save save;
     private final UMLModel.Load load;
     public final ClassCommands classCommands;
@@ -143,7 +144,7 @@ public class UMLController {
         }
 
         public void renameField(final String[] input) {
-            if(input.length >= 5) {
+            if(input.length < 5) {
                 System.out.println("Invalid number of arguments. Usage: rename field <className> <oldFieldName> <newFieldName>");
             } else {
                 String className = input[2];
@@ -158,7 +159,7 @@ public class UMLController {
                     System.out.println("Field does not exist");
                 }else{
                     classObject.renameField(oldFieldName,newFieldName,newFieldType);
-                    System.out.println("the field called: " + oldFieldName + " has been renamed to: " + newFieldName);
+                    System.out.println("you renamed field "+ oldFieldName+" to "+newFieldName+" with the type " + newFieldType);
                 }
             }
         }
@@ -394,12 +395,12 @@ public class UMLController {
             this.storage = storage;
         }
         public boolean addRelationship(final String[] input){
-            if(input.length > 4){
+            if(input.length <= 3){
                 System.out.println("Invalid number of arguments");
                 return false;
 
             }else{
-                String source = input[2];
+                String source = input[2] ;
                 String destination = input[3];
 
 
@@ -411,14 +412,14 @@ public class UMLController {
 
 
 
-                srcClass.addRelation(srcClass.getName(), destination);
+                srcClass.addRelation(source, destination);
                 System.out.println("Successful");
                 return true;
             }
         }
 
         public boolean removeRelationship(final String[] input){
-            if(input.length != 4){
+            if(input.length <= 3){
                 System.out.println("Invalid number of arguments");
                 return false;
             }else{
@@ -430,10 +431,17 @@ public class UMLController {
                 if(!storage.list.containsKey(source)) System.out.println("source class does not exist");
 
                 UMLModel.Class srcClass = storage.getClass(source);
+                UMLModel.Class destClass = storage.getClass(destination);
 
-                srcClass.removeRelation(srcClass.getName(), destination);
-                System.out.println("Successful");
-                return true;
+                Boolean removed = srcClass.removeRelation(source, destination);
+
+                if(removed){
+                    System.out.println("Successful");
+                    return true;
+                }else {
+                    System.out.println("Successful");
+                    return false;
+                }
             }
         }
     }

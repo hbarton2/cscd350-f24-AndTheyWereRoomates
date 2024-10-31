@@ -218,7 +218,7 @@ public class UMLModel {
 
             field.setName(newName);
             field.setType(typeName);
-            System.out.println("you renamed field "+ oldName+" to "+newName+"with the type " + typeName);
+
             return true;
         }
 
