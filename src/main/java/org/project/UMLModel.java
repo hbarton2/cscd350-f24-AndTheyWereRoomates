@@ -622,13 +622,8 @@ public class UMLModel {
             try {
                 FileReader reader = new FileReader(fileName);
                 Gson gson = new Gson();
-                Type type = new TypeToken<TreeMap<String, org.project.Class>>() {}.getType();
-                TreeMap<String, UMLModel.Class> loadedData = gson.fromJson(reader, type);
-                if(loadedData != null){
-                    storage.clearClasses();
-                    storage.getClasses().putAll(loadedData);
-                }
-                reader.close();
+                Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {}.getType();
+                storage.list = gson.fromJson(reader,type);
                 return true;
             }catch(IOException e){
                 e.printStackTrace();
@@ -673,7 +668,9 @@ public class UMLModel {
         /**
          * A map to store the classes.
          */
-        public final TreeMap<String, UMLModel.Class> list = new TreeMap<>();
+        public TreeMap<String, UMLModel.Class> list = new TreeMap<>();
+
+
 
         /**
          * addClass adds a class to the stored list.

@@ -105,7 +105,7 @@ public class UMLController {
         }
 
         public void addField(final String[] input) {
-            if(input.length <= 4) {
+            if(input.length < 5) {
                 System.out.println("Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>");
             } else {
                 String className = input[2];
@@ -125,7 +125,7 @@ public class UMLController {
         }
 
         public void removeField(final String[] input) {
-            if(input.length >= 3) {
+            if(input.length <= 3) {
                 System.out.println("Invalid number of arguments");
             } else {
                 String className = input[2];
