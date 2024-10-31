@@ -89,7 +89,7 @@ public class Menu {
             case "class" -> controller.classCommands.addClass(input);
             case "method" -> controller.methodCommands.addMethod(new String[]{"add","method",currentClass.getName(),input[2],});
             case "field" -> controller.fieldCommands.addField(new String[]{"add","field", currentClass.getName(), input[2], input[3]});
-            case "parameter" -> controller.parameterCommands.addParameter(new String[]{"add","parameter",currentClass.getName(),input[2],input[3]});
+            case "parameter" -> controller.parameterCommands.addParameter(new String[]{"add","parameter",currentClass.getName(),input[2],input[3],input[4]});
             case "relationship" -> controller.relationshipCommands.addRelationship(new String[]{"add","relationship",currentClass.getName(),input[2],input[3]});
         }
     }
@@ -114,9 +114,10 @@ public class Menu {
             return;
         }
         switch(input[1]) {
-            case "class" -> controller.classCommands.renameClass(input);
-            case "method" -> controller.methodCommands.renameMethod(input);
-            case "field" -> controller.fieldCommands.renameField(input);
+            case "class" -> controller.classCommands.renameClass(new String[]{"rename","class", currentClass.getName(), input[3], input[2]});
+            case "method" -> controller.methodCommands.renameMethod(new String[]{"rename","method", currentClass.getName(), input[2], input[3]});
+            case "field" -> controller.fieldCommands.renameField(new String[]{"rename","field", currentClass.getName(), input[2], input[3], input[4]});
+            case "parameter" -> controller.parameterCommands.changeParameter(new String[]{"rename","parameter", currentClass.getName(), input[2], input[3], input[4],input[5]});
         }
     }
 
@@ -133,37 +134,46 @@ public class Menu {
     }
 
     private void listCommand(String[] input) {
-        if(!"class".equals(input[1])){
-            listClass();
-        }else if(!"class".equals(input[1])){
-            listClasses();
-        }else{
-            System.out.println("Invalid list command.");
+        if(input.length < 2){
+            System.out.println("invalid syntax. Try: load class");
+        }
+        switch (input[1].toLowerCase()) {
+            case "class" -> {
+                if(currentClass != null){
+                    listClass(new String[]{"List", "class", currentClass.getName()});
+                }else{
+                    System.out.println("not active class set. use set command to set a class you want to see. Useage: set class <classname>");
+                }
+            }
+            case "classes" -> listClasses();
+            default -> System.out.println("Invalid list command");
+
         }
     }
 
-    public void listClass() {
-        if(currentClass == null){
+    public void listClass(String[] input) {
+        UMLModel.Class obj = controller.getStorage().getClass(input[2]);
+        if(obj == null){
             System.out.println("no class selected. Try: set class <class name>");
             return;
         }
 
 
-            System.out.println("Class name: " + currentClass.getName());
+            System.out.println("Class name: " + obj.getName());
             System.out.println("Relationships: ");
-            for (UMLModel.Relationship relate: currentClass.getRelationships()){
+            for (UMLModel.Relationship relate: obj.getRelationships()){
                 System.out.println("----------------------");
                 System.out.println("Source Class: " + relate.getSource());
                 System.out.println("Destination class: " + relate.getDestination());
             }
             System.out.println("Fields:");
-            for (UMLModel.Field field : currentClass.getFields()) {
+            for (UMLModel.Field field : obj.getFields()) {
                 System.out.println("----------------------");
                 System.out.println("Field name: " + field.getName());
                 System.out.println("Field type: " + field.getType());
             }
             System.out.println("Methods: ");
-            for (UMLModel.Method method : currentClass.getMethodList()) {
+            for (UMLModel.Method method : obj.getMethodList()) {
                 System.out.println("----------------------");
                 System.out.println("Method: " + method.getName());
                 System.out.println();
@@ -258,14 +268,14 @@ public class Menu {
                 System.out.println("Syntax: remove class [name] - removes class with [name] in single command");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: remove method [class name] [method name] - removes method with [method name] from class with [class name]");
+                System.out.println("Syntax: remove method [method name] - removes method with [method name] from class with [class name]");
                 return;
             case "rename":
                 System.out.println("Rename command allows you to rename existing class, method, field");
                 System.out.println("Syntax: rename [object]");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: rename method [class name] [method name] - renames method with [method name] from class with [class name]");
+                System.out.println("Syntax: rename method [method name] - renames method with [method name] from class with [class name]");
                 return;
             case "save":
                 System.out.println("Save command allows you to save existing class");

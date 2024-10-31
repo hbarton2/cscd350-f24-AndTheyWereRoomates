@@ -8,7 +8,7 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+
 public class UMLModel {
     public static class Class {
         /** Name of the class. */
@@ -107,6 +107,7 @@ public class UMLModel {
 
         /**
          * Renames a method
+         *
          * @param oldName - The current name of the method
          * @param newName - The new name of the method
          * @return - True if the method was renamed successfully, otherwise returns false.
@@ -201,20 +202,23 @@ public class UMLModel {
 
         }
 
+
         /**
          * Renames a field
-         * @param old - The current name of the field
+         * @param oldName - The current name of the field
          * @param newName - The new name of the field
          * @return true if the field was renamed successfully, otherwise returns false.
          */
-        public boolean renameField(final String old, final String newName){
-            if(name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
+        public boolean renameField(final String oldName, final String newName, final String typeName){
+            if(name == null || name.isEmpty() || typeName == null || typeName.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
 
-            if(!hasField(old)) return false;
+            if(!hasField(oldName)) return false;
 
-            Field field = findField(old);
+            Field field = findField(oldName);
 
             field.setName(newName);
+            field.setType(typeName);
+            System.out.println("you renamed field "+ oldName+" to "+newName+"with the type " + typeName);
             return true;
         }
 

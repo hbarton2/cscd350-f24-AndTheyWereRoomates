@@ -72,7 +72,7 @@ public class UMLController {
 
         public void renameClass(String[] input) {
 
-            if(input.length <= 3) {
+            if(input.length < 4) {
                 System.out.println("Invalid number of arguments. Usage: rename class <old classname> <new classname>");
             }
 
@@ -104,7 +104,7 @@ public class UMLController {
         }
 
         public void addField(final String[] input) {
-            if(input.length <= 3) {
+            if(input.length <= 4) {
                 System.out.println("Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>");
             } else {
                 String className = input[2];
@@ -143,12 +143,13 @@ public class UMLController {
         }
 
         public void renameField(final String[] input) {
-            if(input.length >= 3) {
+            if(input.length >= 5) {
                 System.out.println("Invalid number of arguments. Usage: rename field <className> <oldFieldName> <newFieldName>");
             } else {
                 String className = input[2];
                 String oldFieldName = input[3];
-                String newFieldName = input[3];
+                String newFieldName = input[4];
+                String newFieldType = input[5];
 
                 UMLModel.Class classObject = storage.getClass(className);
                 if (classObject == null){
@@ -156,7 +157,7 @@ public class UMLController {
                 }else if(!classObject.hasField(oldFieldName)){
                     System.out.println("Field does not exist");
                 }else{
-                    classObject.renameField(oldFieldName,newFieldName);
+                    classObject.renameField(oldFieldName,newFieldName,newFieldType);
                     System.out.println("the field called: " + oldFieldName + " has been renamed to: " + newFieldName);
                 }
             }
@@ -337,7 +338,7 @@ public class UMLController {
 
         public void changeParameter(String[] input) {
             if (input.length <= 6) {
-                System.out.println("Invalid number of arguments. Usage: add parameter <className> <methodName> <parameterName> <newParameterName> <newParameterType>");
+                System.out.println("Invalid number of arguments. Usage: rename parameter <className> <methodName> <parameterName> <newParameterName> <newParameterType>");
                 return;
             }
 
@@ -393,7 +394,7 @@ public class UMLController {
             this.storage = storage;
         }
         public boolean addRelationship(final String[] input){
-            if(input.length != 4){
+            if(input.length > 4){
                 System.out.println("Invalid number of arguments");
                 return false;
 
