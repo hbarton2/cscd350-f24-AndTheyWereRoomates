@@ -7,6 +7,7 @@ public class Menu {
 
     private Scanner scanner;
     private UMLController controller;
+    private UMLModel.Class currentClass;
     public Menu() {
         this.scanner = new Scanner(System.in);
         this.controller = new UMLController();
@@ -44,6 +45,10 @@ public class Menu {
         }
 
         return !str[0].equals("exit") || str.length >= 2;
+    }
+    private void setCurrentCass(final String className){
+        UMLModel.Class selectedClass = controller.getStorage().getClass(className);
+        if()
     }
 
     private void commandCheck(String[] input) {
@@ -201,6 +206,13 @@ public class Menu {
                 System.out.println();
                 System.out.println("For field");
                 System.out.println("Syntax: add field [class name] - creates field and add it to class with [name]");
+                System.out.println();
+                System.out.println("For Parameter");
+                System.out.println("Syntax: add parameter [class name] - creates field and add it to class with [name]");
+                System.out.println();
+                System.out.println("For Relationship");
+                System.out.println("Syntax: add field [class name] - creates field and add it to class with [name]");
+
                 return;
             case "remove":
                 System.out.println("Remove command allows you to delete existing class, method, field, relationship");
@@ -243,10 +255,10 @@ public class Menu {
     }
 
     private boolean help() {
-        System.out.println("Syntax: help [command]");
+        System.out.println("Syntax for help: help <command you need help with>.");
         System.out.println();
         System.out.println("Existing commands are: ");
-        System.out.println("- add:  create a new class, method, field, relationship, or parameter.");
+        System.out.println("- add:  create a new class, method, field, relationship, or parameter. ");
         System.out.println("- remove: delete existing class, method, field, relationship");
         System.out.println("- rename: rename existing class, method, field");
         System.out.println("- save: save existing class");

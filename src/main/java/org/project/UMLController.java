@@ -189,7 +189,7 @@ public class UMLController {
                         System.out.println("Class already contains this method");
                     }else{
                         classObject.addMethod(methodName);
-                        System.out.println("Method added. Field name: " + methodName);
+                        System.out.println("Method added. Method name: " + methodName);
                     }
                 }
             }
