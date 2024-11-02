@@ -1,26 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <AnchorPane prefHeight="637.0" prefWidth="831.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.MainController">
-   <children>
-      <Pane fx:id="canvas" layoutX="97.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <MenuBar prefHeight="27.0" prefWidth="267.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Load" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Exit" />
-        </menus>
-      </MenuBar>
-      <Button fx:id="addClass" layoutX="297.0" layoutY="2.0" mnemonicParsing="false" onAction="#createClass" text="Add Class" />
-   </children>
+    <children>
+        <Pane fx:id="canvas" layoutX="97.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0" />
+
+        <MenuBar prefHeight="27.0" prefWidth="267.0">
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem text="Save" />
+                        <MenuItem text="Load" />
+                    </items>
+                </Menu>
+                <Menu text="Exit" />
+            </menus>
+        </MenuBar>
+
+        <Button fx:id="addClass" layoutX="640.0" layoutY="10.0" text="Add Class" onAction="#createClass" />
+
+        <Button fx:id="toggleInspectorButton" layoutX="730.0" layoutY="10.0" text="Hide" onAction="#toggleInspector" style="-fx-font-weight: bold;" />
+
+        <VBox fx:id="inspectorPane" layoutX="631.0" layoutY="50.0" prefWidth="200.0" alignment="TOP_LEFT" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
+            <Label text="Class Name:" />
+            <TextField fx:id="classNameInput" promptText="Enter class name" />
+            <Button fx:id="saveClassName" text="Save Class Name" onAction="#handleSaveClassName" />
+
+            <Separator />
+
+            <Label text="Field Name:" />
+            <TextField fx:id="fieldNameInput" promptText="Enter field name" />
+            <Label text="Data Type:" />
+            <ComboBox fx:id="dataTypeComboBox" promptText="Select type">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="String" />
+                        <String fx:value="Int" />
+                        <String fx:value="Double" />
+                        <String fx:value="Boolean" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Button fx:id="addField" text="Add Field" onAction="#handleAddField" />
+
+            <Separator />
+
+            <Label text="Method Name:" />
+            <TextField fx:id="methodNameInput" promptText="Enter method name" />
+            <Label text="Parameters:" />
+            <ComboBox fx:id="parametersComboBox" promptText="Select parameters">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Int" />
+                        <String fx:value="String" />
+                        <String fx:value="Double" />
+                        <String fx:value="Boolean" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Button fx:id="addMethod" text="Add Method" onAction="#handleAddMethod" />
+        </VBox>
+    </children>
 </AnchorPane>
