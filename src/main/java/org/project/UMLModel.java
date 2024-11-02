@@ -618,6 +618,9 @@ public class UMLModel {
         }
 
         public boolean Load(String fileName) {
+            if(fileName == null){
+                System.out.println("The class: " + fileName + " does not exist");
+            }
 
             try {
                 FileReader reader = new FileReader(fileName);
