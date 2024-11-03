@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class MainController {
@@ -45,7 +46,7 @@ public class MainController {
     private ComboBox<String> parameterTypeComboBox;
 
     @FXML
-    private Label parameterCountLabel;
+    private Label className;
 
     @FXML
     private TextField relationshipInput;
@@ -63,7 +64,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        setupRelationshipAutocomplete();
 
     }
 
@@ -80,12 +80,6 @@ public class MainController {
                 classBox.setLayoutX(centerX - classBox.getWidth() / 2);
                 classBox.setLayoutY(centerY - classBox.getHeight() / 2);
             });
-
-            TextField classNameField = (TextField) classBox.getChildren().get(0);
-            String className = classNameField.getText();
-            if (!className.isEmpty() && !classNames.contains(className)) {
-                classNames.add(className);
-            }
 
             canvas.getChildren().add(classBox);
         } catch (IOException e) {
@@ -110,8 +104,8 @@ public class MainController {
 
         DropShadow highlight = new DropShadow();
         highlight.setColor(Color.BLUE);
-        highlight.setWidth(20);
-        highlight.setHeight(20);
+        highlight.setWidth(10);
+        highlight.setHeight(10);
         selectedClassBox.setEffect(highlight);
 
         TextField classNameField = (TextField) selectedClassBox.getChildren().get(0);
@@ -126,24 +120,11 @@ public class MainController {
     }
 
     @FXML
-    public void handleSaveClassName(ActionEvent event) {
-        if (selectedClassBox != null && selectedClassBox.getChildren().get(0) instanceof TextField) {
-            String className = classNameInput.getText();
-            TextField classNameField = (TextField) selectedClassBox.getChildren().get(0);
-            classNameField.setText(className);
-            if (!classNames.contains(className)) {
-                classNames.add(className);
-            }
-        }
-    }
-
-    @FXML
-    public void handleRenameClass(ActionEvent event) {
-        if (selectedClassBox != null){
+    public void handleSetClassName(ActionEvent event) {
+        if (selectedClassBox != null) {
             String newName = classNameInput.getText();
-           TextField className = (TextField) selectedClassBox.getChildren().get(0);
-           className.setText(newName);
-
+            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            className.setText(newName);
         }
     }
 
@@ -153,6 +134,8 @@ public class MainController {
             String fieldName = fieldNameInput.getText();
             ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
             fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+
+            fieldNameInput.clear();
         }
     }
 
@@ -165,13 +148,10 @@ public class MainController {
 
             if (selectedField != null) {
                 fieldList.getItems().remove(selectedField);
-            } else {
-                System.out.println("No field selected");
             }
-        } else {
-            System.out.println("No class selected");
         }
     }
+
 
     @FXML
     public void handleRenameField(ActionEvent event) {
@@ -187,53 +167,40 @@ public class MainController {
                     String updatedField = newFieldType + " " + newFieldName;
                     int selectIndex = fieldList.getSelectionModel().getSelectedIndex();
                     fieldList.getItems().set(selectIndex, updatedField);
-                } else {
-                    System.out.println("Enter new name");
-                }
-            } else {
-                System.out.println("No field to rename");
-            }
 
-        } else {
-            System.out.println("No class selected");
+                    fieldNameInput.clear();
+                }
+            }
         }
     }
+
 
     @FXML
     public void addParameter(ActionEvent event) {
         if (selectedClassBox != null) {
             ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
 
-            if (methodList.getItems().isEmpty()) {
-                System.out.println("Add a method first to add parameters.");
-                return;
+            if (!methodList.getItems().isEmpty()) {
+                String parameterName = parameterNameInput.getText();
+                String parameterType = parameterTypeComboBox.getValue();
+
+                if (!parameterName.isEmpty() && parameterType != null) {
+                    int lastMethodIndex = methodList.getItems().size() - 1;
+                    String currentMethod = methodList.getItems().get(lastMethodIndex);
+
+                    if (currentMethod.endsWith("()")) {
+                        currentMethod = currentMethod.replace("()", "(" + parameterType + " " + parameterName + ")");
+                    } else {
+                        currentMethod = currentMethod.replace(")", ", " + parameterType + " " + parameterName + ")");
+                    }
+
+                    parameterNameInput.clear();
+                    methodList.getItems().set(lastMethodIndex, currentMethod);
+                }
             }
-
-            String parameterName = parameterNameInput.getText();
-            String parameterType = parameterTypeComboBox.getValue();
-
-            if (parameterName.isEmpty() || parameterType == null) {
-                System.out.println("Enter both a parameter name and type.");
-                return;
-            }
-
-            int lastMethodIndex = methodList.getItems().size() - 1;
-            String currentMethod = methodList.getItems().get(lastMethodIndex);
-
-            if (currentMethod.endsWith("()")) {
-                currentMethod = currentMethod.replace("()", "(" + parameterType + " " + parameterName + ")");
-            } else {
-                currentMethod = currentMethod.replace(")", ", " + parameterType + " " + parameterName + ")");
-            }
-
-            methodList.getItems().set(lastMethodIndex, currentMethod);
-
-            parameterNameInput.clear();
-            parameterTypeComboBox.getSelectionModel().clearSelection();
-        } else {
-            System.out.println("No class selected.");
         }
     }
+
 
 
     @FXML
@@ -241,60 +208,51 @@ public class MainController {
         if (selectedClassBox != null) {
             String methodName = methodNameInput.getText();
 
-            if (methodName.isEmpty()) {
-                System.out.println("Enter a method name.");
-                return;
+            if (!methodName.isEmpty()) {
+                String formattedMethod = methodName + "()";
+                ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
+                methodList.getItems().add(formattedMethod);
+
+                methodNameInput.clear();
             }
+        }
+    }
 
-            String formattedMethod = methodName + "()";
 
+    @FXML
+    public void handleDeleteMethod(ActionEvent event) {
+        if (selectedClassBox != null) {
             ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
-            methodList.getItems().add(formattedMethod);
+            String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
-            methodNameInput.clear();
-        } else {
-            System.out.println("No class selected.");
+            if (selectedMethod != null) {
+                methodList.getItems().remove(selectedMethod);
+
+                methodNameInput.clear();
+            }
         }
     }
 
     @FXML
-    public void handleDeleteMethod(ActionEvent event) {
-    }
-
-    @FXML
     public void handleRenameMethod(ActionEvent event) {
+        if (selectedClassBox != null) {
+            ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
+            String selectedMethod = methodList.getSelectionModel().getSelectedItem();
+
+            if (selectedMethod != null) {
+                String newMethodName = methodNameInput.getText();
+
+                if (!newMethodName.isEmpty()) {
+                    int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
+                    String updatedMethod = newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
+                    methodList.getItems().set(selectedIndex, updatedMethod);
+
+                    methodNameInput.clear();
+                }
+            }
+        }
     }
 
-    @FXML
-    public void showRelationshipInput(ActionEvent event) {
-        relationshipInput.clear();
-        relationshipInput.setVisible(true);
-        relationshipInput.requestFocus();
-    }
-
-    private void setupRelationshipAutocomplete() {
-        relationshipInput.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
-                return;
-            }
-
-            String input = relationshipInput.getText();
-            Optional<String> suggestion = classNames.stream()
-                    .filter(name -> name.toLowerCase().startsWith(input.toLowerCase()))
-                    .findFirst();
-
-            if (suggestion.isPresent() && !input.isEmpty()) {
-                String suggestedText = suggestion.get();
-                relationshipInput.setText(suggestedText);
-                relationshipInput.positionCaret(input.length());
-                relationshipInput.selectEnd();
-            }
-
-            if (event.getCode() == KeyCode.ENTER) {
-                relationshipInput.deselect();
-            }
-        });
-    }
 
     @FXML
     public void addRelation(ActionEvent event) {
