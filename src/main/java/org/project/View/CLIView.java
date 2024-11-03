@@ -1,15 +1,18 @@
-package org.project;
+package org.project.View;
+import org.project.Controller.UMLController;
+import org.project.Model.UMLModel;
+
 import java.util.Map;
 import java.util.Scanner;
 
 
-public class Menu {
+public class CLIView {
 
     private Scanner scanner;
     private UMLController controller;
     private UMLModel.Class currentClass = null;
 
-    public Menu() {
+    public CLIView() {
         this.scanner = new Scanner(System.in);
         this.controller = new UMLController();
     }

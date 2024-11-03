@@ -1,7 +1,6 @@
-package org.project;
+package org.project.Controller;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import org.project.Model.UMLModel;
 
 public class UMLController {
 

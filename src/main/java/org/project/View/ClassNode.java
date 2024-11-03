@@ -1,9 +1,10 @@
-package org.project;
+package org.project.View;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.project.Controller.DraggableMaker;
 
 public class ClassNode extends VBox {
 

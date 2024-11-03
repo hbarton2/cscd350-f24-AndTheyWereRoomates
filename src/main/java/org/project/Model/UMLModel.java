@@ -1,4 +1,4 @@
-package org.project;
+package org.project.Model;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -247,7 +247,7 @@ public class UMLModel {
          * @param name - The name of the field
          * @return true if the field exists, otherwise returns false.
          */
-        boolean hasField(final String name){
+        public boolean hasField(final String name){
             for(Field field: fields){
                 if(field.getName().equals(name)){
                     return true;
