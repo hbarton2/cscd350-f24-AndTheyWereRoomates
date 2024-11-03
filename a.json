@@ -1,17 +1,7 @@
 {
   "a": {
     "name": "a",
-    "methodlist": [
-      {
-        "name": "a",
-        "parameters": [
-          {
-            "name": "a",
-            "type": "a"
-          }
-        ]
-      }
-    ],
+    "methodlist": [],
     "fields": [
       {
         "name": "a",

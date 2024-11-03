@@ -265,7 +265,7 @@ public class CLIView {
                 return;
             case "remove":
                 System.out.println("Remove command allows you to delete existing class, method, field, relationship");
-                System.out.println("Syntax: remove class - prompts for class name to be removed");
+                System.out.println("Syntax: remove class [name]- prompts for class name to be removed");
                 System.out.println();
                 System.out.println("For class");
                 System.out.println("Syntax: remove class [name] - removes class with [name] in single command");
@@ -275,25 +275,29 @@ public class CLIView {
                 return;
             case "rename":
                 System.out.println("Rename command allows you to rename existing class, method, field");
-                System.out.println("Syntax: rename [object]");
+                System.out.println();
+                System.out.println("For class");
+                System.out.println("Syntax: rename [old class name] [new class name]");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: rename method [method name] - renames method with [method name] from class with [class name]");
+                System.out.println("Syntax: rename method [old method name] [new method name] - renames method with [new method name]");
+                System.out.println("For field");
+                System.out.println("Syntax: rename field [old field name] [new field name]- renames method with [method name]");
                 return;
             case "save":
                 System.out.println("Save command allows you to save existing class");
-                System.out.println("Syntax: save [object]");
+                System.out.println("Syntax: save [class name]");
                 return;
             case "load":
                 System.out.println("Load command allows you to load existing class");
-                System.out.println("Syntax: load [object]");
+                System.out.println("Syntax: load [class name]");
                 return;
             case "list":
                 System.out.println("List command allows you to list existing class");
-                System.out.println("Syntax: list [object]");
+                System.out.println("Syntax: list class");
+                System.out.println(" list all info for your set class");
                 System.out.println();
-                System.out.println("For class");
-                System.out.println("Syntax: list [class name] - list info about class with [class name]");
+                System.out.println("Syntax: list classes - list all classes");
                 return;
             case "exit":
                 System.out.println("Exits the program");

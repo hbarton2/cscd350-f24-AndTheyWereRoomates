@@ -68,7 +68,7 @@ public class UMLModel {
             }
             if (matchingMethods.size() == 1) {
                 methodlist.remove(matchingMethods.get(0));
-                System.out.println("Removed method ");
+
                 return true;
             }
 
