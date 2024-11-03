@@ -41,10 +41,7 @@
 
             <Label text="Class Name:" />
             <TextField fx:id="classNameInput" promptText="Enter class name" />
-            <HBox spacing="10.0">
-                <Button fx:id="saveClassName" onAction="#handleSaveClassName" text="Save Class Name" />
-                <Button fx:id="renameClassButton" onAction="#handleRenameClass" text="Rename Class" />
-            </HBox>
+            <Button fx:id="setClassName" onAction="#handleSetClassName" text="Set Class Name" />
 
             <Label text="Field Name:" />
             <TextField fx:id="fieldNameInput" promptText="Enter field name" />
@@ -87,8 +84,6 @@
                 <Button fx:id="addParameter" onAction="#addParameter" prefWidth="90" text="Add" />
             </HBox>
 
-            <Label fx:id="parameterCountLabel" text="Parameters added: 0" />
-
             <Separator />
 
             <HBox spacing="10.0">
@@ -101,20 +96,19 @@
 
             <Label text="Relationship:" />
             <HBox spacing="5.0">
-                <Button fx:id="fromButton" onAction="#showRelationshipInput" text="From" />
-                <Button fx:id="toButton" onAction="#showRelationshipInput" text="To" />
-                <ComboBox fx:id="relationshipTypeComboBox" promptText="Type">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Aggregation" />
-                            <String fx:value="Composition" />
-                            <String fx:value="Generalization" />
-                            <String fx:value="Realization" />
-                        </FXCollections>
-                    </items>
-                </ComboBox>
+                <ComboBox fx:id="fromComboBox" prefWidth="110" promptText="From" />
+                <ComboBox fx:id="toComboBox" prefWidth="110" promptText="To" />
             </HBox>
-            <TextField fx:id="relationshipInput" promptText="Enter relationship..." visible="false" />
+            <ComboBox fx:id="relationshipTypeComboBox" prefWidth="225" promptText="Type">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Aggregation" />
+                        <String fx:value="Composition" />
+                        <String fx:value="Generalization" />
+                        <String fx:value="Realization" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
             <HBox spacing="5.0">
                 <Button fx:id="addRelationButton" onAction="#addRelation" text="Add Relation" />

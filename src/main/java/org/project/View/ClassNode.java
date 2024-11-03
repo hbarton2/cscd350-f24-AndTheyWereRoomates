@@ -24,6 +24,7 @@ public class ClassNode extends VBox {
     public void initialize() {
         DraggableMaker draggableMaker = new DraggableMaker();
         className.setText("Class Name");
+        className.setEditable(false);
         classRepresentation.setStyle("-fx-border-width: 5; -fx-border-color: black");
         draggableMaker.makeDraggable(classRepresentation);
     }
