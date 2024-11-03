@@ -102,9 +102,14 @@ public class MainController {
 
     @FXML
     public void deleteClass(ActionEvent event) {
-        if(selectedClassBox != null){
+        if(selectedClassBox != null) {
+            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            String classNameRemove = className.getText();
             canvas.getChildren().remove(selectedClassBox);
             selectedClassBox = null;
+
+            fromComboBox.getItems().remove(classNameRemove);
+            toComboBox.getItems().remove(classNameRemove);
         }
     }
 
