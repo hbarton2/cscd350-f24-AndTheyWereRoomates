@@ -401,6 +401,7 @@ public class UMLController {
             }else{
                 String source = input[2] ;
                 String destination = input[3];
+                String type = input[4];
 
 
                 //These if-statements check if the classes exist. If not the relationship cannot be created
@@ -411,7 +412,7 @@ public class UMLController {
 
 
 
-                srcClass.addRelation(source, destination);
+                srcClass.addRelation(source, destination,type);
                 System.out.println("Successful");
                 return true;
             }
@@ -425,6 +426,7 @@ public class UMLController {
 
                 String source = input[2];
                 String destination = input[3];
+                String type = input[4];
 
                 //Checks to see the source class exists
                 if(!storage.list.containsKey(source)) System.out.println("source class does not exist");
@@ -432,7 +434,7 @@ public class UMLController {
                 UMLModel.Class srcClass = storage.getClass(source);
                 UMLModel.Class destClass = storage.getClass(destination);
 
-                Boolean removed = srcClass.removeRelation(source, destination);
+                Boolean removed = srcClass.removeRelation(source, destination, type);
 
                 if(removed){
                     System.out.println("Successful");
