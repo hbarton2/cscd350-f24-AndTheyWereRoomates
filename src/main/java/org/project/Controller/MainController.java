@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +48,13 @@ public class MainController {
     private ComboBox<String> parameterTypeComboBox;
 
     @FXML
-    private Label className;
+    private ComboBox<String> fromComboBox;
+
+    @FXML
+    private ComboBox<String> toComboBox;
+
+    @FXML
+    private TextField className;
 
     @FXML
     private TextField relationshipInput;
@@ -81,6 +89,11 @@ public class MainController {
                 classBox.setLayoutY(centerY - classBox.getHeight() / 2);
             });
 
+            TextField classNameField = (TextField) classBox.getChildren().get(0);
+            String className = classNameField.getText();
+
+            fromComboBox.getItems().add(className);
+            toComboBox.getItems().add(className);
             canvas.getChildren().add(classBox);
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,7 +137,18 @@ public class MainController {
         if (selectedClassBox != null) {
             String newName = classNameInput.getText();
             TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            String currentName = className.getText();
             className.setText(newName);
+
+            int fromIndex = fromComboBox.getItems().indexOf(currentName);
+            int toIndex = toComboBox.getItems().indexOf(currentName);
+
+            if (fromIndex >= 0) {
+                fromComboBox.getItems().set(fromIndex, newName);
+            }
+            if (toIndex >= 0) {
+                toComboBox.getItems().set(toIndex, newName);
+            }
         }
     }
 
