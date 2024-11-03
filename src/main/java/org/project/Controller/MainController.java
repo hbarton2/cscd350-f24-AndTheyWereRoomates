@@ -95,6 +95,10 @@ public class MainController {
 
     @FXML
     public void deleteClass(ActionEvent event) {
+        if(selectedClassBox != null){
+            canvas.getChildren().remove(selectedClassBox);
+            selectedClassBox = null;
+        }
     }
 
     private void selectClassBox(VBox classBox) {
@@ -135,13 +139,21 @@ public class MainController {
 
     @FXML
     public void handleRenameClass(ActionEvent event) {
+        if (selectedClassBox != null){
+            String newName = classNameInput.getText();
+           TextField className = (TextField) selectedClassBox.getChildren().get(0);
+           className.setText(newName);
 
+        }
     }
 
     @FXML
     public void handleAddField(ActionEvent event) {
-
-
+        if(selectedClassBox != null){
+            String fieldName = fieldNameInput.getText();
+            ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
+            fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+        }
     }
 
 
