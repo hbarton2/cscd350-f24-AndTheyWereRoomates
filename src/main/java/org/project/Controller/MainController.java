@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -89,6 +86,10 @@ public class MainController {
 
     @FXML
     public void deleteClass(ActionEvent event) {
+        if(selectedClassBox != null){
+            canvas.getChildren().remove(selectedClassBox);
+            selectedClassBox = null;
+        }
     }
 
     private void selectClassBox(VBox classBox) {
@@ -129,10 +130,22 @@ public class MainController {
 
     @FXML
     public void handleRenameClass(ActionEvent event) {
+        if (selectedClassBox != null){
+            String newName = classNameInput.getText();
+           TextField className = (TextField) selectedClassBox.getChildren().get(0);
+           className.setText(newName);
+
+        }
+
     }
 
     @FXML
     public void handleAddField(ActionEvent event) {
+        if(selectedClassBox != null){
+            String fieldName = fieldNameInput.getText();
+            ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
+            fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+        }
     }
 
     @FXML
@@ -149,6 +162,11 @@ public class MainController {
 
     @FXML
     public void handleAddMethod(ActionEvent event) {
+        if(selectedClassBox != null){
+            String methodName = methodNameInput.getText();
+            ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
+            methodList.getItems().add("");
+        }
     }
 
     @FXML
