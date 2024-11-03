@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 
 <AnchorPane prefHeight="637.0" prefWidth="831.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.MainController">
     <children>
-        <Pane fx:id="canvas" layoutX="97.0" layoutY="63.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0" />
+        <Pane fx:id="canvas" layoutX="97.0" layoutY="63.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="50.0" />
 
-        <MenuBar prefHeight="27.0" prefWidth="267.0">
+        <MenuBar prefHeight="27.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
                 <Menu text="File">
                     <items>
@@ -30,48 +31,96 @@
             </menus>
         </MenuBar>
 
-        <Button fx:id="addClass" layoutX="640.0" layoutY="10.0" text="Add Class" onAction="#createClass" />
+        <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+            <Button fx:id="addClass" onAction="#createClass" text="Add Class" />
+            <Button fx:id="deleteClassButton" onAction="#deleteClass" text="Delete Class" />
+            <Button fx:id="toggleInspectorButton" onAction="#toggleInspector" style="-fx-font-weight: bold;" text="Hide" />
+        </HBox>
 
-        <Button fx:id="toggleInspectorButton" layoutX="730.0" layoutY="10.0" text="Hide" onAction="#toggleInspector" style="-fx-font-weight: bold;" />
+        <VBox fx:id="inspectorPane" alignment="TOP_LEFT" prefWidth="250.0" spacing="8.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
 
-        <VBox fx:id="inspectorPane" layoutX="631.0" layoutY="50.0" prefWidth="200.0" alignment="TOP_LEFT" spacing="10.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
             <Label text="Class Name:" />
             <TextField fx:id="classNameInput" promptText="Enter class name" />
-            <Button fx:id="saveClassName" text="Save Class Name" onAction="#handleSaveClassName" />
-
-            <Separator />
+            <HBox spacing="10.0">
+                <Button fx:id="saveClassName" onAction="#handleSaveClassName" text="Save Class Name" />
+                <Button fx:id="renameClassButton" onAction="#handleRenameClass" text="Rename Class" />
+            </HBox>
 
             <Label text="Field Name:" />
             <TextField fx:id="fieldNameInput" promptText="Enter field name" />
-            <Label text="Data Type:" />
-            <ComboBox fx:id="dataTypeComboBox" promptText="Select type">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="String" />
-                        <String fx:value="Int" />
-                        <String fx:value="Double" />
-                        <String fx:value="Boolean" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
-            <Button fx:id="addField" text="Add Field" onAction="#handleAddField" />
+            <HBox spacing="10.0">
+                <ComboBox fx:id="dataTypeComboBox" prefWidth="100" promptText="Type">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Int" />
+                            <String fx:value="String" />
+                            <String fx:value="Double" />
+                            <String fx:value="Boolean" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Button fx:id="addField" onAction="#handleAddField" text="Add" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Button fx:id="renameFieldButton" onAction="#handleRenameField" text="Rename Field" />
+                <Button fx:id="deleteField" onAction="#handleDeleteField" text="Delete Field" />
+            </HBox>
 
             <Separator />
 
             <Label text="Method Name:" />
             <TextField fx:id="methodNameInput" promptText="Enter method name" />
-            <Label text="Parameters:" />
-            <ComboBox fx:id="parametersComboBox" promptText="Select parameters">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Int" />
-                        <String fx:value="String" />
-                        <String fx:value="Double" />
-                        <String fx:value="Boolean" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
-            <Button fx:id="addMethod" text="Add Method" onAction="#handleAddMethod" />
+
+            <Label text="Add Parameter:" />
+            <HBox spacing="15.0">
+                <TextField fx:id="parameterNameInput" prefWidth="80" promptText="Name" />
+                <ComboBox fx:id="parameterTypeComboBox" prefWidth="110" promptText="Type">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Int" />
+                            <String fx:value="String" />
+                            <String fx:value="Double" />
+                            <String fx:value="Boolean" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Button fx:id="addParameter" onAction="#addParameter" prefWidth="90" text="Add" />
+            </HBox>
+
+            <Label fx:id="parameterCountLabel" text="Parameters added: 0" />
+
+            <Separator />
+
+            <HBox spacing="10.0">
+                <Button fx:id="addMethod" onAction="#handleAddMethod" text="Add" />
+                <Button fx:id="deleteMethod" onAction="#handleDeleteMethod" text="Delete" />
+                <Button fx:id="renameMethodButton" onAction="#handleRenameMethod" text="Rename Method" />
+            </HBox>
+
+            <Separator />
+
+            <Label text="Relationship:" />
+            <HBox spacing="5.0">
+                <Button fx:id="fromButton" onAction="#showRelationshipInput" text="From" />
+                <Button fx:id="toButton" onAction="#showRelationshipInput" text="To" />
+                <ComboBox fx:id="relationshipTypeComboBox" promptText="Type">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Aggregation" />
+                            <String fx:value="Composition" />
+                            <String fx:value="Generalization" />
+                            <String fx:value="Realization" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+            <TextField fx:id="relationshipInput" promptText="Enter relationship..." visible="false" />
+
+            <HBox spacing="5.0">
+                <Button fx:id="addRelationButton" onAction="#addRelation" text="Add Relation" />
+                <Button fx:id="deleteRelationButton" onAction="#deleteRelation" text="Delete Relation" />
+            </HBox>
+
         </VBox>
     </children>
 </AnchorPane>
