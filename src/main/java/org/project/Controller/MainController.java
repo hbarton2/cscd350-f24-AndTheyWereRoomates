@@ -14,8 +14,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+
+  
+  
+import org.project.View.ClassBox;
+
 import org.w3c.dom.Text;
 
 import java.awt.*;
@@ -67,7 +73,7 @@ public class MainController {
     @FXML
     private TextField relationshipInput;
 
-    private VBox selectedClassBox = null;
+    private ClassBox selectedClassBox = null;
 
     private ObservableList<String> classNames = FXCollections.observableArrayList();
 
@@ -85,43 +91,50 @@ public class MainController {
 
 
     public void createClass(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/classNode.fxml"));
-            VBox classBox = loader.load();
-            classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-            canvas.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-                double centerX = newValue.getWidth() / 2;
-                double centerY = newValue.getHeight() / 2;
-                classBox.setLayoutX(centerX - classBox.getWidth() / 2);
-                classBox.setLayoutY(centerY - classBox.getHeight() / 2);
-            });
+        ClassBox classBox = new ClassBox("New Class #" + (umlController.getStorage().getClasses().size() + 1));
+        classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-            TextField classNameField = (TextField) classBox.getChildren().get(0);
-            String className = classNameField.getText();
+        // Calculate the center of the canvas
+        double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
+        double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
 
-            fromComboBox.getItems().add(className);
-            toComboBox.getItems().add(className);
-            canvas.getChildren().add(classBox);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Set the position of the classBox to the center of the canvas
+        classBox.setLayoutX(centerX);
+        classBox.setLayoutY(centerY);
+
+        fromComboBox.getItems().add(classBox.getName());
+        toComboBox.getItems().add(classBox.getName());
+        canvas.getChildren().add(classBox);
+
+        umlController.classCommands.addClass(new String[]{"add", "class", classBox.getName()});
+        System.out.println("Size: " + umlController.getStorage().getClasses().size());
     }
 
     @FXML
     public void deleteClass(ActionEvent event) {
         if(selectedClassBox != null) {
-            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            Label className = (Label) selectedClassBox.getChildren().get(0);
             String classNameRemove = className.getText();
-            canvas.getChildren().remove(selectedClassBox);
-            selectedClassBox = null;
 
-            fromComboBox.getItems().remove(classNameRemove);
-            toComboBox.getItems().remove(classNameRemove);
+
+            String message = umlController.classCommands.removeClass(new String[]{"remove", "class", classNameRemove});
+
+            if(message.isEmpty()) {
+                // GUI update
+                canvas.getChildren().remove(selectedClassBox);
+                selectedClassBox = null;
+
+                fromComboBox.getItems().remove(classNameRemove);
+                toComboBox.getItems().remove(classNameRemove);
+
+            } else {
+                showAlert("Class", message);
+            }
         }
     }
 
-    private void selectClassBox(VBox classBox) {
+    private void selectClassBox(ClassBox classBox) {
         if (selectedClassBox != null) {
             selectedClassBox.setEffect(null);
         }
@@ -134,8 +147,8 @@ public class MainController {
         highlight.setHeight(10);
         selectedClassBox.setEffect(highlight);
 
-        TextField classNameField = (TextField) selectedClassBox.getChildren().get(0);
-        classNameInput.setText(classNameField.getText());
+        Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
+        classNameInput.setText(classNameLabel.getText());
     }
 
     @FXML
@@ -149,8 +162,15 @@ public class MainController {
     public void handleSetClassName(ActionEvent event) {
         if (selectedClassBox != null) {
             String newName = classNameInput.getText();
-            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            if(umlController.getStorage().hasClass(newName)) {
+                showAlert("Class Creation Error", "A class with the name \"" + newName + "\" already exists.");
+                return;
+            }
+            Label className = (Label) selectedClassBox.getChildren().get(0);
             String currentName = className.getText();
+            // Rename class in storage
+            umlController.getStorage().renameClass(currentName, newName);
+            // Rename class in View
             className.setText(newName);
 
             int fromIndex = fromComboBox.getItems().indexOf(currentName);
@@ -168,11 +188,27 @@ public class MainController {
     @FXML
     public void handleAddField(ActionEvent event) {
         if(selectedClassBox != null){
+
+            if(dataTypeComboBox.getValue() == null){
+                showAlert("Error", "Chose the type of field");
+                return;
+            }
+
             String fieldName = fieldNameInput.getText();
             ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
-            fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+            String message = umlController.fieldCommands.addField(new String[]{"add", "field", selectedClassBox.getName(), fieldName, dataTypeComboBox.getValue()});
 
-            fieldNameInput.clear();
+
+            if(message.isEmpty()) {
+                fieldNameInput.clear();
+                fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+            }
+            else {
+                showAlert("Error", message);
+            }
+            System.out.println(umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
+
+
         }
     }
 
@@ -182,8 +218,11 @@ public class MainController {
         if (selectedClassBox != null) {
             ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
             String selectedField = fieldList.getSelectionModel().getSelectedItem();
+            String fieldType = selectedField.split(" ")[0].toLowerCase().trim();
+            String fieldName = selectedField.split(" ")[1].toLowerCase().trim();
 
             if (selectedField != null) {
+                umlController.fieldCommands.removeField(new String[]{"add", "field", selectedClassBox.getName(), fieldName, fieldType}); // "add field [class name] [field name] [field type]"
                 fieldList.getItems().remove(selectedField);
             }
         }
@@ -200,12 +239,18 @@ public class MainController {
                 String newFieldName = fieldNameInput.getText();
                 String newFieldType = dataTypeComboBox.getValue();
 
-                if (!newFieldName.isEmpty() && newFieldType != null) {
+                if (!newFieldName.isEmpty()  && newFieldType != null) {
                     String updatedField = newFieldType + " " + newFieldName;
                     int selectIndex = fieldList.getSelectionModel().getSelectedIndex();
                     fieldList.getItems().set(selectIndex, updatedField);
 
                     fieldNameInput.clear();
+
+                    // update storage
+                    String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
+                    umlController.fieldCommands.renameField(new String[]{"rename", "field", selectedClassBox.getName(), oldFieldName, newFieldName, newFieldType});
+                    System.out.println(umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
+                    System.out.println("Size of fields: " + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
                 }
             }
         }
@@ -246,11 +291,20 @@ public class MainController {
             String methodName = methodNameInput.getText();
 
             if (!methodName.isEmpty()) {
-                String formattedMethod = methodName + "()";
-                ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
-                methodList.getItems().add(formattedMethod);
 
-                methodNameInput.clear();
+                String message = umlController.methodCommands.addMethod(new String[]{"add", "method", selectedClassBox.getName(), methodName});
+                if(message.isEmpty()) {
+                    String formattedMethod = methodName + "()";
+                    ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
+                    methodList.getItems().add(formattedMethod);
+
+                    methodNameInput.clear();
+                }
+                else {
+                    showAlert("Error", message);
+                }
+
+
             }
         }
     }
@@ -263,6 +317,9 @@ public class MainController {
             String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
             if (selectedMethod != null) {
+
+                umlController.methodCommands.removeMethod(new String[]{"delete", "method", selectedClassBox.getName(), selectedMethod});
+                System.out.println("Number of methods: " + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
                 methodList.getItems().remove(selectedMethod);
 
                 methodNameInput.clear();
@@ -280,6 +337,12 @@ public class MainController {
                 String newMethodName = methodNameInput.getText();
 
                 if (!newMethodName.isEmpty()) {
+                    String oldMethodName = selectedMethod.substring(0, selectedMethod.indexOf("("));
+
+                    umlController.methodCommands.renameMethod(new String[]{"rename", "method", selectedClassBox.getName(), oldMethodName, newMethodName});
+
+
+
                     int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
                     String updatedMethod = newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
                     methodList.getItems().set(selectedIndex, updatedMethod);
@@ -415,5 +478,14 @@ public class MainController {
 
         // Remove line and arrowhead with the specified ID
         canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
+    }
+
+    // Helper method to show an alert
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

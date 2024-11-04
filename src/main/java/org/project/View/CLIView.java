@@ -237,65 +237,80 @@ public class CLIView {
     }
 
     private void helpCommand(String[] command) {
-
         switch(command[1]) {
             case "set":
-                System.out.println("Set command allows you set the class your working on for modifying the class");
                 System.out.println("Syntax: set class [classname]");
+                System.out.println("Set command allows you set the class your working on for modifying the class");
                 return;
             case "add":
                 System.out.println("Add command allows you to create a new class, method, field, relationship, or parameter.");
                 System.out.println("Syntax: add [object]");
                 System.out.println();
                 System.out.println("For class");
-                System.out.println("Syntax: add class [name] - creates class with [name] in single command");
+                System.out.println("Syntax: add class [name] - creates class with [name]");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: add method [class name] - creates method and adds to class with [name]");
+                System.out.println("Syntax: add method [name] - creates method and adds to the currently set class ");
                 System.out.println();
                 System.out.println("For field");
-                System.out.println("Syntax: add field [class name] - creates field and add it to class with [name]");
+                System.out.println("Syntax: add field [name] [type] - creates field and add it to the currently set class with [name] and the type [type]");
                 System.out.println();
                 System.out.println("For Parameter");
-                System.out.println("Syntax: add parameter [class name] - creates field and add it to class with [name]");
+                System.out.println("Syntax: add parameter [method name] [name] [type] - creates Parameter and add it to the currently set class with [name]");
                 System.out.println();
                 System.out.println("For Relationship");
-                System.out.println("Syntax: add field [class name] - creates field and add it to class with [name]");
+                System.out.println("Syntax: add relationship [class name] [another class] - creates Relationship between [class name] and [another class] ");
 
                 return;
             case "remove":
-                System.out.println("Remove command allows you to delete existing class, method, field, relationship");
-                System.out.println("Syntax: remove class [name]- prompts for class name to be removed");
+                System.out.println("Remove command allows you to delete existing class, method, field, parameter, or relationship");
+                System.out.println("Syntax: remove [object] - prompts for class name to be removed");
                 System.out.println();
                 System.out.println("For class");
-                System.out.println("Syntax: remove class [name] - removes class with [name] in single command");
+                System.out.println("Syntax: remove class - removes the currently set class");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: remove method [method name] - removes method with [method name] from class with [class name]");
+                System.out.println("Syntax: remove method [method name] - removes method with [method name] from the currently set class");
+                System.out.println();
+                System.out.println("For field");
+                System.out.println("Syntax: remove field [field name] - removes field with [field name] from the currently set class");
+                System.out.println();
+                System.out.println("For parameter");
+                System.out.println("Syntax: remove field [method name] [parameter name] - removes [parameter name] from [method name] in the currently set class");
+                System.out.println();
+                System.out.println("For relationship");
+                System.out.println("Syntax: remove relationship [class name] [another class] - removes a Relationship between [class name] and [another class]");
                 return;
             case "rename":
-                System.out.println("Rename command allows you to rename existing class, method, field");
+                System.out.println("Rename command allows you to rename existing class, method, field, or parameter");
+                System.out.println("Syntax: rename [object] - prompts for class name to be renamed");
                 System.out.println();
                 System.out.println("For class");
-                System.out.println("Syntax: rename [old class name] [new class name]");
+                System.out.println("Syntax: rename class [old class name] [new class name] - renames the currently set class with the new name");
                 System.out.println();
                 System.out.println("For method");
-                System.out.println("Syntax: rename method [old method name] [new method name] - renames method with [new method name]");
+                System.out.println("Syntax: rename method [existing method] [new method name] - renames method with [new method name] in the currently set class");
+                System.out.println();
                 System.out.println("For field");
-                System.out.println("Syntax: rename field [old field name] [new field name]- renames method with [method name]");
+                System.out.println("Syntax: rename field [existing field name] [new field name] [new field type] - renames field with a new name and type in the currently set class");
+                System.out.println();
+                System.out.println("For parameter");
+                System.out.println("Syntax: rename parameter [existing method] [existing parameter name] [new parameter name] [new parameter type]\n" +
+                        "-renames parameter with [new parameter name] [new parameter type]");
                 return;
             case "save":
-                System.out.println("Save command allows you to save existing class");
-                System.out.println("Syntax: save [class name]");
+                System.out.println("Syntax: save");
+                System.out.println("Save command allows you to save all your classes into a file");
+                System.out.println("You'll be prompted to input the file name");
                 return;
             case "load":
-                System.out.println("Load command allows you to load existing class");
-                System.out.println("Syntax: load [class name]");
+                System.out.println("Syntax: load");
+                System.out.println("Load command allows you to load a json file");
+                System.out.println("You'll be prompted to input the file name. You don't need to include '.json' at the end");
                 return;
             case "list":
                 System.out.println("List command allows you to list existing class");
-                System.out.println("Syntax: list class");
-                System.out.println(" list all info for your set class");
+                System.out.println("Syntax: list class - list all info for your set class");
                 System.out.println();
                 System.out.println("Syntax: list classes - list all classes");
                 return;
@@ -312,11 +327,11 @@ public class CLIView {
         System.out.println();
         System.out.println("Existing commands are: ");
         System.out.println("- set: sets the class so you can work on it. ");
-        System.out.println("- add:  create a new class, method, field, relationship, or parameter. ");
+        System.out.println("- add:  create a new class, method, field, relationship, or parameter.");
         System.out.println("- remove: delete existing class, method, field, relationship");
         System.out.println("- rename: rename existing class, method, field");
-        System.out.println("- save: save existing class");
-        System.out.println("- load: load existing class");
+        System.out.println("- save: save all your classes into a file");
+        System.out.println("- load: load an existing json file");
         System.out.println("- list: class: list existing class");
         System.out.println("- list: classes: list existing classes");
         System.out.println("- list: relationships: list existing relationships");

@@ -28,4 +28,12 @@ public class ClassNode extends VBox {
         classRepresentation.setStyle("-fx-border-width: 5; -fx-border-color: black");
         draggableMaker.makeDraggable(classRepresentation);
     }
+
+    public String getClassName() {
+        return className.getText();
+    }
+
+    public void setClassName(String className) {
+        this.className.setText(className);
+    }
 }
