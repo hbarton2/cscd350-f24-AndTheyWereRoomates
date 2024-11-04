@@ -299,15 +299,16 @@ public class MainController {
         String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
         Line line = new Line();
-
+        line.setId(relationshipId); // Set unique ID for the line
 
         line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
         line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
-
         line.endXProperty().bind(toBox.layoutXProperty().subtract(20));
         line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
 
         Polygon arrowHead = new Polygon();
+        arrowHead.setId(relationshipId); // Set the same ID for the arrowhead
+
         arrowHead.getPoints().addAll(
                 -20.0, 0.0,
                 0.0, -10.0,
@@ -316,23 +317,20 @@ public class MainController {
                 -20.0, 0.0
         );
 
-
         switch (relationType) {
             case "Aggregation":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.TRANSPARENT);
                 line.endXProperty().bind(toBox.layoutXProperty().subtract(40));
                 line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-
                 arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
                 arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Composition":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.BLACK);
-                line.endXProperty().bind(toBox.layoutXProperty().subtract(40)); // Adjust this number to control how far left the arrowhead moves
+                line.endXProperty().bind(toBox.layoutXProperty().subtract(40));
                 line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-
                 arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
                 arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
@@ -344,14 +342,11 @@ public class MainController {
                         -20.0, -10.0
                 );
                 arrowHead.setFill(Color.BLACK);
-
-                line.endXProperty().bind(toBox.layoutXProperty().subtract(0));
+                line.endXProperty().bind(toBox.layoutXProperty());
                 line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-
                 arrowHead.layoutXProperty().bind(line.endXProperty());
                 arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
-
             case "Realization":
                 arrowHead.getPoints().clear();
                 arrowHead.getPoints().addAll(
@@ -361,19 +356,16 @@ public class MainController {
                 );
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.TRANSPARENT);
-
-
                 line.getStrokeDashArray().addAll(10.0, 10.0);
-
-                line.endXProperty().bind(toBox.layoutXProperty().subtract(0));
+                line.endXProperty().bind(toBox.layoutXProperty());
                 line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-
                 arrowHead.layoutXProperty().bind(line.endXProperty());
                 arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             default:
                 return;
         }
+
         canvas.getChildren().addAll(line, arrowHead);
     }
 
@@ -413,13 +405,15 @@ public class MainController {
     public void deleteRelation(ActionEvent event) {
         String fromClassName = fromComboBox.getValue();
         String toClassName = toComboBox.getValue();
+        String relationType = relationshipTypeComboBox.getValue();
 
-        if (fromClassName == null || toClassName == null) {
+        if (fromClassName == null || toClassName == null || relationType == null) {
             return;
         }
 
-        String relationshipId = fromClassName + "->" + toClassName;
+        String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
+        // Remove line and arrowhead with the specified ID
         canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
     }
 }
