@@ -1,193 +1,101 @@
+
 # cscd350-f24-AndTheyWereRoomates
 [Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
-# TABLE OF CONTENTS
-Help Command
-<br>Class.java 
-<br>Field.java
-<br>Menu.java
-<br>Method.java
-<br>Parameter.java
-<br>Relationship.java
-<br>Storage.java
 
-## Help Command
-#### Commands
-Help - Brings up a detailed list of usable commands 
-<br>Add - Add command allows you to create a new class, method, field, relationship, or parameter. Syntax: 'add [object to add]'
-<br>Delete - Delete command allows you to delete existing class, method, field, relationship. Syntax: 'add [object to delete]'
-<br>Rename - Rename command allows you to rename existing class, method, field. Syntax: 'add [object to rename]'
-<br>Save - Save command allows you to save existing class. Syntax: 'save [object]' 
-<br>Load - Load command allows you to load existing class. Syntax: 'load [object]'
-<br>List - List command allows you to list existing class. Syntax: 'list [object]'
+# CLI Instructions
+Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
 
-<br>Exit - Exit the program
-## Class.java 
+`Welcome to our UML Editor application
+If you would like a list of commands enter 'help'`
 
-#### Class(String name)
-Composed of:
-* Name
-* Method List
-* Field list
-* Relation List
-<br>Upon Creation, the input name is assigned to the Class.
-#### addMethod(String methodName) 
-Creates a new method to the class, stored in the Method List
+From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line (scroll down to the "_CLI Commands_") but if you want, the portion below will function as a basic walkthrough for some basic inputs to get you started and familiar with starting up the program.
 
-#### removeMethod(String methodName)
-Removes a method from the class in the Method List
+As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all of the associated commands.
 
-#### renameMethod(String oldName, String newName)
-Renames a method from the class in the Method List. 
-<br>Requires a new name for the method
+Once the program starts, the first thing you need to add is a class.
+Type 'add class ' and the name of the class you wish to add to create a class into the program. (ex: 'add class _apple_') and press the enter key.
 
-#### addRelation(final String source, final String dest)
-Creates a new relation to the class, stored in the Relation List
-<br>Requires a source and a destintination link
+You can add as many classes as you want, but you can't edit anything in the classes themselves. For example, if you try to add a method, you'll get a prompt telling you
 
-#### removeRelation(String sourceName, String dest)
-Removes a relation from the class in the Relation List. 
-<br>Requires both a source name and destination link
+`no class selected. Try: set class <class name>
+`
+<br> <br>
+You can't edit anything in a class until you set the class you want to edit. To set a class, type in 'set class ' and the name of an existing class you created (in this walkthrough: 'set class _apple_')
+Once you do that, you'll see a confirmation text saying the class was set, and from here you can edit the class. You can use the rest of the add, remove, and rename commands.
 
-#### getName()
-Returns the name of the class
-#### setName(String name)
-Sets the name of the class based on the name input
-#### addField(String name, String type)
-Creates a new field to the class, stored in the Field List
+To test that out, type 'add method ' and the name of the method you want to add. (ex: 'add method _banana_')
+You can test out the other add commands, but keep in mind that adding a field, relationship, and parameter requires two, two and three inputs respectively in order to work (Detailed explanation in CLI Commands)
 
-#### renameField(String old, String newName)
-Removes a field from the class in the Field List
+If you wish to edit another class, you'll need to type 'set class' with the name of another existing class that is created.
 
-#### Field findField( final String name)
-Finds a field from the class in the Field List and returns it if it exists
+To see what you've added to the currently set class, type 'list class' to see how your class is set up.
+What should display is everything added to the currently selected class.
+If you want to see all the classes you created, type 'list classes' and it'll display all currently created classes.
 
-#### hasField(final String name)
-Checks if a given field exists in the class
+Since you have something in the UML editor, to save the program, type 'save' to save everything you have into a json file.
+The program should prompt text asking to type a name for the file. Name the file whatever you want and press the enter key and you should see a json file with that name in the project folder.
 
-## Field.java 
-#### Field (final String name, final String type)
-Input takes a name and a type
-#### getName()
-Returns the name of the field
-#### getType()
-Returns the type of the field
-#### setName()
-Sets the name of the field based on the string input
-#### setType()
-Sets the name of the type based on the string input
+If you want to load the file, type 'load'. This will prompt text asking for a file name in the project folder. The program will then prompt you to type in the name of a json file.
+As a heads-up, you don't need to include ".json" in your input, the program looks for a json file with the name of what you input.
+Assuming you typed in the name of the file, all your classes and every attribute tied to the classes should be loaded. (although if you're following along, it might be hard to notice considering you presumably didn't add anything after saving)
 
-## Menu.java 
+If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
-#### runMenu()
-Runs the main program until the user types in 'Exit'
+This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
 
-#### inputCheck(String input)
-Reads in user inputs.
-<br> If input is 'help', it will display the help commands
-<br> If input is 'exit', it will close the program
-<br> If input is anything else, it will display 'Invalid number of arguements'
+# CLI Commands
+Down below are usable commands for the UML program. What's here should also display when you type _help_ in the command line
+## General Commands
+These commands don't fall under any category but are basic commands in the program
 
-#### commandCheck(String[] input)
-Executes the code based on the first input
-<br>Code checks based on inputs seperated by a space.
-Example: _Add_ ...
+_set class <class name>_ - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
 
-#### addCommand(String[] input)
-Executes the code based on the second input
-<br>Code checks based on inputs after the space.
-Example: Add _Method_
+_help_ - displays all possible commands
+_help <command>_ - displays expanded commands for the given command.
 
-#### addClass()
-Creates a class
-#### addMethod()
-Adds a method to the created class.
- Requires user to input a name.
-#### addParameter()
-Adds a parameter to the created class.  Requires user to input a name.
-#### addRelationship()
-Adds a relationship to the created class.  Requires user to input a name.
+_list class_ - Lists everything in the currently selected class
+_list classes_ - List all created classes
 
-#### helpCommand(String command)
-Displays detailed information for any commands.
-#### help()
-Creates a list of useable commands.
+_save_  - saves the current project as one json. It will ask you to input a name after typing in the command.
+_load_ - loads a json as a UML class. It will ask you to input a name after typing load (You do not need to include ".json" in your input. Just the file name)
 
-## Method.java 
-#### Method(final String name)
-Composed of:
-* Name
-* Parameter list
-<br>Upon Creation, the input name is assigned to the Method name.
+_exit_ - exits the program
 
-#### addParameter(final String parameterName, final String parameterType)
-Creates a new paramater to add to its list. Requires a name and a parameter type.
+## Add Commands
+These commands add things into the editor.
 
-#### changeParameter(final String oldParamName, final String newParamName, final String newParamType)
-Changes a parameter type in the method. Requires a new name and parameter type.
+_add class <name>_ - creates a class with that name
 
-#### deleteParameter(final String parameterName)
-Deletes a given parameter in the method. Requires a name.
+_add method <name>_ - creates a method with the given name
 
-#### deleteAllParameter()
-Completely wipes all parameters in the method.
+_add field <name> <type>_ - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
 
-#### hasParameter(final String parameterName)
-Checks if a given parameter exists in the method
+_add parameter <existing method> <name> <type>_ - creates a parameter with the given name and type. This requires a method to exist in order to work
 
-#### getName()
-Returns the name of the method
+_add relationship <existing class name> <different existing class name>_ - creates a relationship between two existing classes.
 
-#### setName(final String name)
-Sets the name of the method
+## Remove Commands
+These commands remove things in the editor.
 
-#### ArrayList<Parameter> getParameter()
-Returns the entire list of parameters in the method
+_remove class_ - removes the class that is currently set
 
-## Parameter.java 
-#### Parameter (final String name, final String type)
-Composed of:
-* Name
-* Type
-<br>Upon Creation, the Name and Type will be set.
+_remove method <name>_ - removes a method with the given name
 
-#### String getName()
-Returns the name of the parameter
+_remove field <name>_ - removes a field with the given name
 
-#### String getType()
-Returns the type of the parameter
+_remove parameter <existing method> <name>_ - removes a parameter with the given name
 
-#### setName(final String name)
-Sets the name for the parameter
+_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
 
-#### setType(final String type)
-Sets the type for the parameter
+## Rename Commands
+These commands rename things in the editor.
 
-## Relationship.java 
-#### Relationship (final String source, final String destination)
-Composed of:
-* Source
-* Destination
-<br>Upon Creation, the Source and Destination will be set.
+_rename class <old name> <new name>_ - renames the currently selected class to the new name
 
-#### getSource()
-Returns the source name for the Relationship
+_rename method <existing method> <new name>_ - renames a method in currently selected class to the new name
 
-#### getDestination()
-Returns the destination name for the Relationship
+_rename field <existing field> <new name> <new typ >_ - renames a method in currently selected class to the new name
 
-#### setSource(final String source)
-Sets the name of the source for the Relationship
+_rename parameter <existing method> <existing parameter > <new name> <new type >_ - renames a parameter in currently selected class to the new name
 
-#### setDestination(final String destination)
-Sets the destination for the Relationship
 
-## Storage.java 
-Contains a dedicated TreeMap to contain the classes
-#### addClass(String name)
-Adds a new class to the given storage
-
-#### deleteClass(String name)
-Deletes a class in the storage
-
-#### renameClass(String oldName, String newName)
-Renames a class in storage. Requires a new name
