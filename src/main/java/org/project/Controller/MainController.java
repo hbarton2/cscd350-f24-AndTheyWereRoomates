@@ -226,12 +226,18 @@ public class MainController {
                 String newFieldName = fieldNameInput.getText();
                 String newFieldType = dataTypeComboBox.getValue();
 
-                if (!newFieldName.isEmpty() && newFieldType != null) {
+                if (!newFieldName.isEmpty()  && newFieldType != null) {
                     String updatedField = newFieldType + " " + newFieldName;
                     int selectIndex = fieldList.getSelectionModel().getSelectedIndex();
                     fieldList.getItems().set(selectIndex, updatedField);
 
                     fieldNameInput.clear();
+
+                    // update storage
+                    String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
+                    umlController.fieldCommands.renameField(new String[]{"rename", "field", selectedClassBox.getName(), oldFieldName, newFieldName, newFieldType});
+                    System.out.println(umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
+                    System.out.println("Size of fields: " + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
                 }
             }
         }
