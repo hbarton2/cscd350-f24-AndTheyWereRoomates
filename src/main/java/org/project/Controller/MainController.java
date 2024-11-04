@@ -304,6 +304,9 @@ public class MainController {
             String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
             if (selectedMethod != null) {
+
+                umlController.methodCommands.removeMethod(new String[]{"delete", "method", selectedClassBox.getName(), selectedMethod});
+                System.out.println("Number of methods: " + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
                 methodList.getItems().remove(selectedMethod);
 
                 methodNameInput.clear();
@@ -321,6 +324,12 @@ public class MainController {
                 String newMethodName = methodNameInput.getText();
 
                 if (!newMethodName.isEmpty()) {
+                    String oldMethodName = selectedMethod.substring(0, selectedMethod.indexOf("("));
+
+                    umlController.methodCommands.renameMethod(new String[]{"rename", "method", selectedClassBox.getName(), oldMethodName, newMethodName});
+
+
+
                     int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
                     String updatedMethod = newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
                     methodList.getItems().set(selectedIndex, updatedMethod);
