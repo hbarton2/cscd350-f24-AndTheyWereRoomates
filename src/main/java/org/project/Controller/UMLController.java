@@ -40,7 +40,7 @@ public class UMLController {
 
         public void addClass(final String[] input) {
 
-            if(input.length <= 2) {
+            if(input.length != 3) {
                 System.out.println("Invalid number of arguments. Usage: add class <classname>");
             }
             else if(input.length == 3) {
@@ -55,7 +55,7 @@ public class UMLController {
 
         public void removeClass(String[] input) {
 
-            if(input.length <= 2) {
+            if(input.length != 3) {
                 System.out.println("Invalid number of arguments. Usage: remove class <classname>");
                 return;
             }
@@ -72,7 +72,7 @@ public class UMLController {
 
         public void renameClass(String[] input) {
 
-            if(input.length < 4) {
+            if(input.length != 4) {
                 System.out.println("Invalid number of arguments. Usage: rename class <old classname> <new classname>");
             }
 
@@ -104,7 +104,7 @@ public class UMLController {
         }
 
         public void addField(final String[] input) {
-            if(input.length < 5) {
+            if(input.length != 5) {
                 System.out.println("Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>");
             } else {
                 String className = input[2];
@@ -143,8 +143,8 @@ public class UMLController {
         }
 
         public void renameField(final String[] input) {
-            if(input.length < 5) {
-                System.out.println("Invalid number of arguments. Usage: rename field <className> <oldFieldName> <newFieldName>");
+            if(input.length != 6) {
+                System.out.println("Invalid number of arguments. Usage: rename field <className> <oldFieldName> <newFieldName> <field type>");
             } else {
                 String className = input[2];
                 String oldFieldName = input[3];
@@ -174,7 +174,7 @@ public class UMLController {
 
         // add(0) method(1) Class Name(2) Method Name(3)
         public void addMethod(final String[] input) {
-            if(input.length < 3) {
+            if(input.length != 4) {
                 System.out.println("Invalid number of arguments. Usage: add method <className> <newMethodName>");
             } else {
                 String className = input[2];
@@ -198,7 +198,7 @@ public class UMLController {
 
         // add(0) method(1) Class Name(2) Method Name(3)
         public void removeMethod(final String[] input) {
-            if(input.length < 3) {
+            if(input.length != 4) {
                 System.out.println("Invalid number of arguments. Usage: add method <className> <removingMethodName>");
             } else {
                 String className = input[2];
@@ -213,7 +213,7 @@ public class UMLController {
                     }else if(!classObject.hasMethod(methodName)){
                         System.out.println("Class doesn't contains this method");
                     }else{
-                        classObject.addMethod(methodName);
+                        classObject.removeMethod(methodName);
                         System.out.println("Method " + methodName + " removed");
                     }
                 }
@@ -222,7 +222,7 @@ public class UMLController {
 
         // add(0) method(1) Class Name(2) Method Name(3) NewMethod Name(4)
         public void renameMethod(final String[] input) {
-            if(input.length < 4) {
+            if(input.length != 5) {
                 System.out.println("Invalid number of arguments. Usage: add method <className> <oldMethodName> <newMethodName>");
             } else {
                 String className = input[2];
@@ -337,7 +337,7 @@ public class UMLController {
         }
 
         public void changeParameter(String[] input) {
-            if (input.length <= 6) {
+            if (input.length != 7) {
                 System.out.println("Invalid number of arguments. Usage: rename parameter <className> <methodName> <parameterName> <newParameterName> <newParameterType>");
                 return;
             }
@@ -401,6 +401,7 @@ public class UMLController {
             }else{
                 String source = input[2] ;
                 String destination = input[3];
+                String type = input[4];
 
 
                 //These if-statements check if the classes exist. If not the relationship cannot be created
@@ -411,7 +412,7 @@ public class UMLController {
 
 
 
-                srcClass.addRelation(source, destination);
+                srcClass.addRelation(source, destination,type);
                 System.out.println("Successful");
                 return true;
             }
@@ -425,6 +426,7 @@ public class UMLController {
 
                 String source = input[2];
                 String destination = input[3];
+                String type = input[4];
 
                 //Checks to see the source class exists
                 if(!storage.list.containsKey(source)) System.out.println("source class does not exist");
@@ -432,7 +434,7 @@ public class UMLController {
                 UMLModel.Class srcClass = storage.getClass(source);
                 UMLModel.Class destClass = storage.getClass(destination);
 
-                Boolean removed = srcClass.removeRelation(source, destination);
+                Boolean removed = srcClass.removeRelation(source, destination, type);
 
                 if(removed){
                     System.out.println("Successful");
