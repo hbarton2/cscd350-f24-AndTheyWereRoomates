@@ -185,27 +185,36 @@ public class UMLController {
         }
 
         // add(0) method(1) Class Name(2) Method Name(3)
-        public void addMethod(final String[] input) {
+        public String addMethod(final String[] input) {
+
+            String message = "";
+
             if(input.length != 4) {
                 System.out.println("Invalid number of arguments. Usage: add method <className> <newMethodName>");
+                message = "Invalid number of arguments. Usage: add method <className> <newMethodName>";
             } else {
                 String className = input[2];
                 if(!storage.list.containsKey(className)) {
                     System.out.println("Class " + className + " does not exist");
+                    message = "Class " + className + " does not exist";
                 } else {
                     String methodName = input[3];
                     UMLModel.Class classObject = storage.getClass(className);
 
                     if(classObject == null){
                         System.out.println("Class does not exist");
+                        message = "Class does not exist";
                     }else if(classObject.hasMethod(methodName)){
                         System.out.println("Class already contains this method");
+                        message = "Class already contains this method";
                     }else{
                         classObject.addMethod(methodName);
                         System.out.println("Method added. Method name: " + methodName);
                     }
                 }
             }
+
+            return message;
         }
 
         // add(0) method(1) Class Name(2) Method Name(3)
