@@ -1,7 +1,6 @@
 
 # cscd350-f24-AndTheyWereRoomates
 [Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
-
 #To Start
 You will be able to download the jar file that is either GUI or CLI.
 Or grab the exec in the releases tab in the GitHub
