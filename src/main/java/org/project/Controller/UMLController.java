@@ -53,20 +53,23 @@ public class UMLController {
             }
         }
 
-        public void removeClass(String[] input) {
+        public String removeClass(String[] input) {
 
             if(input.length != 3) {
                 System.out.println("Invalid number of arguments. Usage: remove class <classname>");
-                return;
+                return "Invalid number of arguments. Usage: remove class <classname>";
             }
             String className = input[2];
 
             if(storage.getClass(className) == null) {
                 System.out.println("Class does not exist");
+                return "Class does not exist";
             } else {
                 storage.deleteClass(className);
                 System.out.println("Class removed: " + className);
             }
+
+            return "";
 
         }
 
@@ -103,9 +106,11 @@ public class UMLController {
             this.storage = storage;
         }
 
-        public void addField(final String[] input) {
+        public String addField(final String[] input) {
+            String message = "";
             if(input.length != 5) {
                 System.out.println("Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>");
+                message = "Invalid number of arguments. Usage: add field <classname> <fieldname> <fieldtype>";
             } else {
                 String className = input[2];
                 String fieldName = input[3];
@@ -114,13 +119,20 @@ public class UMLController {
                 UMLModel.Class classObject = storage.getClass(className);
                 if(classObject == null){
                     System.out.println("Class does not exist");
+                    message = "Class does not exist";
+                }else if(fieldName.isEmpty() || fieldType.isEmpty()){
+                    System.out.println("Fieldname or fieldtype is empty");
+                    message = "Field name or field type is empty";
                 }else if(classObject.hasField(fieldName)){
                     System.out.println("Class already contains this field");
+                    message = "Class already contains this field";
                 }else{
                     classObject.addField(fieldName,fieldType);
                     System.out.println("Field added. Field name: " + fieldName + " Field type: " + fieldType);
                 }
             }
+
+            return message;
         }
 
         public void removeField(final String[] input) {

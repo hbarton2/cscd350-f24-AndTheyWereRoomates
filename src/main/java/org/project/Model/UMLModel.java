@@ -747,6 +747,11 @@ public class UMLModel {
         public void clearClasses(){
             list.clear();
         }
+
+        public boolean hasClass(final String name){
+            boolean result = list.containsKey(name);
+            return result;
+        }
     }
 
 }
