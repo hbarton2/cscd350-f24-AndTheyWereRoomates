@@ -165,11 +165,27 @@ public class MainController {
     @FXML
     public void handleAddField(ActionEvent event) {
         if(selectedClassBox != null){
+
+            if(dataTypeComboBox.getValue() == null){
+                showAlert("Error", "Chose the type of field");
+                return;
+            }
+
             String fieldName = fieldNameInput.getText();
             ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
-            fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+            String message = umlController.fieldCommands.addField(new String[]{"add", "field", selectedClassBox.getName(), fieldName, dataTypeComboBox.getValue()});
 
-            fieldNameInput.clear();
+
+            if(message.isEmpty()) {
+                fieldNameInput.clear();
+                fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+            }
+            else {
+                showAlert("Error", message);
+            }
+            System.out.println(umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
+
+
         }
     }
 
