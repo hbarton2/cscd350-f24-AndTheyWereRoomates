@@ -10,11 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    paths:
-      - 'src/**'
-  pull_request:
-    paths:
-      - 'src/**'
+    branches:
+      - Developer
+
   workflow_dispatch:
 
 jobs:
