@@ -6,6 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,6 +18,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import org.w3c.dom.Text;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -291,26 +294,26 @@ public class MainController {
         if (fromBox == null || toBox == null) {
             return;
         }
+        String fromClassName = ((TextField) fromBox.getChildren().get(0)).getText();
+        String toClassName = ((TextField) toBox.getChildren().get(0)).getText();
+        String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-        
         Line line = new Line();
 
 
         line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
         line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
 
-
-        line.endXProperty().bind(toBox.layoutXProperty());
+        line.endXProperty().bind(toBox.layoutXProperty().subtract(20));
         line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-
 
         Polygon arrowHead = new Polygon();
         arrowHead.getPoints().addAll(
-                0.0, 0.0,
-                -8.0, -5.0,
+                -20.0, 0.0,
                 0.0, -10.0,
-                8.0, -5.0,
-                0.0, 0.0
+                20.0, 0.0,
+                0.0, 10.0,
+                -20.0, 0.0
         );
 
 
@@ -318,36 +321,61 @@ public class MainController {
             case "Aggregation":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.TRANSPARENT);
+                line.endXProperty().bind(toBox.layoutXProperty().subtract(40));
+                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+
+                arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
+                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Composition":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.BLACK);
+                line.endXProperty().bind(toBox.layoutXProperty().subtract(40)); // Adjust this number to control how far left the arrowhead moves
+                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+
+                arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
+                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Generalization":
                 arrowHead.getPoints().clear();
                 arrowHead.getPoints().addAll(
+                        -20.0, 10.0,
                         0.0, 0.0,
-                        -10.0, -10.0,
-                        10.0, -10.0,
-                        0.0, 0.0
+                        -20.0, -10.0
                 );
                 arrowHead.setFill(Color.BLACK);
+
+                line.endXProperty().bind(toBox.layoutXProperty().subtract(0));
+                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+
+                arrowHead.layoutXProperty().bind(line.endXProperty());
+                arrowHead.layoutYProperty().bind(line.endYProperty());
+                break;
+
+            case "Realization":
+                arrowHead.getPoints().clear();
+                arrowHead.getPoints().addAll(
+                        -20.0, 10.0,
+                        0.0, 0.0,
+                        -20.0, -10.0
+                );
+                arrowHead.setStroke(Color.BLACK);
+                arrowHead.setFill(Color.TRANSPARENT);
+
+
+                line.getStrokeDashArray().addAll(10.0, 10.0);
+
+                line.endXProperty().bind(toBox.layoutXProperty().subtract(0));
+                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+
+                arrowHead.layoutXProperty().bind(line.endXProperty());
+                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             default:
                 return;
         }
-
-
-        arrowHead.layoutXProperty().bind(line.endXProperty());
-        arrowHead.layoutYProperty().bind(line.endYProperty());
-
-
-        line.endXProperty().addListener((obs, oldEndX, newEndX) -> updateArrowHeadRotation(line, arrowHead));
-        line.endYProperty().addListener((obs, oldEndY, newEndY) -> updateArrowHeadRotation(line, arrowHead));
-
         canvas.getChildren().addAll(line, arrowHead);
     }
-
 
     @FXML
     public void addRelation(ActionEvent event) {
@@ -383,5 +411,15 @@ public class MainController {
 
     @FXML
     public void deleteRelation(ActionEvent event) {
+        String fromClassName = fromComboBox.getValue();
+        String toClassName = toComboBox.getValue();
+
+        if (fromClassName == null || toClassName == null) {
+            return;
+        }
+
+        String relationshipId = fromClassName + "->" + toClassName;
+
+        canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
     }
 }
