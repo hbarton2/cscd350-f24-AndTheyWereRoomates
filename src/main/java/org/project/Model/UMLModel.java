@@ -68,7 +68,7 @@ public class UMLModel {
             }
             if (matchingMethods.size() == 1) {
                 methodlist.remove(matchingMethods.get(0));
-                System.out.println("Removed method ");
+
                 return true;
             }
 
@@ -89,7 +89,7 @@ public class UMLModel {
             System.out.println("Removed successfully");
             return true;
         }
-        private String overloadHelper(Method method) {
+        private String overloadHelper(final Method method) {
             String data = method.getName() + "(";
             ArrayList<Parameter> params = method.getParameter();
 
@@ -138,14 +138,14 @@ public class UMLModel {
          * @return - True if the relationship was removed successfully, otherwise returns false.
          * @throws IllegalArgumentException if the sourceName or destination is null or empty.
          */
-        public boolean removeRelation(final String sourceName, final String dest) {
-            if (sourceName == null || sourceName.isEmpty() || dest == null || dest.isEmpty()) {
+        public boolean removeRelation(final String sourceName, final String dest, final String type) {
+            if (sourceName == null || sourceName.isEmpty() || dest == null || dest.isEmpty()|| type == null || type.isEmpty()) {
                 throw new IllegalArgumentException("Invalid sourceName or destName, try again");
             }
             Iterator<Relationship> iterator = relation.iterator();
             while (iterator.hasNext()) {
                 Relationship relationship = iterator.next();
-                if (relationship.getSource().equals(sourceName) && relationship.getDestination().equals(dest)) {
+                if (relationship.getSource().equals(sourceName) && relationship.getDestination().equals(dest) && relationship.getType().equals(type)) {
                     iterator.remove();
                     return true;
                 }
@@ -263,7 +263,7 @@ public class UMLModel {
          * @return true if the relationships was added successfully, otherwise returns false.
          * @throws IllegalArgumentException if the source or destination is null or empty.
          */
-        public boolean hasMethod(String methodName){
+        public boolean hasMethod(final String methodName){
             for(Method method: methodlist){
                 if(method.getName().equals(methodName)){
                     return true;
@@ -273,7 +273,7 @@ public class UMLModel {
             return false;
         }
 
-        public Method getMethod(String methodName){
+        public Method getMethod(final String methodName){
             for(Method method: methodlist){
                 if(method.getName().equals(methodName) && (method.getParameter().isEmpty())) {
                     return method;
@@ -292,11 +292,12 @@ public class UMLModel {
          * @return true if the relationships was added successfully, otherwise returns false.
          * @throws IllegalArgumentException if the source or destination is null or empty.
          */
-        public boolean addRelation(final String source, final String dest){
+        public boolean addRelation(final String source, final String dest, final String type){
             if(source == null || source.isEmpty()) throw new IllegalArgumentException("Invalid source, try again");
             if(dest == null || dest.isEmpty()) throw new IllegalArgumentException("Invalid destination, try again");
+            if(type == null || type.isEmpty()) throw new IllegalArgumentException("Invalid destination, try again");
 
-            return relation.add(new Relationship(source, dest));
+            return relation.add(new Relationship(source, dest, type));
 
 
         }
@@ -557,6 +558,7 @@ public class UMLModel {
         }
     }
     public static class Relationship {
+
         /**
          * The source of the relationship.
          */
@@ -565,15 +567,17 @@ public class UMLModel {
          * The destination of the relationship.
          */
         private String destination;
+        private String type;
 
         /**
          * Constructs a new Relationship.
          * @param source - The source of the relationship.
          * @param destination - The destination of the relatioship.
          */
-        public Relationship (final String source, final String destination){
+        public Relationship (final String source, final String destination, final String type){
             this.source = source;
             this.destination = destination;
+            this.type = type;
         }
 
         /**
@@ -591,6 +595,9 @@ public class UMLModel {
         public String getDestination(){
             return this.destination;
         }
+        public String getType(){
+            return this.type;
+        }
 
         /**
          * Sets the source of the relationship.
@@ -607,17 +614,20 @@ public class UMLModel {
         public void setDestination(final String destination) {
             this.destination = destination;
         }
+        public void setType(final String type) {
+            this.type = type;
+        }
     }
     public static class Load {
 
         private Storage storage;
 
 
-        public Load(Storage storage){
+        public Load(final Storage storage){
             this.storage = storage;
         }
 
-        public boolean Load(String fileName) {
+        public boolean Load(final String fileName) {
             if(fileName == null){
                 System.out.println("The class: " + fileName + " does not exist");
             }
@@ -640,12 +650,12 @@ public class UMLModel {
 
 
 
-        public Save(Storage storage){
+        public Save(final Storage storage){
             this.storage = storage;
         }
 
 
-        public boolean save(String fileName){
+        public boolean save(final String fileName){
 
             try{
                 FileWriter writer = new FileWriter(fileName);
@@ -680,7 +690,7 @@ public class UMLModel {
          * @param name of the class being added.
          * @throws IllegalArgumentException if name is null or empty.
          */
-        public boolean addClass(String name) throws IllegalArgumentException{
+        public boolean addClass(final String name) throws IllegalArgumentException{
             if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
             list.put(name, new UMLModel.Class(name));
             return true;
@@ -700,7 +710,7 @@ public class UMLModel {
          * @param name of the class being removed.
          * @throws IllegalArgumentException thrown if name is empty or null.
          */
-        public boolean deleteClass(String name) throws IllegalArgumentException{
+        public boolean deleteClass(final String name) throws IllegalArgumentException{
             if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name, try again");
             if (list.get(name) == null){
                 System.out.println("Name of class not in list");
@@ -717,7 +727,7 @@ public class UMLModel {
          * @param newName is the new name of the class.
          * @throws IllegalArgumentException If either oldName or newName are null or empty.
          */
-        public boolean renameClass(String oldName, String newName) throws IllegalArgumentException{
+        public boolean renameClass(final String oldName,final String newName) throws IllegalArgumentException{
             if(oldName == null || oldName.isEmpty()) throw new IllegalArgumentException("Invalid old name, try again");
             if(newName == null || newName.isEmpty()) throw new IllegalArgumentException("Invalid new name, try again");
             if(list.get(oldName) == null){

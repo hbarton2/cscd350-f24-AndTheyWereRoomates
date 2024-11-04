@@ -8,6 +8,7 @@ import org.project.View.GUIView;
 public class Main {
     public static void main(String[] args)  {
 
+
         if(args.length == 0 || args[0].equals("--gui")) {
             GUIView.main(args);
         }
@@ -17,5 +18,6 @@ public class Main {
         else {
             System.out.println("Invalid command");
         }
+
     }
 }
