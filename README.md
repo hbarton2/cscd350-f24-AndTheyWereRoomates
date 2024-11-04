@@ -1,250 +1,148 @@
+
 # cscd350-f24-AndTheyWereRoomates
 [Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
+#To Start
+You will be able to download the jar file that is either GUI or CLI.
+Or grab the exec in the releases tab in the GitHub
 
-# Command Line Interface Instructions
-Upon selecting CLI, you'll be brought to the Command Line Interface.
+# CLI Instructions
+Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
 
-## List of Commands
-These are the commands you type into the command line interface add/adjust code in the UML.
-If you wish to pull up a menu to see commands while running the UML editor, type ```help``` into the command window to pull up a list of commands.
+`Welcome to our UML Editor application
+If you would like a list of commands enter 'help'`
 
-### Class Commands
-These are the commands you use
-- Add Class -
-  <br>```add class (class name)```
-  <br>This creates a new class
-- Remove Class -
-  <br>```remove class (class name)```
-  <br>This removes an existing class with the name
-- Rename Class -
-  <br>```rename class (old class name) (new class name)```
-  <br>This renames an existing class with the new name
-### Field Commands
-**To use any of the Field commands, there needs to be an existing class first**
-- Add Field -
-  <br>```add field (existing class name) (field name) (field type)```
-  <br>This creates a field in an existing class. This requires a field type to be clarified.
-- Remove Field -
-  <br>```remove field (existing class name) (field name)  (field type)```
-  <br>This removes an existing field in an existing class
-- Rename Field -
-  <br>```rename field (existing class name) (old field name) (new field name)```
-  <br>This renames an existing field in an existing class with the new name
-### Method Commands
-**To use any of the Method commands, there needs to be an existing class first**
-- Add Method -
-  <br>```add method (existing class name) (method name)```
-  <br>This creates a method in an existing class
-- Remove Method -
-  <br>```remove method (existing class name) (method name)```
-  <br>This removes an existing method in an existing class
-- Rename Method -
-  <br>```rename field (existing class name) (old method name) (new method name)```
-  <br>This renames an existing method in an existing class with the new name
-### Parameter Commands
-**To use any of the Parameter commands, there needs to be an existing class and an existing method**
-- Add Parameter -
-  <br>a```dd parameter (existing class name) (existing method name) (parameter name) (parameter type)```
-  <br>This creates a parameter in an existing method in an existing class
-- Remove Parameter -
-  <br>```remove parameter (existing class name) (existing method name) (parameter name)```
-  <br>This removes an existing parameter in an existing method in an existing class
-- Rename Parameter -
-  <br>```remove parameter (existing class name) (existing method name) (old parameter name) (new parameter name) (new parameter type)```
-  <br>This renames and changes parameter type of an existing parameter in an existing method in an existing class
-### Relationship Commands
-**To use any of the Relationship commands, there needs to be two existing classes**
-- Add Relationship -
-  <br>```add relationship (class source) (class destination)```
-  <br>This defines a connection between one class to another
-- Remove Relationship -
-  <br>```remove relationship (class source)```
-  <br>This removes a connection between one class to another
+From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line (scroll down to the "_CLI Commands_") but if you want, the portion below will function as a basic walkthrough for some basic inputs to get you started and familiar with starting up the program.
 
-### Misc. Commands
-These are commands that don't fall under any given category and are for actions such as save and load.
-WIP
+As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all of the associated commands.
 
-**-Editor note: Everything Below here is more than likely to be gutted and removed as it's covering stuff from Sprint 1.**
+Once the program starts, the first thing you need to add is a class.
+Type 'add class ' and the name of the class you wish to add to create a class into the program. (ex: 'add class _apple_') and press the enter key.
 
-## Help Command
-#### Commands
-Help - Brings up a detailed list of usable commands 
-<br>Add - Add command allows you to create a new class, method, field, relationship, or parameter. Syntax: 'add [object to add]'
-<br>Delete - Delete command allows you to delete existing class, method, field, relationship. Syntax: 'add [object to delete]'
-<br>Rename - Rename command allows you to rename existing class, method, field. Syntax: 'add [object to rename]'
-<br>Save - Save command allows you to save existing class. Syntax: 'save [object]' 
-<br>Load - Load command allows you to load existing class. Syntax: 'load [object]'
-<br>List - List command allows you to list existing class. Syntax: 'list [object]'
+You can add as many classes as you want, but you can't edit anything in the classes themselves. For example, if you try to add a method, you'll get a prompt telling you
 
-<br>Exit - Exit the program
-## Class.java 
+`no class selected. Try: set class <class name>
+`
+<br> <br>
+You can't edit anything in a class until you set the class you want to edit. To set a class, type in 'set class ' and the name of an existing class you created (in this walkthrough: 'set class _apple_')
+Once you do that, you'll see a confirmation text saying the class was set, and from here you can edit the class. You can use the rest of the add, remove, and rename commands.
 
-#### Class(String name)
-Composed of:
-* Name
-* Method List
-* Field list
-* Relation List
-<br>Upon Creation, the input name is assigned to the Class.
-#### addMethod(String methodName) 
-Creates a new method to the class, stored in the Method List
+To test that out, type 'add method ' and the name of the method you want to add. (ex: 'add method _banana_')
+You can test out the other add commands, but keep in mind that adding a field, relationship, and parameter requires two, two and three inputs respectively in order to work (Detailed explanation in CLI Commands)
 
-#### removeMethod(String methodName)
-Removes a method from the class in the Method List
+If you wish to edit another class, you'll need to type 'set class' with the name of another existing class that is created.
 
-#### renameMethod(String oldName, String newName)
-Renames a method from the class in the Method List. 
-<br>Requires a new name for the method
+To see what you've added to the currently set class, type 'list class' to see how your class is set up.
+What should display is everything added to the currently selected class.
+If you want to see all the classes you created, type 'list classes' and it'll display all currently created classes.
 
-#### addRelation(final String source, final String dest)
-Creates a new relation to the class, stored in the Relation List
-<br>Requires a source and a destintination link
+Since you have something in the UML editor, to save the program, type 'save' to save everything you have into a json file.
+The program should prompt text asking to type a name for the file. Name the file whatever you want and press the enter key and you should see a json file with that name in the project folder.
 
-#### removeRelation(String sourceName, String dest)
-Removes a relation from the class in the Relation List. 
-<br>Requires both a source name and destination link
+If you want to load the file, type 'load'. This will prompt text asking for a file name in the project folder. The program will then prompt you to type in the name of a json file.
+As a heads-up, you don't need to include ".json" in your input, the program looks for a json file with the name of what you input.
+Assuming you typed in the name of the file, all your classes and every attribute tied to the classes should be loaded. (although if you're following along, it might be hard to notice considering you presumably didn't add anything after saving)
 
-#### getName()
-Returns the name of the class
-#### setName(String name)
-Sets the name of the class based on the name input
-#### addField(String name, String type)
-Creates a new field to the class, stored in the Field List
+If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
-#### renameField(String old, String newName)
-Removes a field from the class in the Field List
+This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
 
-#### Field findField( final String name)
-Finds a field from the class in the Field List and returns it if it exists
+# CLI Commands
+Down below are usable commands for the UML program. What's here should also display when you type _help_ in the command line
+## General Commands
+These commands don't fall under any category but are basic commands in the program
 
-#### hasField(final String name)
-Checks if a given field exists in the class
+_set class <class name>_ - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
 
-## Field.java 
-#### Field (final String name, final String type)
-Input takes a name and a type
-#### getName()
-Returns the name of the field
-#### getType()
-Returns the type of the field
-#### setName()
-Sets the name of the field based on the string input
-#### setType()
-Sets the name of the type based on the string input
+_help_ - displays all possible commands
+_help <command>_ - displays expanded commands for the given command.
 
-## Menu.java 
+_list class_ - Lists everything in the currently selected class
+_list classes_ - List all created classes
 
-#### runMenu()
-Runs the main program until the user types in 'Exit'
+_save_  - saves the current project as one json. It will ask you to input a name after typing in the command.
+_load_ - loads a json as a UML class. It will ask you to input a name after typing load (You do not need to include ".json" in your input. Just the file name)
 
-#### inputCheck(String input)
-Reads in user inputs.
-<br> If input is 'help', it will display the help commands
-<br> If input is 'exit', it will close the program
-<br> If input is anything else, it will display 'Invalid number of arguements'
+_exit_ - exits the program
 
-#### commandCheck(String[] input)
-Executes the code based on the first input
-<br>Code checks based on inputs seperated by a space.
-Example: _Add_ ...
+## Add Commands
+These commands add things into the editor.
 
-#### addCommand(String[] input)
-Executes the code based on the second input
-<br>Code checks based on inputs after the space.
-Example: Add _Method_
+_add class <name>_ - creates a class with that name
 
-#### addClass()
-Creates a class
-#### addMethod()
-Adds a method to the created class.
- Requires user to input a name.
-#### addParameter()
-Adds a parameter to the created class.  Requires user to input a name.
-#### addRelationship()
-Adds a relationship to the created class.  Requires user to input a name.
+_add method <name>_ - creates a method with the given name
 
-#### helpCommand(String command)
-Displays detailed information for any commands.
-#### help()
-Creates a list of useable commands.
+_add field <name> <type>_ - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
 
-## Method.java 
-#### Method(final String name)
-Composed of:
-* Name
-* Parameter list
-<br>Upon Creation, the input name is assigned to the Method name.
+_add parameter <existing method> <name> <type>_ - creates a parameter with the given name and type. This requires a method to exist in order to work
 
-#### addParameter(final String parameterName, final String parameterType)
-Creates a new paramater to add to its list. Requires a name and a parameter type.
+_add relationship <existing class name> <different existing class name>_ - creates a relationship between two existing classes.
 
-#### changeParameter(final String oldParamName, final String newParamName, final String newParamType)
-Changes a parameter type in the method. Requires a new name and parameter type.
+## Remove Commands
+These commands remove things in the editor.
 
-#### deleteParameter(final String parameterName)
-Deletes a given parameter in the method. Requires a name.
+_remove class_ - removes the class that is currently set
 
-#### deleteAllParameter()
-Completely wipes all parameters in the method.
+_remove method <name>_ - removes a method with the given name
 
-#### hasParameter(final String parameterName)
-Checks if a given parameter exists in the method
+_remove field <name>_ - removes a field with the given name
 
-#### getName()
-Returns the name of the method
+_remove parameter <existing method> <name>_ - removes a parameter with the given name
 
-#### setName(final String name)
-Sets the name of the method
+_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
 
-#### ArrayList<Parameter> getParameter()
-Returns the entire list of parameters in the method
+## Rename Commands
+These commands rename things in the editor.
 
-## Parameter.java 
-#### Parameter (final String name, final String type)
-Composed of:
-* Name
-* Type
-<br>Upon Creation, the Name and Type will be set.
+_rename class <old name> <new name>_ - renames the currently selected class to the new name
 
-#### String getName()
-Returns the name of the parameter
+_rename method <existing method> <new name>_ - renames a method in currently selected class to the new name
 
-#### String getType()
-Returns the type of the parameter
+_rename field <existing field> <new name> <new typ >_ - renames a method in currently selected class to the new name
 
-#### setName(final String name)
-Sets the name for the parameter
+_rename parameter <existing method> <existing parameter > <new name> <new type >_ - renames a parameter in currently selected class to the new name
 
-#### setType(final String type)
-Sets the type for the parameter
 
-## Relationship.java 
-#### Relationship (final String source, final String destination)
-Composed of:
-* Source
-* Destination
-<br>Upon Creation, the Source and Destination will be set.
+# GUI Instructions
 
-#### getSource()
-Returns the source name for the Relationship
+The UML Editor application also provides a Graphical User Interface (GUI) for users who prefer a visual editing experience. Below are instructions for navigating and using the GUI.
 
-#### getDestination()
-Returns the destination name for the Relationship
+## Getting Started with the GUI
 
-#### setSource(final String source)
-Sets the name of the source for the Relationship
+Requirements:
+- Java 17 or higher
+- JVM
 
-#### setDestination(final String destination)
-Sets the destination for the Relationship
+1. **Launching the Application in GUI Mode**:
+    - Start the UML Editor in GUI mode by double clicking the JAR file. You should see a blank canvas area on the left, where classes will appear, and a control panel on the right.
 
-## Storage.java 
-Contains a dedicated TreeMap to contain the classes
-#### addClass(String name)
-Adds a new class to the given storage
+2. **Adding a Class**:
+    - To add a new class, click the **Add Class** button on the top right of the control panel. A new class box will appear on the canvas.
+    - Type the desired class name in the **Class Name** field and click **Set Class Name** to assign it.
 
-#### deleteClass(String name)
-Deletes a class in the storage
+3. **Editing Class Properties**:
+    - **Adding Fields**: Enter a field name in the **Field Name** input box, select a data type from the dropdown, and click **Add**. The field will be added to the selected class.
+    - **Adding Methods**: Type the method name in the **Method Name** box and click **Add**. The method will appear within the selected class box.
+    - **Adding Parameters**: To add parameters to a method, select the method first. Then, specify the parameter name and type in the **Add Parameter** section and click **Add**.
 
-#### renameClass(String oldName, String newName)
-Renames a class in storage. Requires a new name
+4. **Renaming and Deleting Fields or Methods**:
+    - **Rename Field/Method**: Select the field or method, modify the name in the input box, and click **Rename Field** or **Rename Method**.
+    - **Delete Field/Method**: Select the field or method and click **Delete Field** or **Delete Method** to remove it.
+
+5. **Managing Relationships**:
+    - **Add Relationship**: Select the classes involved from the **From** and **To** dropdowns, then choose a relationship type (e.g., Aggregation, Composition, Generalization, Realization) and click **Add Relation**.
+    - **Delete Relationship**: To remove a relationship, select the involved classes and the relationship type, then click **Delete Relation**.
+
+6. **Saving and Loading Projects**:
+    - To save your work, go to the **File** menu, select **Save**, and enter a filename. The project will be saved as a JSON file.
+    - To load an existing project, select **Load** from the **File** menu and choose the saved file. The UML diagram will be restored on the canvas.
+
+7. **Exit the Application**:
+    - To close the application, select **Exit** from the **File** menu.
+
+## Additional Tips
+
+- **Drag and Drop**: You can arrange classes on the canvas by dragging them to your desired position (Drag by the border).
+- **Highlighting Selected Class**: When you click on a class, it will be highlighted, indicating that it is the currently selected class for editing in the control panel.
+- **Visual Feedback**: Any changes made in the control panel will reflect immediately on the canvas.
+
+Refer to the CLI instructions if you prefer to work with commands. Both the GUI and CLI are synced, allowing flexibility in how you interact with the UML Editor.

@@ -1,13 +1,23 @@
 package org.project;
 
-import java.io.IOException;
+import org.project.View.CLIView;
+import org.project.View.GUIView;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args)  {
-        Storage storage = new Storage();
-        Menu menu = new Menu(storage);
-        menu.runMenu();
+
+
+        if(args.length == 0 || args[0].equals("--gui")) {
+            GUIView.main(args);
+        }
+        else if (args[0].equals("--cli")) {
+            new CLIView().runMenu();
+        }
+        else {
+            System.out.println("Invalid command");
+        }
+
     }
 }
