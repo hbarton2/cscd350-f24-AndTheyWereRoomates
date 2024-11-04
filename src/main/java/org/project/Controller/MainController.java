@@ -205,8 +205,11 @@ public class MainController {
         if (selectedClassBox != null) {
             ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
             String selectedField = fieldList.getSelectionModel().getSelectedItem();
+            String fieldType = selectedField.split(" ")[0].toLowerCase().trim();
+            String fieldName = selectedField.split(" ")[1].toLowerCase().trim();
 
             if (selectedField != null) {
+                umlController.fieldCommands.removeField(new String[]{"add", "field", selectedClassBox.getName(), fieldName, fieldType}); // "add field [class name] [field name] [field type]"
                 fieldList.getItems().remove(selectedField);
             }
         }
