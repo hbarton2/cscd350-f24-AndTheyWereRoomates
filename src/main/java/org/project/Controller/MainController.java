@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -52,6 +54,9 @@ public class MainController {
 
     @FXML
     private ComboBox<String> toComboBox;
+
+    @FXML
+    private ComboBox<String> relationshipTypeComboBox;
 
     @FXML
     private TextField className;
@@ -281,10 +286,99 @@ public class MainController {
             }
         }
     }
+    @FXML
+    public void drawRelationLine(VBox fromBox, VBox toBox, String relationType) {
+        if (fromBox == null || toBox == null) {
+            return;
+        }
+
+        
+        Line line = new Line();
+
+
+        line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
+        line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
+
+
+        line.endXProperty().bind(toBox.layoutXProperty());
+        line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+
+
+        Polygon arrowHead = new Polygon();
+        arrowHead.getPoints().addAll(
+                0.0, 0.0,
+                -8.0, -5.0,
+                0.0, -10.0,
+                8.0, -5.0,
+                0.0, 0.0
+        );
+
+
+        switch (relationType) {
+            case "Aggregation":
+                arrowHead.setStroke(Color.BLACK);
+                arrowHead.setFill(Color.TRANSPARENT);
+                break;
+            case "Composition":
+                arrowHead.setStroke(Color.BLACK);
+                arrowHead.setFill(Color.BLACK);
+                break;
+            case "Generalization":
+                arrowHead.getPoints().clear();
+                arrowHead.getPoints().addAll(
+                        0.0, 0.0,
+                        -10.0, -10.0,
+                        10.0, -10.0,
+                        0.0, 0.0
+                );
+                arrowHead.setFill(Color.BLACK);
+                break;
+            default:
+                return;
+        }
+
+
+        arrowHead.layoutXProperty().bind(line.endXProperty());
+        arrowHead.layoutYProperty().bind(line.endYProperty());
+
+
+        line.endXProperty().addListener((obs, oldEndX, newEndX) -> updateArrowHeadRotation(line, arrowHead));
+        line.endYProperty().addListener((obs, oldEndY, newEndY) -> updateArrowHeadRotation(line, arrowHead));
+
+        canvas.getChildren().addAll(line, arrowHead);
+    }
 
 
     @FXML
     public void addRelation(ActionEvent event) {
+        String relationType = relationshipTypeComboBox.getValue();
+        String fromClassName = fromComboBox.getValue();
+        String toClassName = toComboBox.getValue();
+
+        if (fromClassName == null || toClassName == null || fromClassName.equals(toClassName)) {
+            return;
+        }
+        VBox fromBox = findClassName(fromClassName);
+        VBox toBox = findClassName(toClassName);
+
+        drawRelationLine(fromBox, toBox, relationType);
+    }
+    private void updateArrowHeadRotation(Line line, Polygon arrowHead) {
+        double angle = Math.atan2(line.getEndY() - line.getStartY(), line.getEndX() - line.getStartX()) * (180 / Math.PI);
+        arrowHead.setRotate(angle);
+    }
+
+    private VBox findClassName(String classBoxName) {
+        for (javafx.scene.Node node : canvas.getChildren()) {
+            if (node instanceof VBox) {
+                VBox classBox = (VBox) node;
+                TextField className = (TextField) classBox.getChildren().get(0);
+                if (className.getText().equals(classBoxName)) {
+                    return classBox;
+                }
+            }
+        }
+        return null;
     }
 
     @FXML
