@@ -24,6 +24,7 @@ import org.project.View.ClassBox;
 import org.w3c.dom.Text;
 
 import java.awt.*;
+import javafx.scene.control.Label;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -356,20 +357,30 @@ public class MainController {
         if (fromBox == null || toBox == null) {
             return;
         }
-        String fromClassName = ((TextField) fromBox.getChildren().get(0)).getText();
-        String toClassName = ((TextField) toBox.getChildren().get(0)).getText();
+
+        Label fromClassNameLabel = (Label) fromBox.getChildren().get(0);
+        Label toClassNameLabel = (Label) toBox.getChildren().get(0);
+
+
+        String fromClassName = fromClassNameLabel.getText();
+        String toClassName = toClassNameLabel.getText();
         String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
+
         Line line = new Line();
-        line.setId(relationshipId); // Set unique ID for the line
+        line.setId(relationshipId);
+
 
         line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
         line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
+
+
         line.endXProperty().bind(toBox.layoutXProperty().subtract(20));
         line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
 
         Polygon arrowHead = new Polygon();
-        arrowHead.setId(relationshipId); // Set the same ID for the arrowhead
+        arrowHead.setId(relationshipId);
+
 
         arrowHead.getPoints().addAll(
                 -20.0, 0.0,
@@ -383,20 +394,13 @@ public class MainController {
             case "Aggregation":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.TRANSPARENT);
-                line.endXProperty().bind(toBox.layoutXProperty().subtract(40));
-                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-                arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
-                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Composition":
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.BLACK);
-                line.endXProperty().bind(toBox.layoutXProperty().subtract(40));
-                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-                arrowHead.layoutXProperty().bind(line.endXProperty().add(arrowHead.getBoundsInLocal().getWidth() / 2));
-                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Generalization":
+
                 arrowHead.getPoints().clear();
                 arrowHead.getPoints().addAll(
                         -20.0, 10.0,
@@ -404,12 +408,9 @@ public class MainController {
                         -20.0, -10.0
                 );
                 arrowHead.setFill(Color.BLACK);
-                line.endXProperty().bind(toBox.layoutXProperty());
-                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-                arrowHead.layoutXProperty().bind(line.endXProperty());
-                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             case "Realization":
+
                 arrowHead.getPoints().clear();
                 arrowHead.getPoints().addAll(
                         -20.0, 10.0,
@@ -419,17 +420,17 @@ public class MainController {
                 arrowHead.setStroke(Color.BLACK);
                 arrowHead.setFill(Color.TRANSPARENT);
                 line.getStrokeDashArray().addAll(10.0, 10.0);
-                line.endXProperty().bind(toBox.layoutXProperty());
-                line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
-                arrowHead.layoutXProperty().bind(line.endXProperty());
-                arrowHead.layoutYProperty().bind(line.endYProperty());
                 break;
             default:
                 return;
         }
 
+        arrowHead.layoutXProperty().bind(line.endXProperty());
+        arrowHead.layoutYProperty().bind(line.endYProperty());
+
         canvas.getChildren().addAll(line, arrowHead);
     }
+
 
     @FXML
     public void addRelation(ActionEvent event) {
@@ -454,8 +455,8 @@ public class MainController {
         for (javafx.scene.Node node : canvas.getChildren()) {
             if (node instanceof VBox) {
                 VBox classBox = (VBox) node;
-                TextField className = (TextField) classBox.getChildren().get(0);
-                if (className.getText().equals(classBoxName)) {
+                 Label classNameLabel = (Label) classBox.getChildren().get(0);
+                if (classNameLabel.getText().equals(classBoxName)) {
                     return classBox;
                 }
             }
@@ -475,11 +476,9 @@ public class MainController {
 
         String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-        // Remove line and arrowhead with the specified ID
         canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
     }
 
-    // Helper method to show an alert
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
