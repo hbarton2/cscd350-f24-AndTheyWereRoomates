@@ -60,7 +60,7 @@ public class MainController {
     @FXML
     private TextField relationshipInput;
 
-    private VBox selectedClassBox = null;
+    private ClassBox selectedClassBox = null;
 
     private ObservableList<String> classNames = FXCollections.observableArrayList();
 
@@ -80,10 +80,19 @@ public class MainController {
     public void createClass(ActionEvent event) {
 
         ClassBox classBox = new ClassBox("New Class #" + umlController.getStorage().getClasses().size());
-        canvas.getChildren().add(classBox);
+        classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-        classBox.setLayoutX(50);
-        classBox.setLayoutY(50);
+        // Calculate the center of the canvas
+        double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
+        double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+
+        // Set the position of the classBox to the center of the canvas
+        classBox.setLayoutX(centerX);
+        classBox.setLayoutY(centerY);
+
+//        fromComboBox.getItems().add(classBox.getName());
+//        toComboBox.getItems().add(classBox.getName());
+        canvas.getChildren().add(classBox);
 
 //        try {
 //            FXMLLoader loader = new FXMLLoader(getClass().getResource("/classNode.fxml"));
@@ -122,7 +131,7 @@ public class MainController {
         }
     }
 
-    private void selectClassBox(VBox classBox) {
+    private void selectClassBox(ClassBox classBox) {
         if (selectedClassBox != null) {
             selectedClassBox.setEffect(null);
         }
@@ -135,8 +144,8 @@ public class MainController {
         highlight.setHeight(10);
         selectedClassBox.setEffect(highlight);
 
-        TextField classNameField = (TextField) selectedClassBox.getChildren().get(0);
-        classNameInput.setText(classNameField.getText());
+        Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
+        classNameInput.setText(classNameLabel.getText());
     }
 
     @FXML

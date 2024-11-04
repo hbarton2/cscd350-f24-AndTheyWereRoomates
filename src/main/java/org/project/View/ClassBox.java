@@ -6,11 +6,12 @@ import javafx.scene.layout.VBox;
 import org.project.Controller.DraggableMaker;
 
 public class ClassBox extends VBox {
+    private Label classNameLabel;
     private final ListView<String> fieldsListView;
     private final ListView<String> methodsListView;
 
     public ClassBox(String className) {
-        Label classNameLabel = new Label(className);
+        classNameLabel = new Label(className);
         fieldsListView = new ListView<>();
         methodsListView = new ListView<>();
 
@@ -30,5 +31,9 @@ public class ClassBox extends VBox {
 
     public void addMethod(String method) {
         methodsListView.getItems().add(method);
+    }
+
+    public String getName() {
+        return this.classNameLabel.getText();
     }
 }
