@@ -278,11 +278,20 @@ public class MainController {
             String methodName = methodNameInput.getText();
 
             if (!methodName.isEmpty()) {
-                String formattedMethod = methodName + "()";
-                ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
-                methodList.getItems().add(formattedMethod);
 
-                methodNameInput.clear();
+                String message = umlController.methodCommands.addMethod(new String[]{"add", "method", selectedClassBox.getName(), methodName});
+                if(message.isEmpty()) {
+                    String formattedMethod = methodName + "()";
+                    ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
+                    methodList.getItems().add(formattedMethod);
+
+                    methodNameInput.clear();
+                }
+                else {
+                    showAlert("Error", message);
+                }
+
+
             }
         }
     }
