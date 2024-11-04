@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - Developer
+      - main
 
   workflow_dispatch:
 
