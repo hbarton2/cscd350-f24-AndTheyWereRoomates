@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.project.View.ClassBox;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -77,27 +78,35 @@ public class MainController {
 
 
     public void createClass(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/classNode.fxml"));
-            VBox classBox = loader.load();
-            classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-            canvas.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-                double centerX = newValue.getWidth() / 2;
-                double centerY = newValue.getHeight() / 2;
-                classBox.setLayoutX(centerX - classBox.getWidth() / 2);
-                classBox.setLayoutY(centerY - classBox.getHeight() / 2);
-            });
+        ClassBox classBox = new ClassBox("New Class #" + umlController.getStorage().getClasses().size());
+        canvas.getChildren().add(classBox);
 
-            TextField classNameField = (TextField) classBox.getChildren().get(0);
-            String className = classNameField.getText();
+        classBox.setLayoutX(50);
+        classBox.setLayoutY(50);
 
-            fromComboBox.getItems().add(className);
-            toComboBox.getItems().add(className);
-            canvas.getChildren().add(classBox);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/classNode.fxml"));
+//            VBox classBox = loader.load();
+//            classBox.setOnMouseClicked(e -> selectClassBox(classBox));
+//
+//            // Calculate the center of the canvas
+//            double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
+//            double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+//
+//            // Set the position of the classBox to the center of the canvas
+//            classBox.setLayoutX(centerX);
+//            classBox.setLayoutY(centerY);
+//
+//            TextField classNameField = (TextField) classBox.getChildren().get(0);
+//            String className = classNameField.getText();
+//
+//            fromComboBox.getItems().add(className);
+//            toComboBox.getItems().add(className);
+//            canvas.getChildren().add(classBox);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @FXML
