@@ -159,7 +159,7 @@ public class MainController {
     public void handleSetClassName(ActionEvent event) {
         if (selectedClassBox != null) {
             String newName = classNameInput.getText();
-            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            Label className = (Label) selectedClassBox.getChildren().get(0);
             String currentName = className.getText();
             className.setText(newName);
 
