@@ -53,20 +53,23 @@ public class UMLController {
             }
         }
 
-        public void removeClass(String[] input) {
+        public String removeClass(String[] input) {
 
             if(input.length != 3) {
                 System.out.println("Invalid number of arguments. Usage: remove class <classname>");
-                return;
+                return "Invalid number of arguments. Usage: remove class <classname>";
             }
             String className = input[2];
 
             if(storage.getClass(className) == null) {
                 System.out.println("Class does not exist");
+                return "Class does not exist";
             } else {
                 storage.deleteClass(className);
                 System.out.println("Class removed: " + className);
             }
+
+            return "";
 
         }
 

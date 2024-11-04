@@ -101,13 +101,23 @@ public class MainController {
     @FXML
     public void deleteClass(ActionEvent event) {
         if(selectedClassBox != null) {
-            TextField className = (TextField) selectedClassBox.getChildren().get(0);
+            Label className = (Label) selectedClassBox.getChildren().get(0);
             String classNameRemove = className.getText();
-            canvas.getChildren().remove(selectedClassBox);
-            selectedClassBox = null;
 
-            fromComboBox.getItems().remove(classNameRemove);
-            toComboBox.getItems().remove(classNameRemove);
+
+            String message = umlController.classCommands.removeClass(new String[]{"remove", "class", classNameRemove});
+
+            if(message.isEmpty()) {
+                // GUI update
+                canvas.getChildren().remove(selectedClassBox);
+                selectedClassBox = null;
+
+                fromComboBox.getItems().remove(classNameRemove);
+                toComboBox.getItems().remove(classNameRemove);
+
+            } else {
+                showAlert("Class", message);
+            }
         }
     }
 
