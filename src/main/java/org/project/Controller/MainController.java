@@ -79,7 +79,7 @@ public class MainController {
 
     public void createClass(ActionEvent event) {
 
-        ClassBox classBox = new ClassBox("New Class #" + umlController.getStorage().getClasses().size());
+        ClassBox classBox = new ClassBox("New Class #" + (umlController.getStorage().getClasses().size() + 1));
         classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
         // Calculate the center of the canvas
@@ -93,6 +93,9 @@ public class MainController {
         fromComboBox.getItems().add(classBox.getName());
         toComboBox.getItems().add(classBox.getName());
         canvas.getChildren().add(classBox);
+
+        umlController.classCommands.addClass(new String[]{"add", "class", classBox.getName()});
+        System.out.println("Size: " + umlController.getStorage().getClasses().size());
     }
 
     @FXML
@@ -136,8 +139,15 @@ public class MainController {
     public void handleSetClassName(ActionEvent event) {
         if (selectedClassBox != null) {
             String newName = classNameInput.getText();
+            if(umlController.getStorage().hasClass(newName)) {
+                showAlert("Class Creation Error", "A class with the name \"" + newName + "\" already exists.");
+                return;
+            }
             Label className = (Label) selectedClassBox.getChildren().get(0);
             String currentName = className.getText();
+            // Rename class in storage
+            umlController.getStorage().renameClass(currentName, newName);
+            // Rename class in View
             className.setText(newName);
 
             int fromIndex = fromComboBox.getItems().indexOf(currentName);
@@ -284,5 +294,14 @@ public class MainController {
 
     @FXML
     public void deleteRelation(ActionEvent event) {
+    }
+
+    // Helper method to show an alert
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
