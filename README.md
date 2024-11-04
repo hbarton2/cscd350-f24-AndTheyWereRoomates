@@ -99,3 +99,47 @@ _rename field <existing field> <new name> <new typ >_ - renames a method in curr
 _rename parameter <existing method> <existing parameter > <new name> <new type >_ - renames a parameter in currently selected class to the new name
 
 
+# GUI Instructions
+
+The UML Editor application also provides a Graphical User Interface (GUI) for users who prefer a visual editing experience. Below are instructions for navigating and using the GUI.
+
+## Getting Started with the GUI
+
+Requirements:
+- Java 17 or higher
+- JVM
+
+1. **Launching the Application in GUI Mode**:
+    - Start the UML Editor in GUI mode by double clicking the JAR file. You should see a blank canvas area on the left, where classes will appear, and a control panel on the right.
+
+2. **Adding a Class**:
+    - To add a new class, click the **Add Class** button on the top right of the control panel. A new class box will appear on the canvas.
+    - Type the desired class name in the **Class Name** field and click **Set Class Name** to assign it.
+
+3. **Editing Class Properties**:
+    - **Adding Fields**: Enter a field name in the **Field Name** input box, select a data type from the dropdown, and click **Add**. The field will be added to the selected class.
+    - **Adding Methods**: Type the method name in the **Method Name** box and click **Add**. The method will appear within the selected class box.
+    - **Adding Parameters**: To add parameters to a method, select the method first. Then, specify the parameter name and type in the **Add Parameter** section and click **Add**.
+
+4. **Renaming and Deleting Fields or Methods**:
+    - **Rename Field/Method**: Select the field or method, modify the name in the input box, and click **Rename Field** or **Rename Method**.
+    - **Delete Field/Method**: Select the field or method and click **Delete Field** or **Delete Method** to remove it.
+
+5. **Managing Relationships**:
+    - **Add Relationship**: Select the classes involved from the **From** and **To** dropdowns, then choose a relationship type (e.g., Aggregation, Composition, Generalization, Realization) and click **Add Relation**.
+    - **Delete Relationship**: To remove a relationship, select the involved classes and the relationship type, then click **Delete Relation**.
+
+6. **Saving and Loading Projects**:
+    - To save your work, go to the **File** menu, select **Save**, and enter a filename. The project will be saved as a JSON file.
+    - To load an existing project, select **Load** from the **File** menu and choose the saved file. The UML diagram will be restored on the canvas.
+
+7. **Exit the Application**:
+    - To close the application, select **Exit** from the **File** menu.
+
+## Additional Tips
+
+- **Drag and Drop**: You can arrange classes on the canvas by dragging them to your desired position (Drag by the border).
+- **Highlighting Selected Class**: When you click on a class, it will be highlighted, indicating that it is the currently selected class for editing in the control panel.
+- **Visual Feedback**: Any changes made in the control panel will reflect immediately on the canvas.
+
+Refer to the CLI instructions if you prefer to work with commands. Both the GUI and CLI are synced, allowing flexibility in how you interact with the UML Editor.
