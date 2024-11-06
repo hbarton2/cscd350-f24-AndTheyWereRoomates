@@ -1,4 +1,4 @@
-# 
+ye# 
 
 * 
 * How to read version # Version main branch.release branch.pull request changes'
@@ -37,9 +37,15 @@ Ensure that the following software is installed on the target machine:
 ### Steps to Run the UML Editor
 
 ### 1. Obtain the Program File
-Download the package https://github.com/hbarton2/cscd350-f24-TeamNull.git
+Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates.git
 
+### Make sure the main branch is selected
+![Screenshot 2024-11-06 at 2.17.30 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fj2%2Fl7ff3v7d1qn_wf45g0439v780000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_xSaHF3%2FScreenshot%202024-11-06%20at%202.17.30%E2%80%AFPM.png)
+### Click on the green code button and click on Download Zip.
+![Screenshot 2024-11-06 at 2.19.01 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fj2%2Fl7ff3v7d1qn_wf45g0439v780000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_pxqYkv%2FScreenshot%202024-11-06%20at%202.19.01%E2%80%AFPM.png)
+### Navigate to where the package was downloaded and extract the files
 ### Steps to Open Terminal and Run `umleditor.jar`
+
 
 2. **Locate `umleditor.jar`**:
     - Navigate to the directory where `umleditor.jar` is located using your file explorer.
@@ -49,17 +55,17 @@ Download the package https://github.com/hbarton2/cscd350-f24-TeamNull.git
         - Right-click inside the folder (not on the file) and select `Open in Terminal` or `Open PowerShell window here`.
     - **On macOS**:
         - Open Terminal, then type `cd` followed by a space.
-        - Drag and drop the folder containing `umleditor.jar` into the Terminal window.
+        - Drag and drop the folder containing `uml-editor.jar` into the Terminal window.
         - Press `Enter` to navigate to the folder.
     - **On Linux**:
         - Open Terminal, then type `cd` followed by a space.
-        - Drag and drop the folder containing `umleditor.jar` into the Terminal window.
+        - Drag and drop the folder containing `uml-editor.jar` into the Terminal window.
         - Press `Enter` to navigate to the folder.
 
 4. **Run the JAR File**:
     - Type the following command in the terminal:
       ```bash
-      java -jar umleditor.jar
+      java -jar uml-editor.jar
       ```
     - Press `Enter` to execute the command.
 
@@ -119,8 +125,8 @@ src/main/java/umleditor/EntryPoint.java
 
 1. Clone the repository:
    ```bash
-   git clone FIX MEMMEMEMEMEMEMEMEMEMEMEM!!!!!!!!!!!!
-   cd projectname
+   git clone https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
+   cd cscd350-f24-AndTheyWereRoomates
    ```
    
 2. Build the project using Maven:
@@ -131,7 +137,7 @@ src/main/java/umleditor/EntryPoint.java
 
 3. Run the project:
    ```bash
-   java -jar umleditor-2.0-shaded.jar
+   java -jar target/original-uml-editor-shaded.jar
    ``` 
 ---
 
@@ -183,17 +189,4 @@ Please see LICENSE.md
 
 ## Contact
 
-For any inquiries, feel free to reach out to:
-
-- 
-- 
-
----
-
-## Acknowledgments
-- 
-
----
-
-## Project Details
-
+For any inquiries, feel free to reach out
