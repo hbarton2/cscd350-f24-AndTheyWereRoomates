@@ -1,9 +1,8 @@
-ye# 
+# UML Editor
 
-* 
+
 * How to read version # Version main branch.release branch.pull request changes'
 * What's New
-* - 
 
 ---
 

@@ -1,7 +1,5 @@
 package org.project.Controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -18,7 +16,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import org.project.View.ClassBox;
 
-public class MainController {
+public class GUIViewController {
 
   @FXML
   private Pane canvas;
@@ -56,29 +54,23 @@ public class MainController {
   @FXML
   private ComboBox<String> relationshipTypeComboBox;
 
-  @FXML
-  private TextField className;
-
-  @FXML
-  private TextField relationshipInput;
-
   private ClassBox selectedClassBox = null;
-
-  private ObservableList<String> classNames = FXCollections.observableArrayList();
 
   public UMLController umlController;
 
-
-  public MainController() {
+  /**
+   * This is the constructor for GUIViewController.
+   * Initializes UMLController
+   */
+  public GUIViewController() {
     this.umlController = new UMLController();
   }
 
-  @FXML
-  public void initialize() {
 
-  }
-
-
+  /**
+   * This method creates a Class object with a default name of "Class Name #"
+   * @param event - When the "Create Class" button is clicked
+   */
   public void createClass(ActionEvent event) {
 
     ClassBox classBox = new ClassBox(
@@ -101,6 +93,11 @@ public class MainController {
     System.out.println("Size: " + umlController.getStorage().getClasses().size());
   }
 
+
+  /**
+   * This method deletes the class from the model and gui view
+   * @param event - Represents the action of the button being clicked
+   */
   @FXML
   public void deleteClass(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -124,6 +121,10 @@ public class MainController {
     }
   }
 
+  /**
+   *  This method saves the box that was last selected by the user
+   * @param classBox - Representing the box that was selected
+   */
   private void selectClassBox(ClassBox classBox) {
     if (selectedClassBox != null) {
       selectedClassBox.setEffect(null);
@@ -141,12 +142,21 @@ public class MainController {
     classNameInput.setText(classNameLabel.getText());
   }
 
+  /**
+   * When the hide/show button is clicked, depending on the status of the inspector. It will hide and show the inspector
+   * @param event - Representing the action of the button being clicked
+   */
   @FXML
   public void toggleInspector(ActionEvent event) {
     boolean isInspectorVisible = inspectorPane.isVisible();
     inspectorPane.setVisible(!isInspectorVisible);
     toggleInspectorButton.setText(isInspectorVisible ? "Show" : "Hide");
   }
+
+  /**
+   * When the "Set Class Name" button is clicked. It will grab the input box text and set that to be the new class name.
+   * @param event - Representing the action of the button being clicked
+   */
 
   @FXML
   public void handleSetClassName(ActionEvent event) {
@@ -176,6 +186,10 @@ public class MainController {
     }
   }
 
+  /**
+   * When the "Add Field" button is clicked, it will grab the text inside the field text box and add it to the selected Class
+   * @param event - Representing the action of the button being clicked
+   */
   @FXML
   public void handleAddField(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -205,6 +219,10 @@ public class MainController {
   }
 
 
+  /**
+   * Inside the selected class the user will have a field selected. When the user clicks on "Delete Field" the selected field will then be deleted.
+   * @param event - Representing the action of the event being pressed
+   */
   @FXML
   public void handleDeleteField(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -223,6 +241,11 @@ public class MainController {
   }
 
 
+  /**
+   * Inside the selected class the user has a field selected. When the user clicks "Rename Field" button this method will gave
+   * the text inside the field box and rename the field
+   * @param event - Representing the action that the button is clicked
+   */
   @FXML
   public void handleRenameField(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -255,6 +278,11 @@ public class MainController {
   }
 
 
+  /**
+   * When the user has a class selected and a method in the class selected. When the user clicks on "Add Parameter". It wil grab the input in the field method
+   * and add it the selected method in the selected class.
+   * @param event - Representing the action that the button is clicked
+   */
   @FXML
   public void addParameter(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -283,7 +311,10 @@ public class MainController {
     }
   }
 
-
+  /**
+   * Adds a new method to the selected class box
+   * @param event the action event triggered by clicking on the add method button.
+   */
   @FXML
   public void handleAddMethod(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -308,7 +339,10 @@ public class MainController {
     }
   }
 
-
+  /**
+   * Deletes selected method from the selected class box.
+   * @param event the action event is triggered by clicking on the delete method button
+   */
   @FXML
   public void handleDeleteMethod(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -328,6 +362,10 @@ public class MainController {
     }
   }
 
+  /**
+   * Renames the selected method in the selected class box.
+   * @param event the action event triggered by renaming a method
+   */
   @FXML
   public void handleRenameMethod(ActionEvent event) {
     if (selectedClassBox != null) {
@@ -355,6 +393,13 @@ public class MainController {
     }
   }
 
+  /**
+   * Draws a relationship line with an arrowhead between two class boxes,
+   * based on the selected relationship type.
+   * @param fromBox the VBox representing the source class box
+   * @param toBox the Vbox representing the destination class box
+   * @param relationType the type of relationship (Aggregation, Composition, Generalization, Realization)
+   */
   @FXML
   public void drawRelationLine(VBox fromBox, VBox toBox, String relationType) {
     if (fromBox == null || toBox == null) {
@@ -429,7 +474,11 @@ public class MainController {
     canvas.getChildren().addAll(line, arrowHead);
   }
 
-
+  /**
+   * Adds a relationship line between two selected classes,
+   * based on the selected relationship type and class names.
+   * @param event the action event triggered by clicking the add relationship button
+   */
   @FXML
   public void addRelation(ActionEvent event) {
     String relationType = relationshipTypeComboBox.getValue();
@@ -445,13 +494,11 @@ public class MainController {
     drawRelationLine(fromBox, toBox, relationType);
   }
 
-  private void updateArrowHeadRotation(Line line, Polygon arrowHead) {
-    double angle =
-      Math.atan2(line.getEndY() - line.getStartY(), line.getEndX() - line.getStartX()) * (180
-        / Math.PI);
-    arrowHead.setRotate(angle);
-  }
-
+  /**
+   * Finds and returns a class box by its name.
+   * @param classBoxName the name of the class box to find
+   * @return the VBox representing the class box with the specified name, or null if not found
+   */
   private VBox findClassName(String classBoxName) {
     for (javafx.scene.Node node : canvas.getChildren()) {
       if (node instanceof VBox) {
@@ -465,6 +512,11 @@ public class MainController {
     return null;
   }
 
+  /**
+   * Deletes the selected relationship between two classes from the canvas,
+   * based on the selected classes and relationship type in the "From" and "To" Combobox.
+   * @param event the action even triggered by clicking the delete relationship button
+   */
   @FXML
   public void deleteRelation(ActionEvent event) {
     String fromClassName = fromComboBox.getValue();
@@ -480,6 +532,11 @@ public class MainController {
     canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
   }
 
+  /**
+   * Displays an alert pop up with a title and content.
+   * @param title the title of the alert pop up
+   * @param content the message content to be displayed in the alert
+   */
   private void showAlert(String title, String content) {
     Alert alert = new Alert(Alert.AlertType.WARNING);
     alert.setTitle(title);
@@ -487,6 +544,11 @@ public class MainController {
     alert.setContentText(content);
     alert.showAndWait();
   }
+
+  /**
+   * Exits the program when the exit button is clicked.
+   * @param event the action event for exiting the program
+   */
   @FXML
   public void exitProgram(ActionEvent event) {
     System.exit(0);
