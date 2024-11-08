@@ -8,6 +8,11 @@ import javafx.stage.Stage;
 
 public class GUIView extends Application {
 
+
+  /**
+   * Loads the GUI
+   * @param stage - Loads "Main.fxml", Represents the GUI
+   */
   @Override
   public void start(Stage stage) {
 
