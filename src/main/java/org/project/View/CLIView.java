@@ -12,16 +12,24 @@ import org.project.Model.UMLModel;
  */
 
 public class CLIView {
-
   private Scanner scanner;
   private UMLController controller;
   private UMLModel.Class currentClass = null;
 
+  /**
+   * Constructs a new CLIView instance which creates a scanner and UMLController.
+   */
   public CLIView() {
     this.scanner = new Scanner(System.in);
     this.controller = new UMLController();
   }
 
+
+  /**
+   *Displays the menu and prompts the user for a valid input
+   * until the user inputs the exit command that's being checked with
+   * the inputCheck method.
+   */
   public void runMenu() {
     System.out.println("Welcome to our UML Editor application");
     System.out.println("If you would like a list of commands enter 'help' ");
