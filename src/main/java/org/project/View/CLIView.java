@@ -5,6 +5,11 @@ import java.util.Scanner;
 import org.project.Controller.UMLController;
 import org.project.Model.UMLModel;
 
+/**
+ * CLIView is a command-line interface for the UML Editor application, providing
+ * interactive commands for creating, modifying, and managing UML classes,
+ * fields, methods, parameters, and relationships.
+ */
 
 public class CLIView {
 
