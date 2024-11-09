@@ -70,7 +70,6 @@ public class CLIView {
       case "save" -> saveCommand(input);
       case "load" -> loadCommand(input);
     }
-    ;// <---- WTF IS THIS
   }
 
   private void setCurrentClass(final String className) {

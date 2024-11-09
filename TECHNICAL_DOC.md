@@ -14,24 +14,27 @@
 4. [Known Bugs](#known-bugs)
 ---
 ## CLI Introduction
-Brief description ...
-
-
----
-## CLI Overview
-A breakdown of the CLI commands and their functionalities.
-
-## CLI Usage
 Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
 
 `Welcome to our UML Editor application
 If you would like a list of commands enter 'help'`
 
+
+---
+## CLI Overview
+##Features
+* Add Command - Add classes, methods, fields, relationships
+* Remove Commands - Removes class, methods, fields and relationships.
+* Rename Commands - Rename classes, methods, fields and relationships
+
+
+## CLI Usage
+
 From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line.
 
 ---
 ## General Commands
-* Please make sure to read CLI Usage before reading this section.
+* Please make sure to read CLI Introduction before reading this section.
 * These commands are general commands that can be used in the CLI.
 
 1. set class `<class name>` - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
@@ -41,6 +44,8 @@ From here you'll be able to type in commands and start editing. Down below are a
 
 3. help `<command>` - displays expanded commands for the given command.
    * Example: `help add class`
+   * Example: `help remove method`
+   * Example: `help rename field`
 
 4. list class - Lists everything in the currently selected class
 
@@ -56,7 +61,7 @@ From here you'll be able to type in commands and start editing. Down below are a
 8. exit - exits the program
 ---
 ## Add Commands
-* Please make sure to read CLI Usage before reading this section.
+* Please make sure to read CLI Introduction before reading this section.
 * These commands add things to the editor.
 
 1. add class `<name>` - creates a class with that name
@@ -71,15 +76,16 @@ From here you'll be able to type in commands and start editing. Down below are a
 4. add parameter `<existing method> <name> <type>` - creates a parameter with the given name and type. This requires a method to exist in order to work
     * Example: `add parameter eat food String`
 
-5. add relationship `<existing class name> <different existing class name>` - creates a relationship between two existing classes.
-    * Example: `add relationship Apple Banana`
+5. add relationship `<existing class name> <different existing class name> <Type>` - creates a relationship between two existing classes.
+    * Example: `add relationship Apple Banana Aggregation`
 ---
 ## Remove Commands
-* Please make sure to read CLI Usage before reading this section.
+* Please make sure to read CLI Introduction before reading this section.
 * These commands remove things in the editor.
 
-1. remove class - removes the class that is currently set
+1. remove class `<name>` - removes the class that is currently set
 These commands remove things in the editor.
+    * Example: `remove class Apple`
 
 2. remove method `<name>` - removes a method with the given name
    * Example: `remove method method1`
@@ -90,11 +96,11 @@ These commands remove things in the editor.
 4. remove parameter `<existing method> <name>` - removes a parameter with the given name
     * Example: `remove parameter method1 param1`
 
-5. remove relationship `<existing class name> <different existing class name>` -  removes a relationship between two existing classes.
-    * Example: `remove relationship Apple Banana`
+5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+    * Example: `remove relationship Apple Banana Aggregation`
 ---
 ## Rename Commands
-* Please make sure to read CLI Usage before reading this section.
+* Please make sure to read CLI Introduction before reading this section.
 * These commands rename things in the editor.
 
 1. rename class `<old name> <new name>` - renames the currently selected class to the new name
@@ -111,8 +117,28 @@ These commands remove things in the editor.
 ---
 
 ## Known Bugs
-1. Save / load does not work at the moment
+1. Save does not work at the moment
+![Save And Load](doc/images/savebug.png)
 2. Add field (format) should be `add field <type> <name>` not `add field <name> <type>`
+3. Rename Class does not work
+![Rename Class](doc/images/renameclassbug.png)
+4. Method overloading is not implemented
+![Method Overloading](doc/images/methodoverloading.png)
+5. Load Feature does not work
+![Load Feature](doc/images/LoadBug.png)
+6. Add Field does not work (ArrayIndexOutOfBoundsException)
+![Field Bug](doc/images/addfieldbug.png)
+7. Add method bug - Breaks when the wrong amount of arguments is entered. "Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 2"
+8. Rename Field does not work (ArrayIndexOutOfBoundsException)
+![Rename Field](doc/images/renamefieldoutofbounds.png)
+9. Add parameter bug - Breaks when the wrong amount of arguments is entered. Error Displayed - Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
+10. Rename Parameter bug - Breaks the program. Error Displayed - Exception in thread "main" java.lang.NullPointerException: Cannot invoke "org.project.Model.UMLModel$Method.hasParameter(String)" because "method" is null
+11. Remove field bug - Breaks the program. Error Displayed - (ArrayIndexOutOfBoundsException)
+![Remove Field](doc/images/removefieldoutofbounds.png)
+12. Remove Parameter bug - Breaks program. Error displayed - Enter parameter name: Exception in thread "main" java.lang.NullPointerException: Cannot invoke "org.project.Model.UMLModel$Method.hasParameter(String)" because "method" is null
+13. Add relationship bug - doesn't check for the 4 types of relationships (Aggregation, Composition, Generalization, Realization).
+14. List classes bug - doesn't display the type of relationship between classes.
+![List Class](doc/images/ListClassBug.png)
 
 ---
 ## Sample Workflow
