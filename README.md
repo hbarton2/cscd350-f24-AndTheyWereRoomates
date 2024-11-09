@@ -39,15 +39,15 @@ Ensure that the following software is installed on the target machine:
 Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates.git
 
 ### Make sure the main branch is selected
-![Screenshot 2024-11-06 at 2.17.30 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fj2%2Fl7ff3v7d1qn_wf45g0439v780000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_xSaHF3%2FScreenshot%202024-11-06%20at%202.17.30%E2%80%AFPM.png)
+![Main Branch](doc/images/mainbranch.png)
 ### Click on the green code button and click on Download Zip.
-![Screenshot 2024-11-06 at 2.19.01 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fj2%2Fl7ff3v7d1qn_wf45g0439v780000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_pxqYkv%2FScreenshot%202024-11-06%20at%202.19.01%E2%80%AFPM.png)
+![Code Button](doc/images/codebutton.png)
 ### Navigate to where the package was downloaded and extract the files
 ### Steps to Open Terminal and Run `umleditor.jar`
 
 
-2. **Locate `umleditor.jar`**:
-    - Navigate to the directory where `umleditor.jar` is located using your file explorer.
+2. **Locate `uml-editor.jar`**:
+    - Navigate to the directory where `uml-editor.jar` is located using your file explorer.
 
 3. **Open Terminal/Command Prompt**:
     - **On Windows**:
@@ -119,7 +119,7 @@ mvn install
 ### Step-by-Step Instructions
 
 ```angular2html
-src/main/java/umleditor/EntryPoint.java
+src/main/java/uml-editor/EntryPoint.java
 ```
 
 1. Clone the repository:

@@ -4,7 +4,7 @@
 ## Table of Contents
 
 1. [CLI Introduction](#cli-introduction)
-2. [ClI Overview](#cli-overview)
+2. [CLI Overview](#cli-overview)
 2. [CLI Usage](#cli-usage)
    * [General Commands](#general-commands)
    * [Add Commands](#add-commands)
