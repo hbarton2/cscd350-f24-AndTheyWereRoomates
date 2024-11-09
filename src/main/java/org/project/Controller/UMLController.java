@@ -4,6 +4,7 @@ import org.project.Model.UMLModel;
 
 /**
  * UMLController class act as the central controller for managing commands related to UMLModel.
+ *
  * It interacts with the various commands for adding removing and renaming in the UMLModel.
  */
 public class UMLController {
