@@ -1,8 +1,86 @@
+# UML Editor - CLI Technical Documentation
 
-# cscd350-f24-AndTheyWereRoomates
-[Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
-#To Start
-You  can download our source code and compile it yourself, or you will be able to download the precompiled jar file in releases
+---
+## Table of Contents
+
+1. [CLI Introduction](#cli-introduction)
+2. [ClI Overview](#cli-overview)
+2. [CLI Usage](#cli-usage)
+   * [General Commands](#general-commands)
+   * [Add Commands](#add-commands)
+   * [Remove Commands](#remove-commands)
+   * [Rename Commands](#rename-commands)
+3. [Sample Workflow](#sample-workflow)
+4. [Known Bugs](#known-bugs)
+---
+## CLI Introduction
+Brief description ...
+
+
+---
+## CLI Overview
+A
+A brief overview of the CLI commands and their functionalities.
+---
+## CLI Usage
+
+---
+## General Commands
+1. set class `<class name>` - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
+   * Example: `set class Apple`
+
+2. help - displays all possible commands
+
+3. help `<command>` - displays expanded commands for the given command.
+   * Example: `help add class`
+
+4. list class - Lists everything in the currently selected class
+
+5. list classes - List all created classes
+   * Example: `list classes`
+
+6. save - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save` -> `Enter file name: MyProject`
+
+7. load - loads a json as a UML class. It will ask you to input a name after typing load
+    * Example: `load` -> `Enter file name: MyProject`
+   
+8. exit - exits the program
+---
+## Add Commands
+1. add class `<name>` - creates a class with that name
+   * Example: `add class Apple`
+
+2. add method `<name>` - creates a method with the given name
+    * Example: `add method eat`
+
+3. add field `<name> <type>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+    * Example: `add field color String`
+
+4. add parameter `<existing method> <name> <type>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+    * Example: `add parameter eat food String`
+
+5. add relationship `<existing class name> <different existing class name>` - creates a relationship between two existing classes.
+    * Example: `add relationship Apple Banana`
+---
+## Remove Commands
+1. remove class - removes the class that is currently set
+These commands remove things in the editor.
+
+_remove class_ - removes the class that is currently set
+
+_remove method <name>_ - removes a method with the given name
+
+_remove field <name>_ - removes a field with the given name
+
+_remove parameter <existing method> <name>_ - removes a parameter with the given name
+
+_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
+
+
+## Known Bugs
+
+---
 
 # CLI Instructions
 Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
@@ -44,37 +122,6 @@ Assuming you typed in the name of the file, all your classes and every attribute
 If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
 This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
-
-# CLI Commands
-Down below are usable commands for the UML program. What's here should also display when you type _help_ in the command line
-## General Commands
-These commands don't fall under any category but are basic commands in the program
-
-_set class <class name>_ - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
-
-_help_ - displays all possible commands
-_help <command>_ - displays expanded commands for the given command.
-
-_list class_ - Lists everything in the currently selected class
-_list classes_ - List all created classes
-
-_save_  - saves the current project as one json. It will ask you to input a name after typing in the command.
-_load_ - loads a json as a UML class. It will ask you to input a name after typing load (You do not need to include ".json" in your input. Just the file name)
-
-_exit_ - exits the program
-
-## Add Commands
-These commands add things into the editor.
-
-_add class <name>_ - creates a class with that name
-
-_add method <name>_ - creates a method with the given name
-
-_add field <name> <type>_ - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
-
-_add parameter <existing method> <name> <type>_ - creates a parameter with the given name and type. This requires a method to exist in order to work
-
-_add relationship <existing class name> <different existing class name>_ - creates a relationship between two existing classes.
 
 ## Remove Commands
 These commands remove things in the editor.
@@ -129,19 +176,4 @@ Requirements:
 
 5. **Managing Relationships**:
     - **Add Relationship**: Select the classes involved from the **From** and **To** dropdowns, then choose a relationship type (e.g., Aggregation, Composition, Generalization, Realization) and click **Add Relation**.
-    - **Delete Relationship**: To remove a relationship, select the involved classes and the relationship type, then click **Delete Relation**.
-
-6. **Saving and Loading Projects**:
-    - To save your work, go to the **File** menu, select **Save**, and enter a filename. The project will be saved as a JSON file.
-    - To load an existing project, select **Load** from the **File** menu and choose the saved file. The UML diagram will be restored on the canvas.
-
-7. **Exit the Application**:
-    - To close the application, select **Exit** from the **File** menu.
-
-## Additional Tips
-
-- **Drag and Drop**: You can arrange classes on the canvas by dragging them to your desired position (Drag by the border).
-- **Highlighting Selected Class**: When you click on a class, it will be highlighted, indicating that it is the currently selected class for editing in the control panel.
-- **Visual Feedback**: Any changes made in the control panel will reflect immediately on the canvas.
-
-Refer to the CLI instructions if you prefer to work with commands. Both the GUI and CLI are synced, allowing flexibility in how you interact with the UML Editor.
+    - **Delete Relationship**: To remove a 
