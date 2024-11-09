@@ -28,7 +28,7 @@ public class CLIView {
   /**
    *Displays the menu and prompts the user for a valid input
    * until the user inputs the exit command that's being checked with
-   * the inputCheck method.
+   * the inputCheck method. While in the loop, it will check if the entered text is a working command.
    */
   public void runMenu() {
     System.out.println("Welcome to our UML Editor application");
@@ -46,6 +46,12 @@ public class CLIView {
 
     } while (!userInput.equals("exit"));
   }
+
+  /**
+   * inputCheck checks if the string is empty, if it says help, exit, or it has multiple words separated by space.
+   * @param input is the user input represented as a string.
+   * @return a boolean showing the validity of the input.
+   */
 
   private boolean inputCheck(String input) {
 
@@ -65,6 +71,11 @@ public class CLIView {
     return !str[0].equals("exit") || str.length >= 2;
   }
 
+  /**
+   * commandCheck checks the input for a matching command choice, then calls the corresponding command.
+   * @param input is the user input represented as a list of strings.
+   */
+
   private void commandCheck(String[] input) {
     switch (input[0]) {
       case "set" -> {
@@ -83,8 +94,14 @@ public class CLIView {
       case "save" -> saveCommand(input);
       case "load" -> loadCommand(input);
     }
-    ;// <---- WTF IS THIS
   }
+
+  /**
+   * setCurrentClass takes an inputted class name and sets that class as the class being changed.
+   * Outputs "you selected class " if there's a matching class and "<className> does not exist"
+   * if there is no matching class.
+   * @param className is the name of the class being chosen.
+   */
 
   private void setCurrentClass(final String className) {
     UMLModel.Class selectedClass = controller.getStorage().getClass(className);
@@ -96,7 +113,13 @@ public class CLIView {
     }
   }
 
-
+  /**
+   * addCommand handles adding a class, method, field, parameter, or relationship.
+   * Calls the appropriate UMLController add function for each type.
+   * Outputs "no class selected. Try: set class <class name>" and returns
+   * if there is no set class and it's not adding a class.
+   * @param input is the user input.
+   */
   private void addCommand(String[] input) {
 
     if (currentClass == null && !"class".equals(input[1])) {
@@ -116,6 +139,14 @@ public class CLIView {
     }
   }
 
+  /**
+   * removeCommand handles removing a class, method, field, parameter, or relationship.
+   * Calls the appropriate UMLController remove function for each type.
+   * Outputs "no class selected. Try: set class <class name>" and returns
+   * if there is no set class and it's not removing a class.
+   * @param input is the user input.
+   */
+
   private void removeCommand(String[] input) {
     if (currentClass == null && !"class".equals(input[1])) {
       System.out.println("no class selected. Try: set class <class name>");
@@ -133,6 +164,14 @@ public class CLIView {
         new String[]{"remove", "relationship", input[2], input[3], input[4]});
     }
   }
+
+  /**
+   * renameCommand handles renaming a class, method, field, or parameter.
+   * Calls the appropriate UMLController rename function for each type.
+   * Outputs "no class selected. Try: set class <class name>" and returns
+   * if there is no set class and it's not renaming a class
+   * @param input is the user input.
+   */
 
   private void renameCommand(String[] input) {
     if (currentClass == null && !"class".equals(input[1])) {
@@ -152,6 +191,11 @@ public class CLIView {
     }
   }
 
+  /**
+   * changeCommand calls the changeParameter function if there is a matching set class.
+   * Outputs "no class selected. Try: set class <class name>" and returns if there is no set class.
+   * @param input is the user input.
+   */
   private void changeCommand(String[] input) {
     if (currentClass == null) {
       System.out.println("no class selected. Try: set class <class name>");
@@ -163,6 +207,14 @@ public class CLIView {
       System.out.println("Invalid change command.");
     }
   }
+
+  /**
+   * listCommand checks if the input is valid.
+   * If the input is invalid length it prints "invalid syntax. Try: load class"
+   * Then checks a valid input for whether it's choosing to list a class or multiple classes.
+   * If it's not choosing to list a class or multiple classes, print "Invalid List command"
+   * @param input is a string list representing the input.
+   */
 
   private void listCommand(String[] input) {
     if (input.length < 2) {
@@ -182,6 +234,13 @@ public class CLIView {
 
     }
   }
+
+  /**
+   * listClass checks if the input holds a valid class, if input class is invalid, prints "no class selected.
+   * Try: set class <class name>" and returns.
+   * If input is valid, prints the class name, all relationships, all fields, and all methods / parameters.
+   * @param input is a list of strings representing the user input.
+   */
 
   public void listClass(String[] input) {
     UMLModel.Class obj = controller.getStorage().getClass(input[2]);
@@ -220,6 +279,10 @@ public class CLIView {
 
   }
 
+  /**
+   * listClasses is a method that lists the names of each class currently existing.
+   * If there are no classes, print "no classes to get."
+   */
   public void listClasses() {
     Map<String, UMLModel.Class> classes = controller.getStorage().getClasses();
     if (classes.isEmpty()) {
@@ -231,6 +294,10 @@ public class CLIView {
     }
   }
 
+  /**
+   * listRelationship grabs all classes, and for each class, checks if there is a relationship
+   * then prints the relationships.
+   */
   public void listRelationship() {
     Map<String, UMLModel.Class> classes = controller.getStorage().getClasses();
     for (UMLModel.Class clazz : classes.values()) {
@@ -240,6 +307,13 @@ public class CLIView {
     }
   }
 
+  /**
+   * saveCommand takes a string list of a user input. I don't know why.
+   * Then it prompts the user for a file name and converts the file name to a .json.
+   * The code does not check if file name is invalid / has spaces.
+   * If valid, prints "Successfully Saved", if invalid prints "Not Successfully Saved")]
+   * @param input is a String list representing user input.
+   */
   public void saveCommand(String[] input) {
     UMLModel.Save save = new UMLModel.Save(controller.getStorage());
     System.out.print("Enter file name: ");
@@ -251,6 +325,13 @@ public class CLIView {
     }
   }
 
+  /**
+   * loadCommand takes an input String list that is not used.
+   * Prompts the user for a file name that is not validated.
+   * Adds .json to the ends of the inputted file name whether user inputted .json already or not.
+   * prints "Successfully loaded" if it works, "Not Successfully Loaded" if it does not.
+   * @param input is a string list that is never used.
+   */
   public void loadCommand(String[] input) {
     UMLModel.Load load = new UMLModel.Load(controller.getStorage());
     System.out.print("Enter file name:");
@@ -263,6 +344,12 @@ public class CLIView {
 
   }
 
+  /**
+   * helpCommand takes a String list of the command, and parses it into a printed option.
+   * Prints the corresponding response depending on which option help is called for.
+   * Details the command so that the user understands how it's used and what it's used for.
+   * @param command is the user input checked for
+   */
   private void helpCommand(String[] command) {
     switch (command[1]) {
       case "set":
@@ -367,6 +454,11 @@ public class CLIView {
     }
   }
 
+  /**
+   * The help commands shows the user all available options for commands.
+   * The help command also shows the baseline for how the command should be formatted.
+   * @return a false boolean.
+   */
   private boolean help() {
     System.out.println("Syntax for help: help <command you need help with>.");
     System.out.println();
