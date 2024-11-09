@@ -2,19 +2,50 @@ package org.project.Controller;
 
 import org.project.Model.UMLModel;
 
+/**
+ * UMLController class act as the central controller for managing commands related to UMLModel.
+ *
+ * It interacts with the various commands for adding removing and renaming in the UMLModel.
+ */
 public class UMLController {
 
-
+  /**
+   * the storage instance used to manage the UML Model's data.
+   */
   private final UMLModel.Storage storage;
-
+  /**
+   * The save instance used to handle saving operations.
+   */
   private final UMLModel.Save save;
+  /**
+   * the load instance used to handle loading operations.
+   */
   private final UMLModel.Load load;
+  /**
+   * The class commands instance for handling class operations.
+   */
   public final ClassCommands classCommands;
+  /**
+   * The FieldCommands instance for handling field operations.
+   */
   public final FieldCommands fieldCommands;
+  /**
+   * The Methods commands instance for handling method operations.
+   */
   public final MethodCommands methodCommands;
+  /**
+   * The relationship commands instance for handling relationship operations.
+   */
   public final RelationshipCommands relationshipCommands;
+  /**
+   * The ParameterCommands instance for handling parameter operations.
+   */
   public final ParameterCommands parameterCommands;
 
+  /**
+   * Constructs a new instance of UMLController, and initialize all the different command modules
+   * as well as, storage save and load functions as well.
+   */
   public UMLController() {
 
     this.storage = new UMLModel.Storage();
@@ -27,19 +58,36 @@ public class UMLController {
     this.fieldCommands = new FieldCommands(storage);
   }
 
+  /**
+   * Returns the associated storage object with this controller.
+   *
+   * @return The UMLModel.Storage instance.
+   */
   public UMLModel.Storage getStorage() {
     return this.storage;
   }
-
+  /**
+   * ClassCommands manages the operations related to classes in UMLModel
+   * this includes adding, removing, and renaming classes.
+   */
   public class ClassCommands {
 
     private final UMLModel.Storage storage;
 
+    /**
+     * Constructs a new class instance associated with storage.
+     *
+     * @param storage The UMLModel.Storage instance to manage class operation.
+     */
     public ClassCommands(final UMLModel.Storage storage) {
       this.storage = storage;
     }
 
-
+    /**
+     * Adds a class to the UML Model
+     *
+     * @param input The command arguments where input[2] is the chosen name for the class being added.
+     */
     public void addClass(final String[] input) {
 
       if (input.length != 3) {
@@ -53,6 +101,13 @@ public class UMLController {
         }
       }
     }
+
+    /**
+     * Removes a class for the UML Model.
+     *
+     * @param input The command arguments where input [2] is the name of the class to be removed.
+     * @return A message indicating the result of the operation.
+     */
 
     public String removeClass(String[] input) {
 
@@ -74,6 +129,11 @@ public class UMLController {
 
     }
 
+    /**
+     * Renames an existing class in the UML Model.
+     *
+     * @param input The command arguments where input[2]  is the old class name and input[3] is the new class name.
+     */
     public void renameClass(String[] input) {
 
       if (input.length != 4) {
@@ -100,16 +160,28 @@ public class UMLController {
   }
 
   /**
-   * Commands tied to Field
+   * FieldCommands manages the operations related to fields in the UML Model.
+   * This includes adding, removing, and renaming fields.
    */
   public class FieldCommands {
 
     private final UMLModel.Storage storage;
 
+    /**
+     * This constructs a new FieldCommands  instance with the provided storage.
+     *
+     * @param storage The UMLModel.Storage instance to manage the field operations.
+     */
     public FieldCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
+    /**
+     * Adds a field to a class in the UML Model.
+     *
+     * @param input The command arguments, where input[2] is the field name and input[3] is the field type.
+     * @return A message that indicated the result of the operation.
+     */
     public String addField(final String[] input) {
       String message = "";
       if (input.length != 5) {
@@ -140,6 +212,11 @@ public class UMLController {
       return message;
     }
 
+    /**
+     * Removes a field for a class in the UML Model.
+     *
+     * @param input The command arguments, where input[2] is the class name and input[3] is the field name.
+     */
     public void removeField(final String[] input) {
       if (input.length <= 3) {
         System.out.println("Invalid number of arguments");
@@ -159,6 +236,11 @@ public class UMLController {
       }
     }
 
+    /**
+     * Renames a field in the UML Model.
+     *
+     * @param input The command arguments, where input[2] is the class name, input[3] is the old field name, input[4] is the new field name, and input[5] is the new field type.
+     */
     public void renameField(final String[] input) {
       if (input.length != 6) {
         System.out.println(
@@ -190,12 +272,19 @@ public class UMLController {
   public class MethodCommands {
 
     private final UMLModel.Storage storage;
-
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public MethodCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
-    // add(0) method(1) Class Name(2) Method Name(3)
+    /**
+     * Adds method to storage
+     * @param input - The parameter inputs to add a method- 'add method [class name] [new method name]'
+     * @return message - return a message saying if anything happened
+     */
     public String addMethod(final String[] input) {
 
       String message = "";
@@ -229,6 +318,10 @@ public class UMLController {
       return message;
     }
 
+    /**
+     * Removes to a method command.
+     * @param input - The parameter inputs to remove a method. 'add method' [class Name] [method name]
+     */
     // add(0) method(1) Class Name(2) Method Name(3)
     public void removeMethod(final String[] input) {
       if (input.length != 4) {
@@ -254,6 +347,10 @@ public class UMLController {
       }
     }
 
+    /**
+     * Renames a method to a different name
+     * @param input - The parameter inputs to rename a method. 'rename method [class name] [method name] [new method name]'
+     */
     // add(0) method(1) Class Name(2) Method Name(3) NewMethod Name(4)
     public void renameMethod(final String[] input) {
       if (input.length != 5) {
@@ -293,11 +390,19 @@ public class UMLController {
   public class ParameterCommands {
 
     private final UMLModel.Storage storage;
-
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public ParameterCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
+      /**
+       * Adds parameter to storage
+       * @param input - The parameter inputs to add a parameter- 'add parameter [class name] [method name] [new name]'
+       * @return - nothing is returned (All parameters methods here have 'return' but it's all void)
+       */
     public void addParameter(final String[] input) {
       if (input.length <= 5) {
         System.out.println(
@@ -339,7 +444,11 @@ public class UMLController {
       System.out.println(
         "Parameter " + parameterName + " added to " + className + " " + methodName);
     }
-
+      /**
+       * Removes parameter from storage
+       * @param input - The parameter inputs to remove a parameter- 'add parameter [class name] [method name] [parameter name]'
+       * @return - nothing is returned
+       */
     public void removeParameter(String[] input) {
       if (input.length <= 4) {
         System.out.println(
@@ -379,6 +488,11 @@ public class UMLController {
 
     }
 
+      /**
+       * Renames parameter in storage
+       * @param input - The parameter inputs to rename a parameter- 'add parameter [class name] [method name] [parameter name] [new parameter name]'
+       * @return - nothing is returned
+       */
     public void changeParameter(String[] input) {
       if (input.length != 7) {
         System.out.println(
@@ -435,10 +549,18 @@ public class UMLController {
 
     private final UMLModel.Storage storage;
 
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public RelationshipCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
-
+    /**
+     * Adds parameter to storage
+     * @param input - The parameter inputs to add a relationship between classes - 'add relationship [class name] [class name]'
+     * @return - true/false, returns true if the program is able to execute.
+     */
     public boolean addRelationship(final String[] input) {
       if (input.length <= 3) {
         System.out.println("Invalid number of arguments");
@@ -465,6 +587,11 @@ public class UMLController {
       }
     }
 
+    /**
+     * Adds parameter to storage
+     * @param input - The parameter inputs to remove a relationship between classes - 'add relationship [class name] [class name]'
+     * @return - true/false, returns true if the program is able to execute.
+     */
     public boolean removeRelationship(final String[] input) {
       if (input.length <= 3) {
         System.out.println("Invalid number of arguments");
