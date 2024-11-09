@@ -26,6 +26,7 @@ A brief overview of the CLI commands and their functionalities.
 
 ---
 ## General Commands
+These commands are general commands that can be used in the CLI.
 1. set class `<class name>` - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
    * Example: `set class Apple`
 
@@ -48,6 +49,7 @@ A brief overview of the CLI commands and their functionalities.
 8. exit - exits the program
 ---
 ## Add Commands
+These commands add things to the editor.
 1. add class `<name>` - creates a class with that name
    * Example: `add class Apple`
 
@@ -64,22 +66,42 @@ A brief overview of the CLI commands and their functionalities.
     * Example: `add relationship Apple Banana`
 ---
 ## Remove Commands
+These commands remove things in the editor.
 1. remove class - removes the class that is currently set
 These commands remove things in the editor.
 
-_remove class_ - removes the class that is currently set
+2. remove method `<name>` - removes a method with the given name
+   * Example: `remove method method1`
 
-_remove method <name>_ - removes a method with the given name
+3. remove field `<name>` - removes a field with the given name
+    * Example: `remove field field1`
 
-_remove field <name>_ - removes a field with the given name
+4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+    * Example: `remove parameter method1 param1`
 
-_remove parameter <existing method> <name>_ - removes a parameter with the given name
+5. remove relationship `<existing class name> <different existing class name>` -  removes a relationship between two existing classes.
+    * Example: `remove relationship Apple Banana`
+---
+## Rename Commands
+These commands rename things in the editor.
+1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+   * Example: `rename class Apple Banana`
 
-_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
+2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+   * Example: `rename method method1 method2`
+
+3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+   * Example: `rename field field1 field2 String`
+
+4. rename parameter `<existing method> <existing parameter> <new name> <new type>` - renames a parameter in currently selected class to the new name
+   * Example: `rename parameter method1 param1 param2 String`
+---
 
 
 ## Known Bugs
-
+1. Save / load does not work at the moment
+2. Add field (format) should be `add field <type> <name>` not `add field <name> <type>`
+3. 
 ---
 
 # CLI Instructions
@@ -122,30 +144,6 @@ Assuming you typed in the name of the file, all your classes and every attribute
 If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
 This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
-
-## Remove Commands
-These commands remove things in the editor.
-
-_remove class_ - removes the class that is currently set
-
-_remove method <name>_ - removes a method with the given name
-
-_remove field <name>_ - removes a field with the given name
-
-_remove parameter <existing method> <name>_ - removes a parameter with the given name
-
-_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
-
-## Rename Commands
-These commands rename things in the editor.
-
-_rename class <old name> <new name>_ - renames the currently selected class to the new name
-
-_rename method <existing method> <new name>_ - renames a method in currently selected class to the new name
-
-_rename field <existing field> <new name> <new typ >_ - renames a method in currently selected class to the new name
-
-_rename parameter <existing method> <existing parameter > <new name> <new type >_ - renames a parameter in currently selected class to the new name
 
 
 # GUI Instructions
