@@ -190,12 +190,19 @@ public class UMLController {
   public class MethodCommands {
 
     private final UMLModel.Storage storage;
-
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public MethodCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
-    // add(0) method(1) Class Name(2) Method Name(3)
+    /**
+     * Adds method to storage
+     * @param input - The parameter inputs to add a method- 'add method [class name] [new method name]'
+     * @return message - return a message saying if anything happened
+     */
     public String addMethod(final String[] input) {
 
       String message = "";
@@ -229,6 +236,10 @@ public class UMLController {
       return message;
     }
 
+    /**
+     * Removes to a method command.
+     * @param input - The parameter inputs to remove a method. 'add method' [class Name] [method name]
+     */
     // add(0) method(1) Class Name(2) Method Name(3)
     public void removeMethod(final String[] input) {
       if (input.length != 4) {
@@ -254,6 +265,10 @@ public class UMLController {
       }
     }
 
+    /**
+     * Renames a method to a different name
+     * @param input - The parameter inputs to rename a method. 'rename method [class name] [method name] [new method name]'
+     */
     // add(0) method(1) Class Name(2) Method Name(3) NewMethod Name(4)
     public void renameMethod(final String[] input) {
       if (input.length != 5) {
@@ -293,11 +308,19 @@ public class UMLController {
   public class ParameterCommands {
 
     private final UMLModel.Storage storage;
-
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public ParameterCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
+      /**
+       * Adds parameter to storage
+       * @param input - The parameter inputs to add a parameter- 'add parameter [class name] [method name] [new name]'
+       * @return - nothing is returned (All parameters methods here have 'return' but it's all void)
+       */
     public void addParameter(final String[] input) {
       if (input.length <= 5) {
         System.out.println(
@@ -339,7 +362,11 @@ public class UMLController {
       System.out.println(
         "Parameter " + parameterName + " added to " + className + " " + methodName);
     }
-
+      /**
+       * Removes parameter from storage
+       * @param input - The parameter inputs to remove a parameter- 'add parameter [class name] [method name] [parameter name]'
+       * @return - nothing is returned
+       */
     public void removeParameter(String[] input) {
       if (input.length <= 4) {
         System.out.println(
@@ -379,6 +406,11 @@ public class UMLController {
 
     }
 
+      /**
+       * Renames parameter in storage
+       * @param input - The parameter inputs to rename a parameter- 'add parameter [class name] [method name] [parameter name] [new parameter name]'
+       * @return - nothing is returned
+       */
     public void changeParameter(String[] input) {
       if (input.length != 7) {
         System.out.println(
@@ -435,10 +467,18 @@ public class UMLController {
 
     private final UMLModel.Storage storage;
 
+    /**
+     * Creates a new class instance associated with storage
+     * @param storage - the UMLModel.Storage instance to manage class operations
+     */
     public RelationshipCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
-
+    /**
+     * Adds parameter to storage
+     * @param input - The parameter inputs to add a relationship between classes - 'add relationship [class name] [class name]'
+     * @return - true/false, returns true if the program is able to execute.
+     */
     public boolean addRelationship(final String[] input) {
       if (input.length <= 3) {
         System.out.println("Invalid number of arguments");
@@ -465,6 +505,11 @@ public class UMLController {
       }
     }
 
+    /**
+     * Adds parameter to storage
+     * @param input - The parameter inputs to remove a relationship between classes - 'add relationship [class name] [class name]'
+     * @return - true/false, returns true if the program is able to execute.
+     */
     public boolean removeRelationship(final String[] input) {
       if (input.length <= 3) {
         System.out.println("Invalid number of arguments");
