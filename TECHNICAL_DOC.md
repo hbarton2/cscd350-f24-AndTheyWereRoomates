@@ -19,14 +19,21 @@ Brief description ...
 
 ---
 ## CLI Overview
-A
-A brief overview of the CLI commands and their functionalities.
----
+A breakdown of the CLI commands and their functionalities.
+
 ## CLI Usage
+Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
+
+`Welcome to our UML Editor application
+If you would like a list of commands enter 'help'`
+
+From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line.
 
 ---
 ## General Commands
-These commands are general commands that can be used in the CLI.
+* Please make sure to read CLI Usage before reading this section.
+* These commands are general commands that can be used in the CLI.
+
 1. set class `<class name>` - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
    * Example: `set class Apple`
 
@@ -49,7 +56,9 @@ These commands are general commands that can be used in the CLI.
 8. exit - exits the program
 ---
 ## Add Commands
-These commands add things to the editor.
+* Please make sure to read CLI Usage before reading this section.
+* These commands add things to the editor.
+
 1. add class `<name>` - creates a class with that name
    * Example: `add class Apple`
 
@@ -66,7 +75,9 @@ These commands add things to the editor.
     * Example: `add relationship Apple Banana`
 ---
 ## Remove Commands
-These commands remove things in the editor.
+* Please make sure to read CLI Usage before reading this section.
+* These commands remove things in the editor.
+
 1. remove class - removes the class that is currently set
 These commands remove things in the editor.
 
@@ -83,7 +94,9 @@ These commands remove things in the editor.
     * Example: `remove relationship Apple Banana`
 ---
 ## Rename Commands
-These commands rename things in the editor.
+* Please make sure to read CLI Usage before reading this section.
+* These commands rename things in the editor.
+
 1. rename class `<old name> <new name>` - renames the currently selected class to the new name
    * Example: `rename class Apple Banana`
 
@@ -97,20 +110,17 @@ These commands rename things in the editor.
    * Example: `rename parameter method1 param1 param2 String`
 ---
 
-
 ## Known Bugs
 1. Save / load does not work at the moment
 2. Add field (format) should be `add field <type> <name>` not `add field <name> <type>`
-3. 
+
 ---
+## Sample Workflow
+Provide a simple walkthrough of how to use the CLI to create a UML diagram.
 
-# CLI Instructions
-Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
 
-`Welcome to our UML Editor application
-If you would like a list of commands enter 'help'`
-
-From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line (scroll down to the "_CLI Commands_") but if you want, the portion below will function as a basic walkthrough for some basic inputs to get you started and familiar with starting up the program.
+---
+// DELETE THIS if you don't need it.
 
 As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all of the associated commands.
 
