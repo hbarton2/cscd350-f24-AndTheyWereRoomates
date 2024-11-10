@@ -120,7 +120,9 @@ These commands remove things in the editor.
 1. Save does not work at the moment
 ![Save And Load](doc/images/savebug.png)
 2. Add field (format) should be `add field <type> <name>` not `add field <name> <type>`
+
 3. Rename Class does not work
+
 ![Rename Class](doc/images/renameclassbug.png)
 4. Method overloading is not implemented
 ![Method Overloading](doc/images/methodoverloading.png)
@@ -128,25 +130,32 @@ These commands remove things in the editor.
 ![Load Feature](doc/images/LoadBug.png)
 6. Add Field does not work (ArrayIndexOutOfBoundsException)
 ![Field Bug](doc/images/addfieldbug.png)
-7. Add method bug - Breaks when the wrong amount of arguments is entered. "Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 2"
+7. Add method bug - Breaks when the wrong amount of arguments is entered.
+![Method Bug](doc/images/methodBug.png)
 8. Rename Field does not work (ArrayIndexOutOfBoundsException)
 ![Rename Field](doc/images/renamefieldoutofbounds.png)
-9. Add parameter bug - Breaks when the wrong amount of arguments is entered. Error Displayed - Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
-10. Rename Parameter bug - Breaks the program. Error Displayed - Exception in thread "main" java.lang.NullPointerException: Cannot invoke "org.project.Model.UMLModel$Method.hasParameter(String)" because "method" is null
+9. Add parameter bug - Breaks when the wrong amount of arguments is entered. 
+![Invalid arguments](doc/images/invalidArgumentsParam.png)
+10. Rename Parameter bug - Breaks the program when invalid arguments is entered.
+![Invalid args Rename Param](doc/images/invalidArgsRenameParam.png)
 11. Remove field bug - Breaks the program. Error Displayed - (ArrayIndexOutOfBoundsException)
 ![Remove Field](doc/images/removefieldoutofbounds.png)
-12. Remove Parameter bug - Breaks program. Error displayed - Enter parameter name: Exception in thread "main" java.lang.NullPointerException: Cannot invoke "org.project.Model.UMLModel$Method.hasParameter(String)" because "method" is null
+12. Remove Parameter bug - Null Pointer Exception
+![Remove Param Bug](doc/images/removeParamBug.png)
 13. Add relationship bug - doesn't check for the 4 types of relationships (Aggregation, Composition, Generalization, Realization).
+![Relationship bug](doc/images/relationshipBug.png)
 14. List classes bug - doesn't display the type of relationship between classes.
 ![List Class](doc/images/ListClassBug.png)
-
+15. Printing Issues for parameter added.
+![Method printing issue](doc/images/methodPrintIssue.png) 
+16. Relationship bugs - Breaks program because it does not check for invalid inputs
+![Relation Invalid args bug](doc/images/relationshipInvalidBugs.png)
 ---
 ## Sample Workflow
 Provide a simple walkthrough of how to use the CLI to create a UML diagram.
 
 
 ---
-// DELETE THIS if you don't need it.
 
 As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all of the associated commands.
 
@@ -180,7 +189,8 @@ Assuming you typed in the name of the file, all your classes and every attribute
 If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
 This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
-
+## WorkFlow Sample
+![Sample WorkFlow](doc/images/flowSample.png)
 
 # GUI Instructions
 
