@@ -1,16 +1,161 @@
+# UML Editor - CLI Technical Documentation
 
-# cscd350-f24-AndTheyWereRoomates
-[Project Link](https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates/tree/readMe)
-#To Start
-You  can download our source code and compile it yourself, or you will be able to download the precompiled jar file in releases
+---
+## Table of Contents
 
-# CLI Instructions
+1. [CLI Introduction](#cli-introduction)
+2. [CLI Overview](#cli-overview)
+2. [CLI Usage](#cli-usage)
+   * [General Commands](#general-commands)
+   * [Add Commands](#add-commands)
+   * [Remove Commands](#remove-commands)
+   * [Rename Commands](#rename-commands)
+3. [Sample Workflow](#sample-workflow)
+4. [Known Bugs](#known-bugs)
+---
+## CLI Introduction
 Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
 
 `Welcome to our UML Editor application
 If you would like a list of commands enter 'help'`
 
-From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line (scroll down to the "_CLI Commands_") but if you want, the portion below will function as a basic walkthrough for some basic inputs to get you started and familiar with starting up the program.
+
+---
+## CLI Overview
+##Features
+* Add Command - Add classes, methods, fields, relationships
+* Remove Commands - Removes class, methods, fields and relationships.
+* Rename Commands - Rename classes, methods, fields and relationships
+
+
+## CLI Usage
+
+From here you'll be able to type in commands and start editing. Down below are all the commands you'll be able to type into the command line.
+
+---
+## General Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands are general commands that can be used in the CLI.
+
+1. set class `<class name>` - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
+   * Example: `set class Apple`
+
+2. help - displays all possible commands
+
+3. help `<command>` - displays expanded commands for the given command.
+   * Example: `help add class`
+   * Example: `help remove method`
+   * Example: `help rename field`
+
+4. list class - Lists everything in the currently selected class
+
+5. list classes - List all created classes
+   * Example: `list classes`
+
+6. save - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save` -> `Enter file name: MyProject`
+
+7. load - loads a json as a UML class. It will ask you to input a name after typing load
+    * Example: `load` -> `Enter file name: MyProject`
+   
+8. exit - exits the program
+---
+## Add Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands add things to the editor.
+
+1. add class `<name>` - creates a class with that name
+   * Example: `add class Apple`
+
+2. add method `<name>` - creates a method with the given name
+    * Example: `add method eat`
+
+3. add field `<name> <type>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+    * Example: `add field color String`
+
+4. add parameter `<existing method> <name> <type>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+    * Example: `add parameter eat food String`
+
+5. add relationship `<existing class name> <different existing class name> <Type>` - creates a relationship between two existing classes.
+    * Example: `add relationship Apple Banana Aggregation`
+---
+## Remove Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands remove things in the editor.
+
+1. remove class `<name>` - removes the class that is currently set
+These commands remove things in the editor.
+    * Example: `remove class Apple`
+
+2. remove method `<name>` - removes a method with the given name
+   * Example: `remove method method1`
+
+3. remove field `<name>` - removes a field with the given name
+    * Example: `remove field field1`
+
+4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+    * Example: `remove parameter method1 param1`
+
+5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+    * Example: `remove relationship Apple Banana Aggregation`
+---
+## Rename Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands rename things in the editor.
+
+1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+   * Example: `rename class Apple Banana`
+
+2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+   * Example: `rename method method1 method2`
+
+3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+   * Example: `rename field field1 field2 String`
+
+4. rename parameter `<existing method> <existing parameter> <new name> <new type>` - renames a parameter in currently selected class to the new name
+   * Example: `rename parameter method1 param1 param2 String`
+---
+
+## Known Bugs
+1. Save does not work at the moment
+![Save And Load](doc/images/savebug.png)
+2. Add field (format) should be `add field <type> <name>` not `add field <name> <type>`
+
+3. Rename Class does not work
+
+![Rename Class](doc/images/renameclassbug.png)
+4. Method overloading is not implemented
+![Method Overloading](doc/images/methodoverloading.png)
+5. Load Feature does not work
+![Load Feature](doc/images/LoadBug.png)
+6. Add Field does not work (ArrayIndexOutOfBoundsException)
+![Field Bug](doc/images/addfieldbug.png)
+7. Add method bug - Breaks when the wrong amount of arguments is entered.
+![Method Bug](doc/images/methodBug.png)
+8. Rename Field does not work (ArrayIndexOutOfBoundsException)
+![Rename Field](doc/images/renamefieldoutofbounds.png)
+9. Add parameter bug - Breaks when the wrong amount of arguments is entered. 
+![Invalid arguments](doc/images/invalidArgumentsParam.png)
+10. Rename Parameter bug - Breaks the program when invalid arguments is entered.
+![Invalid args Rename Param](doc/images/invalidArgsRenameParam.png)
+11. Remove field bug - Breaks the program. Error Displayed - (ArrayIndexOutOfBoundsException)
+![Remove Field](doc/images/removefieldoutofbounds.png)
+12. Remove Parameter bug - Null Pointer Exception
+![Remove Param Bug](doc/images/removeParamBug.png)
+13. Add relationship bug - doesn't check for the 4 types of relationships (Aggregation, Composition, Generalization, Realization).
+![Relationship bug](doc/images/relationshipBug.png)
+14. List classes bug - doesn't display the type of relationship between classes.
+![List Class](doc/images/ListClassBug.png)
+15. Printing Issues for parameter added.
+![Method printing issue](doc/images/methodPrintIssue.png) 
+16. Relationship bugs - Breaks program because it does not check for invalid inputs
+![Relation Invalid args bug](doc/images/relationshipInvalidBugs.png)
+---
+## Sample Workflow
+Provide a simple walkthrough of how to use the CLI to create a UML diagram.
+
+
+---
 
 As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all of the associated commands.
 
@@ -44,62 +189,8 @@ Assuming you typed in the name of the file, all your classes and every attribute
 If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on bootup, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
 
 This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
-
-# CLI Commands
-Down below are usable commands for the UML program. What's here should also display when you type _help_ in the command line
-## General Commands
-These commands don't fall under any category but are basic commands in the program
-
-_set class <class name>_ - sets the class to edit. A class needs to be set to edit its internals such as fields, methods, and parameters.
-
-_help_ - displays all possible commands
-_help <command>_ - displays expanded commands for the given command.
-
-_list class_ - Lists everything in the currently selected class
-_list classes_ - List all created classes
-
-_save_  - saves the current project as one json. It will ask you to input a name after typing in the command.
-_load_ - loads a json as a UML class. It will ask you to input a name after typing load (You do not need to include ".json" in your input. Just the file name)
-
-_exit_ - exits the program
-
-## Add Commands
-These commands add things into the editor.
-
-_add class <name>_ - creates a class with that name
-
-_add method <name>_ - creates a method with the given name
-
-_add field <name> <type>_ - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
-
-_add parameter <existing method> <name> <type>_ - creates a parameter with the given name and type. This requires a method to exist in order to work
-
-_add relationship <existing class name> <different existing class name>_ - creates a relationship between two existing classes.
-
-## Remove Commands
-These commands remove things in the editor.
-
-_remove class_ - removes the class that is currently set
-
-_remove method <name>_ - removes a method with the given name
-
-_remove field <name>_ - removes a field with the given name
-
-_remove parameter <existing method> <name>_ - removes a parameter with the given name
-
-_remove relationship <existing class name> <different existing class name>_ -  removes a relationship between two existing classes.
-
-## Rename Commands
-These commands rename things in the editor.
-
-_rename class <old name> <new name>_ - renames the currently selected class to the new name
-
-_rename method <existing method> <new name>_ - renames a method in currently selected class to the new name
-
-_rename field <existing field> <new name> <new typ >_ - renames a method in currently selected class to the new name
-
-_rename parameter <existing method> <existing parameter > <new name> <new type >_ - renames a parameter in currently selected class to the new name
-
+## WorkFlow Sample
+![Sample WorkFlow](doc/images/flowSample.png)
 
 # GUI Instructions
 
@@ -129,19 +220,4 @@ Requirements:
 
 5. **Managing Relationships**:
     - **Add Relationship**: Select the classes involved from the **From** and **To** dropdowns, then choose a relationship type (e.g., Aggregation, Composition, Generalization, Realization) and click **Add Relation**.
-    - **Delete Relationship**: To remove a relationship, select the involved classes and the relationship type, then click **Delete Relation**.
-
-6. **Saving and Loading Projects**:
-    - To save your work, go to the **File** menu, select **Save**, and enter a filename. The project will be saved as a JSON file.
-    - To load an existing project, select **Load** from the **File** menu and choose the saved file. The UML diagram will be restored on the canvas.
-
-7. **Exit the Application**:
-    - To close the application, select **Exit** from the **File** menu.
-
-## Additional Tips
-
-- **Drag and Drop**: You can arrange classes on the canvas by dragging them to your desired position (Drag by the border).
-- **Highlighting Selected Class**: When you click on a class, it will be highlighted, indicating that it is the currently selected class for editing in the control panel.
-- **Visual Feedback**: Any changes made in the control panel will reflect immediately on the canvas.
-
-Refer to the CLI instructions if you prefer to work with commands. Both the GUI and CLI are synced, allowing flexibility in how you interact with the UML Editor.
+    - **Delete Relationship**: To remove a 
