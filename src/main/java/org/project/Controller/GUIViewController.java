@@ -87,6 +87,8 @@ public class GUIViewController {
 
     fromComboBox.getItems().add(classBox.getName());
     toComboBox.getItems().add(classBox.getName());
+    dataTypeComboBox.getItems().add(classBox.getName());
+    parameterTypeComboBox.getItems().add(classBox.getName());
     canvas.getChildren().add(classBox);
 
     umlController.classCommands.addClass(new String[]{"add", "class", classBox.getName()});
@@ -114,6 +116,8 @@ public class GUIViewController {
 
         fromComboBox.getItems().remove(classNameRemove);
         toComboBox.getItems().remove(classNameRemove);
+        dataTypeComboBox.getItems().remove(classNameRemove);
+        parameterTypeComboBox.getItems().remove(classNameRemove);
 
       } else {
         showAlert("Class", message);
@@ -176,12 +180,20 @@ public class GUIViewController {
 
       int fromIndex = fromComboBox.getItems().indexOf(currentName);
       int toIndex = toComboBox.getItems().indexOf(currentName);
+      int dataTypeIndex = dataTypeComboBox.getItems().indexOf(currentName);
+      int paramTypeIndex = parameterTypeComboBox.getItems().indexOf(currentName);
 
       if (fromIndex >= 0) {
         fromComboBox.getItems().set(fromIndex, newName);
       }
       if (toIndex >= 0) {
         toComboBox.getItems().set(toIndex, newName);
+      }
+      if (dataTypeIndex >= 0) {
+        dataTypeComboBox.getItems().set(dataTypeIndex, newName);
+      }
+      if (paramTypeIndex >=0){
+        parameterTypeComboBox.getItems().set(paramTypeIndex, newName);
       }
     }
   }
@@ -306,6 +318,7 @@ public class GUIViewController {
 
           parameterNameInput.clear();
           methodList.getItems().set(lastMethodIndex, currentMethod);
+
         }
       }
     }
