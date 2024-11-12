@@ -14,20 +14,25 @@ public class Main {
     Scanner scanner = new Scanner(System.in);
 
     while (answer) {
-      System.out.print("Do you want to use GUI UML editor? (yes/y or no/n): ");
+      System.out.println("Welcome to the Unified Modeling Language Editor.");
+      System.out.println("Please choose an interface to start:");
+      System.out.println("  - Graphical User Interface (GUI): Type 'gui' or 'g'");
+      System.out.println("  - Command Line Interface (CLI): Type 'cli' or 'c'");
+      System.out.print("Your choice: ");
       String input = scanner.nextLine().toLowerCase();
 
-      if (input.equals("yes") || input.equals("y")) {
+      if (input.equals("gui") || input.equals("g")) {
         answer = false;
         GUIView.main(args);
-      } else if (input.equals("no") || input.equals("n")) {
+      } else if (input.equals("cli") || input.equals("c")) {
         answer = false;
         new CLIView().runMenu();
       } else {
-        System.out.println("Please enter a valid command.");
+        System.out.println("Please enter a valid option.");
       }
     }
 
     scanner.close();
   }
+
 }
