@@ -1,9 +1,11 @@
 # UML Editor
 
-
-* How to read version # Version main branch.release branch.pull request changes'
-* What's New
-
+v3.0.48
+* How to read version # Version main branch.demo release.pull request changes'
+* What's New:
+* 
+* Major changes:
+   MAJOR REFRACT HAS BEGUN
 ---
 
 ## Table of Contents
@@ -28,7 +30,9 @@ Ensure that the following software is installed on the target machine:
 
 - **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 17 or higher.  
   You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or from [AdoptOpenJDK](https://adoptopenjdk.net/).
-
+- **JavaFX** version 21 or higher.
+  You can download it from the [JavaFX Download page](https://gluonhq.com/products/javafx/).
+  ![JavaFX Download page](doc/images/JavaFX.png)
 ---
 
 ## Running the Application for User

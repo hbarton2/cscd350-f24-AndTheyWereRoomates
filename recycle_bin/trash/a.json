@@ -1,0 +1,13 @@
+{
+  "a": {
+    "name": "a",
+    "methodlist": [],
+    "fields": [
+      {
+        "name": "a",
+        "type": "a"
+      }
+    ],
+    "relation": []
+  }
+}

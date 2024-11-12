@@ -9,50 +9,55 @@ import org.project.Controller.DraggableMaker;
  * This represents a draggable class box that displays the name, fields, and methods.
  */
 public class ClassBox extends VBox {
-    private Label classNameLabel;
-    private final ListView<String> fieldsListView;
-    private final ListView<String> methodsListView;
 
-    /**
-     * Constructs a ClassBox with a specified class name.
-     * @param className the name of the class that will be displayed in this box
-     */
-    public ClassBox(String className) {
-        classNameLabel = new Label(className);
-        fieldsListView = new ListView<>();
-        methodsListView = new ListView<>();
+  private Label classNameLabel;
+  private final ListView<String> fieldsListView;
+  private final ListView<String> methodsListView;
 
-        this.setStyle("-fx-border-width: 5; -fx-border-color: black");
-        this.setPrefSize(200,300);
+  /**
+   * Constructs a ClassBox with a specified class name.
+   *
+   * @param className the name of the class that will be displayed in this box
+   */
+  public ClassBox(String className) {
+    classNameLabel = new Label(className);
+    fieldsListView = new ListView<>();
+    methodsListView = new ListView<>();
 
-        this.getChildren().addAll(classNameLabel, fieldsListView, methodsListView);
+    this.setStyle("-fx-border-width: 5; -fx-border-color: black");
+    this.setPrefSize(200, 300);
 
-        new DraggableMaker().makeDraggable(this);
+    this.getChildren().addAll(classNameLabel, fieldsListView, methodsListView);
+
+    new DraggableMaker().makeDraggable(this);
 
 
-    }
+  }
 
-    /**
-     * Adds a field to the list of fields in the ClassBox.
-     * @param field the field name that will be added
-     */
-    public void addField(String field) {
-        fieldsListView.getItems().add(field);
-    }
+  /**
+   * Adds a field to the list of fields in the ClassBox.
+   *
+   * @param field the field name that will be added
+   */
+  public void addField(String field) {
+    fieldsListView.getItems().add(field);
+  }
 
-    /**
-     * Adds a method to the lists of  methods in the ClassBox.
-     * @param method the method name that will be added
-     */
-    public void addMethod(String method) {
-        methodsListView.getItems().add(method);
-    }
+  /**
+   * Adds a method to the lists of  methods in the ClassBox.
+   *
+   * @param method the method name that will be added
+   */
+  public void addMethod(String method) {
+    methodsListView.getItems().add(method);
+  }
 
-    /**
-     * Returns the name of the class displayed in this Classbox.
-     * @return the class name as a String.
-     */
-    public String getName() {
-        return this.classNameLabel.getText();
-    }
+  /**
+   * Returns the name of the class displayed in this Classbox.
+   *
+   * @return the class name as a String.
+   */
+  public String getName() {
+    return this.classNameLabel.getText();
+  }
 }
