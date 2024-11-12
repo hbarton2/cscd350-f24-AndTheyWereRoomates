@@ -1,24 +1,23 @@
 package org.project.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import org.project.Model.UMLModel;
 import org.project.View.ClassBox;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+
+import java.util.Optional;
 
 public class GUIViewController {
 
@@ -57,6 +56,12 @@ public class GUIViewController {
 
   @FXML
   private ComboBox<String> relationshipTypeComboBox;
+
+  @FXML
+  private MenuBar menuBar;
+
+  @FXML
+  private MenuItem saveButton;
 
   private ClassBox selectedClassBox = null;
 
@@ -643,6 +648,16 @@ public class GUIViewController {
     alert.showAndWait();
   }
 
+
+  private String getFileName(){
+    String filename = "";
+    TextInputDialog dialog = new TextInputDialog("Enter File Name");
+    dialog.setTitle("Enter File Name");
+    dialog.setContentText("Enter A file name: ");
+    Optional<String> result = dialog.showAndWait();
+    return result.orElse("");
+  }
+
   /**
    * Exits the program when the exit button is clicked.
    * @param event the action event for exiting the program
@@ -651,4 +666,11 @@ public class GUIViewController {
   public void exitProgram(ActionEvent event) {
     System.exit(0);
   }
+
+  @FXML
+  public void onSave(ActionEvent event){
+    String fileName = getFileName();
+
+  }
+
 }

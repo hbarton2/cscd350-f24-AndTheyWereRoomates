@@ -12,6 +12,8 @@ public class ClassBox extends VBox {
     private Label classNameLabel;
     private final ListView<String> fieldsListView;
     private final ListView<String> methodsListView;
+    private double xCoordinate;
+    private double yCoordinate;
 
     /**
      * Constructs a ClassBox with a specified class name.
@@ -21,8 +23,11 @@ public class ClassBox extends VBox {
         classNameLabel = new Label(className);
         fieldsListView = new ListView<>();
         methodsListView = new ListView<>();
+        xCoordinate = 0.0;
+        yCoordinate = 0.0;
 
         this.setStyle("-fx-border-width: 5; -fx-border-color: black");
+        classNameLabel.setStyle("-fx-font-size: 18px;");
         this.setPrefSize(200,300);
 
         this.getChildren().addAll(classNameLabel, fieldsListView, methodsListView);
@@ -55,4 +60,15 @@ public class ClassBox extends VBox {
     public String getName() {
         return this.classNameLabel.getText();
     }
+
+    public void setxCoordinate(double xcoor){
+        this.xCoordinate = xcoor;
+    }
+
+
+    public void setyCoordinate(double ycoor){
+        this.yCoordinate = ycoor;
+    }
+
+
 }
