@@ -15,6 +15,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import org.project.View.ClassBox;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 public class GUIViewController {
 
@@ -109,7 +113,14 @@ public class GUIViewController {
       String message = umlController.classCommands.removeClass(
         new String[]{"remove", "class", classNameRemove});
 
-      if (message.isEmpty()) {
+      
+      if (message == null || message.isEmpty()) {
+        // Remove relationships involving the class
+        canvas.getChildren().removeIf(node -> {
+          String nodeId = node.getId();
+          return nodeId != null && (nodeId.startsWith(classNameRemove + "->") || nodeId.contains("->" + classNameRemove));
+        });
+
         // GUI update
         canvas.getChildren().remove(selectedClassBox);
         selectedClassBox = null;
@@ -118,6 +129,7 @@ public class GUIViewController {
         toComboBox.getItems().remove(classNameRemove);
         dataTypeComboBox.getItems().remove(classNameRemove);
         parameterTypeComboBox.getItems().remove(classNameRemove);
+
 
       } else {
         showAlert("Class", message);
@@ -195,6 +207,15 @@ public class GUIViewController {
       if (paramTypeIndex >=0){
         parameterTypeComboBox.getItems().set(paramTypeIndex, newName);
       }
+
+      // Update relationships
+      canvas.getChildren().forEach(node -> {
+        String nodeId = node.getId();
+        if (nodeId != null && (nodeId.startsWith(currentName + "->") || nodeId.contains("->" + currentName))) {
+          String newNodeId = nodeId.replace(currentName, newName);
+          node.setId(newNodeId);
+        }
+      });
     }
   }
 
@@ -426,55 +447,52 @@ public class GUIViewController {
     String toClassName = toClassNameLabel.getText();
     String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-    Line line = new Line();
-    line.setId(relationshipId);
+    // Remove the existing relationship if it exists
+    canvas.getChildren().removeIf(node -> {
+      String nodeId = node.getId();
+      return (nodeId != null && (nodeId.startsWith(fromClassName + "->" + toClassName) || nodeId.startsWith(toClassName + "->" + fromClassName)));
+    });
 
-    line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
-    line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
-
-    line.endXProperty().bind(toBox.layoutXProperty().subtract(20));
-    line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+   Line line = createAndBindLine(fromBox, toBox, relationshipId);
 
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
     arrowHead.getPoints().addAll(
-      -20.0, 0.0,
-      0.0, -10.0,
-      20.0, 0.0,
-      0.0, 10.0,
-      -20.0, 0.0
+            -20.0, 0.0,
+            0.0, -10.0,
+            20.0, 0.0,
+            0.0, 10.0,
+            -20.0, 0.0
     );
 
     switch (relationType) {
       case "Aggregation":
         arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.TRANSPARENT);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Composition":
         arrowHead.setStroke(Color.BLACK);
         arrowHead.setFill(Color.BLACK);
         break;
       case "Generalization":
-
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0
         );
         arrowHead.setFill(Color.BLACK);
         break;
       case "Realization":
-
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0
         );
         arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.TRANSPARENT);
+        arrowHead.setFill(Color.GRAY);
         line.getStrokeDashArray().addAll(10.0, 10.0);
         break;
       default:
@@ -486,6 +504,73 @@ public class GUIViewController {
 
     canvas.getChildren().addAll(line, arrowHead);
   }
+
+    /**
+     * Returns the top, bottom, left, and right points of the class box.
+     * @param box the VBox representing the class box
+     * @return the points of the class box
+     */
+    private DoubleBinding[][] classBoxPoints(VBox box) {
+        DoubleBinding topX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+        DoubleBinding topY = Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
+        DoubleBinding bottomX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+        DoubleBinding bottomY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
+        DoubleBinding leftX = Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
+        DoubleBinding leftY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+        DoubleBinding rightX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
+        DoubleBinding rightY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+
+        return new DoubleBinding[][]{{topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}};
+    }
+
+
+    /**
+     * Creates a line between two class boxes and binds the line to the class boxes.
+     * @param fromBox the VBox representing the source class box
+     * @param toBox the VBox representing the destination class box
+     * @param relationshipId the id of the relationship
+     * @return the line between the two class boxes
+     */
+    private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
+        Line line = new Line();
+        line.setId(relationshipId);
+
+        DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
+        DoubleBinding[][] toPoints = classBoxPoints(toBox);
+
+        DoubleProperty startX = new SimpleDoubleProperty();
+        DoubleProperty startY = new SimpleDoubleProperty();
+        DoubleProperty endX = new SimpleDoubleProperty();
+        DoubleProperty endY = new SimpleDoubleProperty();
+
+        Runnable updateLine = () -> {
+            double minDistance = Double.MAX_VALUE;
+            for (DoubleBinding[] fromPoint : fromPoints) {
+                for (DoubleBinding[] toPoint : toPoints) {
+                    double distance = Math.sqrt(Math.pow(fromPoint[0].get() - toPoint[0].get(), 2) + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        startX.set(fromPoint[0].get());
+                        startY.set(fromPoint[1].get());
+                        endX.set(toPoint[0].get());
+                        endY.set(toPoint[1].get());
+                    }
+                }
+            }
+            line.startXProperty().bind(startX);
+            line.startYProperty().bind(startY);
+            line.endXProperty().bind(endX);
+            line.endYProperty().bind(endY);
+        };
+
+        fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        toBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        toBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+
+        updateLine.run();
+        return line;
+    }
 
   /**
    * Adds a relationship line between two selected classes,

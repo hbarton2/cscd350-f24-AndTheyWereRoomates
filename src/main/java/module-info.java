@@ -12,5 +12,7 @@ module org.project {
   exports org.project.View to javafx.graphics;
 
   opens org.project.Controller to javafx.fxml;
+  opens org.project.Model to com.google.gson;
+  exports org.project;
 }
 
