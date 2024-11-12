@@ -78,6 +78,13 @@ public class GUIViewController  implements Initializable {
 
   FileChooser fileChooser = new FileChooser();
 
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    String home = System.getProperty("user.home");
+    fileChooser.setInitialDirectory(new File(home));
+  }
+
   /**
    * This is the constructor for GUIViewController.
    * Initializes UMLController
@@ -685,16 +692,17 @@ public class GUIViewController  implements Initializable {
 
   }
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    String home = System.getProperty("user.home");
-    fileChooser.setInitialDirectory(new File(home));
-  }
-
+  /**
+   * When the open button is clicked it will ask the user to choose a file they like to upload.
+   * *It will only allow them to enter a .json file*
+   * @param event - The action for opening a file.
+   */
   @FXML
   public void onOpen(ActionEvent event){
-    File file = fileChooser.showOpenDialog(new Stage());
+    FileChooser.ExtensionFilter jsonFilter =  new FileChooser.ExtensionFilter("Json Files", "*.json");
+    fileChooser.getExtensionFilters().add(jsonFilter);
 
+    File file = fileChooser.showOpenDialog(new Stage());
   }
 
 }
