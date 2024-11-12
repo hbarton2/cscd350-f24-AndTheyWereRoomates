@@ -7,22 +7,23 @@ import javafx.scene.Node;
  */
 public class DraggableMaker {
 
-    private double mouseAnchorX;
-    private double mouseAnchorY;
+  private double mouseAnchorX;
+  private double mouseAnchorY;
 
-    /**
-     * Makes the specified node draggable by tracking mouse press and drag events.
-     * @param node the Node that will be made draggable
-     */
-    public void makeDraggable(Node node){
-        node.setOnMousePressed(e ->{
-            mouseAnchorX = e.getX();
-            mouseAnchorY = e.getY();
-        });
+  /**
+   * Makes the specified node draggable by tracking mouse press and drag events.
+   *
+   * @param node the Node that will be made draggable
+   */
+  public void makeDraggable(Node node) {
+    node.setOnMousePressed(e -> {
+      mouseAnchorX = e.getX();
+      mouseAnchorY = e.getY();
+    });
 
-        node.setOnMouseDragged( mouseEvent -> {
-            node.setLayoutX(mouseEvent.getSceneX() - mouseAnchorX);
-            node.setLayoutY(mouseEvent.getSceneY() - mouseAnchorY);
-        });
-    }
+    node.setOnMouseDragged(mouseEvent -> {
+      node.setLayoutX(mouseEvent.getSceneX() - mouseAnchorX);
+      node.setLayoutY(mouseEvent.getSceneY() - mouseAnchorY);
+    });
+  }
 }

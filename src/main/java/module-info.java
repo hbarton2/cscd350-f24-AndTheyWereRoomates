@@ -1,5 +1,5 @@
 /**
- * minimum requirements
+ * minimum requirements for v
  */
 module org.project {
   requires javafx.controls;
@@ -9,8 +9,10 @@ module org.project {
   requires com.google.gson;
 
   exports org.project.Controller;
-  exports org.project.View to javafx.graphics;
+  exports org.project.Model;
+  exports org.project.View;
 
-  opens org.project.Controller to javafx.fxml;
+  opens org.project.Controller to javafx.fxml, com.google.gson;
+  opens org.project.Model to javafx.fxml, com.google.gson;
+  opens org.project.View to javafx.fxml;
 }
-
