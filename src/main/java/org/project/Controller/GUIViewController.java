@@ -3,6 +3,7 @@ package org.project.Controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -10,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.project.Model.UMLModel;
 import org.project.View.ClassBox;
 import javafx.beans.binding.Bindings;
@@ -17,9 +20,12 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class GUIViewController {
+public class GUIViewController  implements Initializable {
 
   @FXML
   private Pane canvas;
@@ -63,9 +69,14 @@ public class GUIViewController {
   @FXML
   private MenuItem saveButton;
 
+  @FXML
+  private  MenuItem openButton;
+
   private ClassBox selectedClassBox = null;
 
   public UMLController umlController;
+
+  FileChooser fileChooser = new FileChooser();
 
   /**
    * This is the constructor for GUIViewController.
@@ -74,6 +85,7 @@ public class GUIViewController {
   public GUIViewController() {
     this.umlController = new UMLController();
   }
+
 
 
   /**
@@ -670,6 +682,18 @@ public class GUIViewController {
   @FXML
   public void onSave(ActionEvent event){
     String fileName = getFileName();
+
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    String home = System.getProperty("user.home");
+    fileChooser.setInitialDirectory(new File(home));
+  }
+
+  @FXML
+  public void onOpen(ActionEvent event){
+    File file = fileChooser.showOpenDialog(new Stage());
 
   }
 
