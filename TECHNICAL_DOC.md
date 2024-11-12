@@ -194,30 +194,122 @@ This should give you the idea of how the UML editor works. If you need a reminde
 
 # GUI Instructions
 
-The UML Editor application also provides a Graphical User Interface (GUI) for users who prefer a visual editing experience. Below are instructions for navigating and using the GUI.
+Upon booting up in GUI mode, you'll be presented with a new window titled "UML EDITOR". 
+You should see this window upon bootup.
+![img.png](doc/images/UMLEDITORwindow.png)
 
-## Getting Started with the GUI
+## GUI Usage
+On this window, you'll be able to add classes and edit. Down below are a detailed explanation as to what 
+buttons does what and how to interface with the program.
 
-Requirements:
-- Java 17 or higher
-- JVM
+1. [Workspace UI](#workspace-ui)
+2. [Select Objects](#selecting-objects)
+3. [Class Buttons](#class-editing)
+4. [Field Buttons](#field-editing)
+5. [Method Buttons](#method-editing)
+6. [Parameter Buttons](#parameter-editing)
+7. [Relationship Buttons](#relationship-editing)
+8. [Known Bugs](#known-gui-bugs)
 
-1. **Launching the Application in GUI Mode**:
-    - Start the UML Editor in GUI mode by double clicking the JAR file. You should see a blank canvas area on the left, where classes will appear, and a control panel on the right.
+## Window UI
+This is a general breakdown of what does what in the UI. A more detailed breakdown for each part is below in this document.
 
-2. **Adding a Class**:
-    - To add a new class, click the **Add Class** button on the top right of the control panel. A new class box will appear on the canvas.
-    - Type the desired class name in the **Class Name** field and click **Set Class Name** to assign it.
+### Workspace UI
+![img.png](doc/images/DetailedGUIBreakdown.png)
 
-3. **Editing Class Properties**:
-    - **Adding Fields**: Enter a field name in the **Field Name** input box, select a data type from the dropdown, and click **Add**. The field will be added to the selected class.
-    - **Adding Methods**: Type the method name in the **Method Name** box and click **Add**. The method will appear within the selected class box.
-    - **Adding Parameters**: To add parameters to a method, select the method first. Then, specify the parameter name and type in the **Add Parameter** section and click **Add**.
+1. Workspace - This where your work will appear 
+2. Class Editor Buttons - These buttons edit classes in your workspaceS
+3. Field Editor Buttons - These buttons edit fields in a class
+4. Method Editor Buttons - These buttons edit methods in a class. The buttons to add/remove/rename are seperated from the name text field
+5. Parameter Editor Buttons - These buttons edit parameters in a method. 
+6. Relationship Editor Buttons - These button edit the relationship between two existing classes
+7. Miscellaneous Editing Dropdowns - These allow opening files, advance editing, and help
 
-4. **Renaming and Deleting Fields or Methods**:
-    - **Rename Field/Method**: Select the field or method, modify the name in the input box, and click **Rename Field** or **Rename Method**.
-    - **Delete Field/Method**: Select the field or method and click **Delete Field** or **Delete Method** to remove it.
 
-5. **Managing Relationships**:
-    - **Add Relationship**: Select the classes involved from the **From** and **To** dropdowns, then choose a relationship type (e.g., Aggregation, Composition, Generalization, Realization) and click **Add Relation**.
-    - **Delete Relationship**: To remove a 
+### Class UI
+![img.png](doc/images/ClassUIBreakdown.png)
+
+* If you wish to edit something in a particular field, click on the specified field to start editing.
+* You can tell if you selected something in the list when it's colored blue.
+1. Class - One entire rectangle is a Class, with Fields, Methods, and Parameters inside.
+2. Fields - Where the fields are listed
+3. Methods - Where Methods are listed
+4. Parameter - Where Parameters are listed, inside one Method
+5. Relationship - These indicate what relationship a class has with another class
+
+## Selecting Objects
+### Selecting a Class
+If you want to select a class to edit, click the name of the box to select it for editing, otherwise you'll only
+select it to move it around. You know you have a class selected if it has a blue glow, like this:
+
+![img.png](doc/images/GUIExamplePicture_ClassSelected.png)
+### Selecting components of a Class
+If you want to select attributes inside a class (in this example, a field), click the specific entry until
+it is highlighted blue like so:
+
+![img.png](doc/images/GUIExamplePicture_FieldSelected.png)
+
+### Class Editing
+These buttons all edit classes
+
+![img.png](doc/images/GUIClassDiagram.png)
+1. Add Class - Creates a completely new blank class
+2. Delete Class - Deletes a currently selected class
+3. Class Name: - This text field is where the class name will display and where you can edit the name.
+4. Set Class Name - Sets the name to the currently selected class if it's changed.
+
+### Field Editing
+
+![img.png](doc/images/GUIFieldDiagram.png)
+1. Field Name: - This text field is where you'll input a name for the field.
+2. Type - A dropdown field where you set what type the field is. 
+3. Add - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
+4. Rename Field - Renames a currently selected field. Click on the specific field to rename it
+5. Delete Field - Deletes a currently selected field. Click on the specific field to remove it
+
+### Method Editing
+
+![img.png](doc/images/GUIMethodDiagram.png)
+1. Method Name - This text field is where you'll input a name for the method.
+2. Add - Adds a method to the given class
+3. Delete - Deletes a currently selected method. Click on the specific field to remove it
+4. Rename Method - Renames a currently selected method. Click on the specific field to rename it
+
+### Parameter Editing
+
+![img.png](doc/images/GUIParameterDiagram.png)
+* To edit a parameter, you must have a Method first
+1. Name - This text field is where you'll input a name for the parameter.
+2. Type - This opens a dropdown display to select a type for the parameter
+3. Add - Adds a parameter to a method
+
+### Relationship Editing
+
+![img.png](doc/images/GUIRelationshipDiagram.png)
+* This requires two existing classes to work.
+1. From - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
+2. To - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
+3. Type - This opens a dropdown display to select the type of relationship between two classes
+4. Add Relation - This creates a relationship between two classes, displaying as an arrow pointing from one class to another
+5. Delete Relation - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
+
+## Known GUI Bugs
+1. Add Parameter - Cannot add a parameter to a specific method, instead defaulting to the most recent method created.
+To recreate: 
+<br> Create multiple Methods for one class and try to create parameters for any methods beyond the bottom most method. You cannot create any parameters
+in any methods besides the one in the bottom of the list.
+
+![img.png](doc/images/GUIbug.png)
+
+2.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the 
+left of a class, creating weird graphical issues of overlapping 
+![img.png](doc/images/GUIbug_RelationshipGraphicalIssues.png)
+
+3. Relationship Display - Deleting classes with relationships doesn't remove the arrows.
+Create two methods with relationships, delete one class with a relationship
+![img.png](doc/images/GUIbug_ReplationshipsNotRemoving.png)
+
+4. Relationship Display - Selecting Generalization or Realization for a Relationship will have the arrow offset from the class
+and the line is connected to the tip of the arrow and not go through it
+![img.png](doc/images/GUIbug_RelationshipDisplayBug.png)
+![img.png](doc/images/GUIbug_RelationshipDisplayBugRealization.png)
