@@ -1,6 +1,6 @@
 # UML Editor
 
-v3.0.48
+v3.0.49
 * How to read version # Version main branch.demo release.pull request changes'
 * What's New:
 * 
