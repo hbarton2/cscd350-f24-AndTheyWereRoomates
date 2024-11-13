@@ -1,22 +1,31 @@
 package org.project.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.project.Model.UMLModel;
 import org.project.View.ClassBox;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
-public class GUIViewController {
+import java.io.File;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+public class GUIViewController  implements Initializable {
 
   @FXML
   private Pane canvas;
@@ -54,9 +63,32 @@ public class GUIViewController {
   @FXML
   private ComboBox<String> relationshipTypeComboBox;
 
+  @FXML
+  private MenuBar menuBar;
+
+  @FXML
+  private MenuItem saveButton;
+
+  @FXML
+  private  MenuItem openButton;
+
   private ClassBox selectedClassBox = null;
 
   public UMLController umlController;
+
+  FileChooser fileChooser = new FileChooser();
+
+
+  /**
+   * This sets the default path to be the user's home directory.
+   * @param url - These are not setup
+   * @param resourceBundle - Not setup
+   */
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    String home = System.getProperty("user.home"); //This could be changed later
+    fileChooser.setInitialDirectory(new File(home));
+  }
 
   /**
    * This is the constructor for GUIViewController. Initializes UMLController
@@ -64,6 +96,7 @@ public class GUIViewController {
   public GUIViewController() {
     this.umlController = new UMLController();
   }
+
 
 
   /**
@@ -87,6 +120,8 @@ public class GUIViewController {
 
     fromComboBox.getItems().add(classBox.getName());
     toComboBox.getItems().add(classBox.getName());
+    dataTypeComboBox.getItems().add(classBox.getName());
+    parameterTypeComboBox.getItems().add(classBox.getName());
     canvas.getChildren().add(classBox);
 
     umlController.classCommands.addClass(new String[]{"add", "class", classBox.getName()});
@@ -108,13 +143,23 @@ public class GUIViewController {
       String message = umlController.classCommands.removeClass(
         new String[]{"remove", "class", classNameRemove});
 
-      if (message.isEmpty()) {
+      
+      if (message == null || message.isEmpty()) {
+        // Remove relationships involving the class
+        canvas.getChildren().removeIf(node -> {
+          String nodeId = node.getId();
+          return nodeId != null && (nodeId.startsWith(classNameRemove + "->") || nodeId.contains("->" + classNameRemove));
+        });
+
         // GUI update
         canvas.getChildren().remove(selectedClassBox);
         selectedClassBox = null;
 
         fromComboBox.getItems().remove(classNameRemove);
         toComboBox.getItems().remove(classNameRemove);
+        dataTypeComboBox.getItems().remove(classNameRemove);
+        parameterTypeComboBox.getItems().remove(classNameRemove);
+
 
       } else {
         showAlert("Class", message);
@@ -182,6 +227,8 @@ public class GUIViewController {
 
       int fromIndex = fromComboBox.getItems().indexOf(currentName);
       int toIndex = toComboBox.getItems().indexOf(currentName);
+      int dataTypeIndex = dataTypeComboBox.getItems().indexOf(currentName);
+      int paramTypeIndex = parameterTypeComboBox.getItems().indexOf(currentName);
 
       if (fromIndex >= 0) {
         fromComboBox.getItems().set(fromIndex, newName);
@@ -189,6 +236,21 @@ public class GUIViewController {
       if (toIndex >= 0) {
         toComboBox.getItems().set(toIndex, newName);
       }
+      if (dataTypeIndex >= 0) {
+        dataTypeComboBox.getItems().set(dataTypeIndex, newName);
+      }
+      if (paramTypeIndex >=0){
+        parameterTypeComboBox.getItems().set(paramTypeIndex, newName);
+      }
+
+      // Update relationships
+      canvas.getChildren().forEach(node -> {
+        String nodeId = node.getId();
+        if (nodeId != null && (nodeId.startsWith(currentName + "->") || nodeId.contains("->" + currentName))) {
+          String newNodeId = nodeId.replace(currentName, newName);
+          node.setId(newNodeId);
+        }
+      });
     }
   }
 
@@ -319,10 +381,12 @@ public class GUIViewController {
 
           parameterNameInput.clear();
           methodList.getItems().set(lastMethodIndex, currentMethod);
+
         }
       }
     }
   }
+
 
   /**
    * Adds a new method to the selected class box
@@ -353,6 +417,7 @@ public class GUIViewController {
     }
   }
 
+
   /**
    * Deletes selected method from the selected class box.
    *
@@ -376,6 +441,7 @@ public class GUIViewController {
       }
     }
   }
+
 
   /**
    * Renames the selected method in the selected class box.
@@ -409,6 +475,7 @@ public class GUIViewController {
     }
   }
 
+
   /**
    * Draws a relationship line with an arrowhead between two class boxes, based on the selected
    * relationship type.
@@ -431,55 +498,53 @@ public class GUIViewController {
     String toClassName = toClassNameLabel.getText();
     String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-    Line line = new Line();
-    line.setId(relationshipId);
+    // Remove the existing relationship if it exists
+    canvas.getChildren().removeIf(node -> {
+      String nodeId = node.getId();
+      return (nodeId != null && (nodeId.startsWith(fromClassName + "->" + toClassName) || nodeId.startsWith(toClassName + "->" + fromClassName)));
+    });
 
-    line.startXProperty().bind(fromBox.layoutXProperty().add(fromBox.widthProperty()));
-    line.startYProperty().bind(fromBox.layoutYProperty().add(fromBox.heightProperty().divide(2)));
-
-    line.endXProperty().bind(toBox.layoutXProperty().subtract(20));
-    line.endYProperty().bind(toBox.layoutYProperty().add(toBox.heightProperty().divide(2)));
+   Line line = createAndBindLine(fromBox, toBox, relationshipId);
 
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
     arrowHead.getPoints().addAll(
-      -20.0, 0.0,
-      0.0, -10.0,
-      20.0, 0.0,
-      0.0, 10.0,
-      -20.0, 0.0
+            -40.0, 0.0,
+            -20.0, -10.0,
+            0.0, 0.0,
+            -20.0, 10.0,
+            -40.0, 0.0
     );
+
 
     switch (relationType) {
       case "Aggregation":
         arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.TRANSPARENT);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Composition":
         arrowHead.setStroke(Color.BLACK);
         arrowHead.setFill(Color.BLACK);
         break;
       case "Generalization":
-
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0
         );
         arrowHead.setFill(Color.BLACK);
         break;
       case "Realization":
-
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0
         );
         arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.TRANSPARENT);
+        arrowHead.setFill(Color.GRAY);
         line.getStrokeDashArray().addAll(10.0, 10.0);
         break;
       default:
@@ -491,6 +556,75 @@ public class GUIViewController {
 
     canvas.getChildren().addAll(line, arrowHead);
   }
+
+
+    /**
+     * Returns the top, bottom, left, and right points of the class box.
+     * @param box the VBox representing the class box
+     * @return the points of the class box
+     */
+    private DoubleBinding[][] classBoxPoints(VBox box) {
+        DoubleBinding topX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+        DoubleBinding topY = Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
+        DoubleBinding bottomX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+        DoubleBinding bottomY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
+        DoubleBinding leftX = Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
+        DoubleBinding leftY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+        DoubleBinding rightX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
+        DoubleBinding rightY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+
+        return new DoubleBinding[][]{{topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}};
+    }
+
+
+    /**
+     * Creates a line between two class boxes and binds the line to the class boxes.
+     * @param fromBox the VBox representing the source class box
+     * @param toBox the VBox representing the destination class box
+     * @param relationshipId the id of the relationship
+     * @return the line between the two class boxes
+     */
+    private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
+        Line line = new Line();
+        line.setId(relationshipId);
+
+        DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
+        DoubleBinding[][] toPoints = classBoxPoints(toBox);
+
+        DoubleProperty startX = new SimpleDoubleProperty();
+        DoubleProperty startY = new SimpleDoubleProperty();
+        DoubleProperty endX = new SimpleDoubleProperty();
+        DoubleProperty endY = new SimpleDoubleProperty();
+
+        Runnable updateLine = () -> {
+            double minDistance = Double.MAX_VALUE;
+            for (DoubleBinding[] fromPoint : fromPoints) {
+                for (DoubleBinding[] toPoint : toPoints) {
+                    double distance = Math.sqrt(Math.pow(fromPoint[0].get() - toPoint[0].get(), 2) + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        startX.set(fromPoint[0].get());
+                        startY.set(fromPoint[1].get());
+                        endX.set(toPoint[0].get());
+                        endY.set(toPoint[1].get());
+                    }
+                }
+            }
+            line.startXProperty().bind(startX);
+            line.startYProperty().bind(startY);
+            line.endXProperty().bind(endX);
+            line.endYProperty().bind(endY);
+        };
+
+        fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        toBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+        toBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+
+        updateLine.run();
+        return line;
+    }
+
 
   /**
    * Adds a relationship line between two selected classes, based on the selected relationship type
@@ -513,6 +647,7 @@ public class GUIViewController {
     drawRelationLine(fromBox, toBox, relationType);
   }
 
+
   /**
    * Finds and returns a class box by its name.
    *
@@ -531,6 +666,7 @@ public class GUIViewController {
     }
     return null;
   }
+
 
   /**
    * Deletes the selected relationship between two classes from the canvas, based on the selected
@@ -553,6 +689,7 @@ public class GUIViewController {
     canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
   }
 
+
   /**
    * Displays an alert pop up with a title and content.
    *
@@ -567,6 +704,17 @@ public class GUIViewController {
     alert.showAndWait();
   }
 
+
+  private String getFileName(){
+    String filename = "";
+    TextInputDialog dialog = new TextInputDialog("Enter File Name");
+    dialog.setTitle("Enter File Name");
+    dialog.setContentText("Enter A file name: ");
+    Optional<String> result = dialog.showAndWait();
+    return result.orElse("");
+  }
+
+
   /**
    * Exits the program when the exit button is clicked.
    *
@@ -576,4 +724,28 @@ public class GUIViewController {
   public void exitProgram(ActionEvent event) {
     System.exit(0);
   }
+
+
+  @FXML
+  public void onSave(ActionEvent event){
+    String fileName = getFileName();
+
+  }
+
+
+  /**
+   * When the open button is clicked it will ask the user to choose a file they like to upload.
+   * *It will only allow them to enter a .json file*
+   * @param event - The action for opening a file.
+   */
+  @FXML
+  public void onOpen(ActionEvent event){
+    FileChooser.ExtensionFilter jsonFilter =  new FileChooser.ExtensionFilter("Json Files", "*.json");
+    fileChooser.getExtensionFilters().add(jsonFilter);
+
+    File file = fileChooser.showOpenDialog(new Stage());
+  }
+
+
+
 }
