@@ -11,6 +11,6 @@ public class CommandParserPrintTest {
 //    testParse.parseCommand("create class Animal");
 //
 //    testParse.getCurrentClass();
-    testParse.printCommandsStructure();
+//    testParse.printCommandsStructure();
   }
 }
