@@ -1,0 +1,51 @@
+{
+  "className": "ExampleClass",
+  "fields": [
+    {
+      "type": "String",
+      "name": "exampleField"
+    },
+    {
+      "type": "int",
+      "name": "exampleNumber"
+    }
+  ],
+  "methods": [
+    {
+      "type": "void",
+      "name": "exampleMethod",
+      "parameters": [
+        {
+          "type": "String",
+          "name": "param1"
+        },
+        {
+          "type": "int",
+          "name": "param2"
+        }
+      ],
+      "isOverloaded": false
+    },
+    {
+      "type": "void",
+      "name": "exampleMethod",
+      "parameters": [
+        {
+          "type": "String",
+          "name": "param1"
+        }
+      ],
+      "isOverloaded": true
+    }
+  ],
+  "relationships": [
+    {
+      "type": "inheritance",
+      "target": "ParentClass"
+    },
+    {
+      "type": "association",
+      "target": "AssociatedClass"
+    }
+  ]
+}

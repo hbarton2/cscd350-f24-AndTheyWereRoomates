@@ -91,8 +91,7 @@ public class GUIViewController  implements Initializable {
   }
 
   /**
-   * This is the constructor for GUIViewController.
-   * Initializes UMLController
+   * This is the constructor for GUIViewController. Initializes UMLController
    */
   public GUIViewController() {
     this.umlController = new UMLController();
@@ -102,6 +101,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * This method creates a Class object with a default name of "Class Name #"
+   *
    * @param event - When the "Create Class" button is clicked
    */
   public void createClass(ActionEvent event) {
@@ -131,6 +131,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * This method deletes the class from the model and gui view
+   *
    * @param event - Represents the action of the button being clicked
    */
   @FXML
@@ -167,7 +168,8 @@ public class GUIViewController  implements Initializable {
   }
 
   /**
-   *  This method saves the box that was last selected by the user
+   * This method saves the box that was last selected by the user
+   *
    * @param classBox - Representing the box that was selected
    */
   private void selectClassBox(ClassBox classBox) {
@@ -188,7 +190,9 @@ public class GUIViewController  implements Initializable {
   }
 
   /**
-   * When the hide/show button is clicked, depending on the status of the inspector. It will hide and show the inspector
+   * When the hide/show button is clicked, depending on the status of the inspector. It will hide
+   * and show the inspector
+   *
    * @param event - Representing the action of the button being clicked
    */
   @FXML
@@ -199,7 +203,9 @@ public class GUIViewController  implements Initializable {
   }
 
   /**
-   * When the "Set Class Name" button is clicked. It will grab the input box text and set that to be the new class name.
+   * When the "Set Class Name" button is clicked. It will grab the input box text and set that to be
+   * the new class name.
+   *
    * @param event - Representing the action of the button being clicked
    */
 
@@ -249,7 +255,9 @@ public class GUIViewController  implements Initializable {
   }
 
   /**
-   * When the "Add Field" button is clicked, it will grab the text inside the field text box and add it to the selected Class
+   * When the "Add Field" button is clicked, it will grab the text inside the field text box and add
+   * it to the selected Class
+   *
    * @param event - Representing the action of the button being clicked
    */
   @FXML
@@ -282,7 +290,9 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * Inside the selected class the user will have a field selected. When the user clicks on "Delete Field" the selected field will then be deleted.
+   * Inside the selected class the user will have a field selected. When the user clicks on "Delete
+   * Field" the selected field will then be deleted.
+   *
    * @param event - Representing the action of the event being pressed
    */
   @FXML
@@ -304,8 +314,9 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * Inside the selected class the user has a field selected. When the user clicks "Rename Field" button this method will gave
-   * the text inside the field box and rename the field
+   * Inside the selected class the user has a field selected. When the user clicks "Rename Field"
+   * button this method will gave the text inside the field box and rename the field
+   *
    * @param event - Representing the action that the button is clicked
    */
   @FXML
@@ -341,8 +352,10 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * When the user has a class selected and a method in the class selected. When the user clicks on "Add Parameter". It wil grab the input in the field method
-   * and add it the selected method in the selected class.
+   * When the user has a class selected and a method in the class selected. When the user clicks on
+   * "Add Parameter". It wil grab the input in the field method and add it the selected method in
+   * the selected class.
+   *
    * @param event - Representing the action that the button is clicked
    */
   @FXML
@@ -377,6 +390,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Adds a new method to the selected class box
+   *
    * @param event the action event triggered by clicking on the add method button.
    */
   @FXML
@@ -406,6 +420,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Deletes selected method from the selected class box.
+   *
    * @param event the action event is triggered by clicking on the delete method button
    */
   @FXML
@@ -430,6 +445,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Renames the selected method in the selected class box.
+   *
    * @param event the action event triggered by renaming a method
    */
   @FXML
@@ -461,11 +477,13 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * Draws a relationship line with an arrowhead between two class boxes,
-   * based on the selected relationship type.
-   * @param fromBox the VBox representing the source class box
-   * @param toBox the Vbox representing the destination class box
-   * @param relationType the type of relationship (Aggregation, Composition, Generalization, Realization)
+   * Draws a relationship line with an arrowhead between two class boxes, based on the selected
+   * relationship type.
+   *
+   * @param fromBox      the VBox representing the source class box
+   * @param toBox        the Vbox representing the destination class box
+   * @param relationType the type of relationship (Aggregation, Composition, Generalization,
+   *                     Realization)
    */
   @FXML
   public void drawRelationLine(VBox fromBox, VBox toBox, String relationType) {
@@ -609,8 +627,9 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * Adds a relationship line between two selected classes,
-   * based on the selected relationship type and class names.
+   * Adds a relationship line between two selected classes, based on the selected relationship type
+   * and class names.
+   *
    * @param event the action event triggered by clicking the add relationship button
    */
   @FXML
@@ -631,6 +650,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Finds and returns a class box by its name.
+   *
    * @param classBoxName the name of the class box to find
    * @return the VBox representing the class box with the specified name, or null if not found
    */
@@ -649,8 +669,9 @@ public class GUIViewController  implements Initializable {
 
 
   /**
-   * Deletes the selected relationship between two classes from the canvas,
-   * based on the selected classes and relationship type in the "From" and "To" Combobox.
+   * Deletes the selected relationship between two classes from the canvas, based on the selected
+   * classes and relationship type in the "From" and "To" Combobox.
+   *
    * @param event the action even triggered by clicking the delete relationship button
    */
   @FXML
@@ -671,7 +692,8 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Displays an alert pop up with a title and content.
-   * @param title the title of the alert pop up
+   *
+   * @param title   the title of the alert pop up
    * @param content the message content to be displayed in the alert
    */
   private void showAlert(String title, String content) {
@@ -695,6 +717,7 @@ public class GUIViewController  implements Initializable {
 
   /**
    * Exits the program when the exit button is clicked.
+   *
    * @param event the action event for exiting the program
    */
   @FXML

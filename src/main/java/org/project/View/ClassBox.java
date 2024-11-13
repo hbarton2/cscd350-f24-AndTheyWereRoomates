@@ -71,5 +71,4 @@ public class ClassBox extends VBox {
         this.yCoordinate = ycoor;
     }
 
-
 }
