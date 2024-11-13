@@ -79,9 +79,14 @@ public class GUIViewController  implements Initializable {
   FileChooser fileChooser = new FileChooser();
 
 
+  /**
+   * This sets the default path to be the user's home directory.
+   * @param url - These are not setup
+   * @param resourceBundle - Not setup
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    String home = System.getProperty("user.home");
+    String home = System.getProperty("user.home"); //This could be changed later
     fileChooser.setInitialDirectory(new File(home));
   }
 
@@ -369,6 +374,7 @@ public class GUIViewController  implements Initializable {
     }
   }
 
+
   /**
    * Adds a new method to the selected class box
    * @param event the action event triggered by clicking on the add method button.
@@ -397,6 +403,7 @@ public class GUIViewController  implements Initializable {
     }
   }
 
+
   /**
    * Deletes selected method from the selected class box.
    * @param event the action event is triggered by clicking on the delete method button
@@ -419,6 +426,7 @@ public class GUIViewController  implements Initializable {
       }
     }
   }
+
 
   /**
    * Renames the selected method in the selected class box.
@@ -450,6 +458,7 @@ public class GUIViewController  implements Initializable {
       }
     }
   }
+
 
   /**
    * Draws a relationship line with an arrowhead between two class boxes,
@@ -529,6 +538,7 @@ public class GUIViewController  implements Initializable {
     canvas.getChildren().addAll(line, arrowHead);
   }
 
+
     /**
      * Returns the top, bottom, left, and right points of the class box.
      * @param box the VBox representing the class box
@@ -596,6 +606,7 @@ public class GUIViewController  implements Initializable {
         return line;
     }
 
+
   /**
    * Adds a relationship line between two selected classes,
    * based on the selected relationship type and class names.
@@ -616,6 +627,7 @@ public class GUIViewController  implements Initializable {
     drawRelationLine(fromBox, toBox, relationType);
   }
 
+
   /**
    * Finds and returns a class box by its name.
    * @param classBoxName the name of the class box to find
@@ -633,6 +645,7 @@ public class GUIViewController  implements Initializable {
     }
     return null;
   }
+
 
   /**
    * Deletes the selected relationship between two classes from the canvas,
@@ -653,6 +666,7 @@ public class GUIViewController  implements Initializable {
 
     canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
   }
+
 
   /**
    * Displays an alert pop up with a title and content.
@@ -677,6 +691,7 @@ public class GUIViewController  implements Initializable {
     return result.orElse("");
   }
 
+
   /**
    * Exits the program when the exit button is clicked.
    * @param event the action event for exiting the program
@@ -686,11 +701,13 @@ public class GUIViewController  implements Initializable {
     System.exit(0);
   }
 
+
   @FXML
   public void onSave(ActionEvent event){
     String fileName = getFileName();
 
   }
+
 
   /**
    * When the open button is clicked it will ask the user to choose a file they like to upload.
@@ -704,5 +721,7 @@ public class GUIViewController  implements Initializable {
 
     File file = fileChooser.showOpenDialog(new Stage());
   }
+
+
 
 }

@@ -26,13 +26,14 @@ public class ClassBox extends VBox {
         xCoordinate = 0.0;
         yCoordinate = 0.0;
 
-        this.setStyle("-fx-border-width: 5; -fx-border-color: black");
+
+        classNameLabel.setMouseTransparent(true);
+        this.setStyle("-fx-border-width: 5; -fx-border-color: black; -fx-background-color: white");
         classNameLabel.setStyle("-fx-font-size: 18px;");
         this.setPrefSize(200,300);
-
         this.getChildren().addAll(classNameLabel, fieldsListView, methodsListView);
-
-        new DraggableMaker().makeDraggable(this);
+        DraggableMaker draggableMaker = new DraggableMaker();
+        draggableMaker.makeDraggable(this);
 
 
     }
