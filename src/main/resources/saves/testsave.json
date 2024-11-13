@@ -4,5 +4,11 @@
     "methodlist": [],
     "fields": [],
     "relation": []
+  },
+  "hello": {
+    "name": "hello",
+    "methodlist": [],
+    "fields": [],
+    "relation": []
   }
 }
