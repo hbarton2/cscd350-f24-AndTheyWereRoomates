@@ -492,12 +492,13 @@ public class GUIViewController  implements Initializable {
     arrowHead.setId(relationshipId);
 
     arrowHead.getPoints().addAll(
-            -20.0, 0.0,
-            0.0, -10.0,
-            20.0, 0.0,
-            0.0, 10.0,
-            -20.0, 0.0
+            -40.0, 0.0,
+            -20.0, -10.0,
+            0.0, 0.0,
+            -20.0, 10.0,
+            -40.0, 0.0
     );
+
 
     switch (relationType) {
       case "Aggregation":
