@@ -30,7 +30,7 @@ Ensure that the following software is installed on the target machine:
 
 - **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 17 or higher.  
   You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or from [AdoptOpenJDK](https://adoptopenjdk.net/).
-- **JavaFX** version 21 or higher.
+- **JavaFX** version 21.
   You can download it from the [JavaFX Download page](https://gluonhq.com/products/javafx/).
   ![JavaFX Download page](doc/images/JavaFX.png)
 ---

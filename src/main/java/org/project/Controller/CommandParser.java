@@ -1,57 +1,35 @@
 package org.project.Controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.util.Scanner;
+import org.project.Model.CommandRegistry;
 
-import java.io.FileReader;
-import java.io.IOException;
-
+/**
+ * Responsible for parsing user input and execution of the commands of the CommandRegistry.
+ * Processing a string input and splitting into a string list of tokens,
+ * identifies and executes the provided command registry.
+ */
 public class CommandParser {
-
-  private JsonObject commandsJson;
+  private final CommandRegistry commandRegistry;
 
   public CommandParser(String jsonFilePath) {
-    loadCommands(jsonFilePath);
+    this.commandRegistry = new CommandRegistry(jsonFilePath);
   }
 
-  private void loadCommands(String jsonFilePath) {
-    try (FileReader reader = new FileReader(jsonFilePath)) {
-      commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
-      System.out.println("Loaded commands structure:");
-      printCommandsStructure();
-    } catch (IOException e) {
-      System.out.println("Error: Could not load CLICommands.json.");
-      e.printStackTrace();
-    }
-  }
-
-  public void printCommandsStructure() {
-    if (commandsJson == null) {
-      System.out.println("Commands JSON is null.");
+  public void parseCommand(String input) {
+    String[] tokens = input.trim().split("\\s+");
+    if (tokens.length < 1) {
+      System.out.println("Invalid command. Please provide a command.");
       return;
     }
-    JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
-    for (String group : commandGroups.keySet()) {
-      System.out.println("Command Group: " + group);
-      JsonObject commands = commandGroups.getAsJsonObject(group);
-      for (String command : commands.keySet()) {
-        System.out.println("  Command: " + command);
-        JsonObject commandDetails = commands.getAsJsonObject(command);
 
-        // Check for the existence of each field before attempting to access it
-        if (commandDetails.has("syntax")) {
-          System.out.println("    Syntax: " + commandDetails.get("syntax").getAsString());
-        } else {
-          System.out.println("    Syntax: [Not Provided]");
-        }
+    String commandName = tokens[0];
+    CommandRegistry.CommandInfo commandInfo = commandRegistry.getCommandInfo(commandName);
 
-        if (commandDetails.has("description")) {
-          System.out.println("    Description: " + commandDetails.get("description").getAsString());
-        } else {
-          System.out.println("    Description: [Not Provided]");
-        }
-      }
+    if (commandInfo != null) {
+      System.out.println("Executing command: " + commandInfo);
+      commandRegistry.executeCommand(commandName, tokens);
+    } else {
+      System.out.println("Error: Command '" + commandName + "' not found.");
     }
   }
-
 }
