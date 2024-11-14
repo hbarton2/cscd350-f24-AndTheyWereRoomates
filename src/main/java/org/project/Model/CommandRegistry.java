@@ -6,10 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.project.Controller.CommandResult;
 
 public class CommandRegistry {
 
+  private static final Logger logger = Logger.getLogger(CommandRegistry.class.getName());
   // A map to store command information including syntax and description
   private final Map<String, CommandInfo> commandMap = new HashMap<>();
 
@@ -24,6 +27,7 @@ public class CommandRegistry {
     try (FileReader reader = new FileReader(jsonFilePath)) {
       JsonObject commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
       JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
+
       for (String group : commandGroups.keySet()) {
         JsonObject commands = commandGroups.getAsJsonObject(group);
         for (String commandName : commands.keySet()) {
@@ -33,10 +37,9 @@ public class CommandRegistry {
           commandMap.put(commandName, new CommandInfo(syntax, description));
         }
       }
-      System.out.println("Commands loaded successfully from " + jsonFilePath);
+      logger.info("Commands loaded successfully from " + jsonFilePath);
     } catch (IOException e) {
-      System.out.println("Error loading commands from JSON file.");
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error loading commands from JSON file: " + jsonFilePath, e);
     }
   }
 
@@ -57,7 +60,7 @@ public class CommandRegistry {
   private void initializeCommandHandlers() {
     commandHandlers.put("create class", this::createClass);
     commandHandlers.put("add field", this::addField);
-    // Add more command handlers as needed...
+    // TODO: Add more command handlers as needed...
   }
 
   // Execute a command by finding and running the appropriate handler
@@ -87,5 +90,5 @@ public class CommandRegistry {
     return CommandResult.success("Field added: " + fieldType + " " + fieldName);
   }
 
-  // Additional command handler methods as needed...
+  // TODO: Additional command handler methods as needed...
 }

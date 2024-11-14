@@ -1,6 +1,6 @@
 # UML Editor
 
-v3.3.55
+v3.3.56
 * How to read version # Version main branch.demo release.pull request changes'
 * What's New:
   * NEW CLI preview(alpha) 

@@ -25,17 +25,14 @@ public class Main {
       switch (input) {
         case "gui", "g" -> {
           answer = false;
-          scanner.close();
           GUIView.main(args);
         }
         case "cli", "c" -> {
           answer = false;
-//          scanner.close(); // WHY DOES THE OLD CLI RELY ON MAIN INPUT SCANS
           new CLIView().runMenu();
         }
         case "new cli", "n" -> {
           answer = false;
-          // This later will supersede current cli
           CommandRegistry commands = new CommandRegistry("src/main/resources/CLICommands.json");
           Terminal terminal = new Terminal(commands);
           terminal.launch();
@@ -49,4 +46,3 @@ public class Main {
     System.exit(0);
   }
 }
-
