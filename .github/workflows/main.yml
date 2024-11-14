@@ -1,3 +1,5 @@
+# This workflow will build a Java project with Maven, cache dependencies, run tests, and create a release
+
 name: Java CI with Maven
 
 on:
@@ -32,9 +34,8 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v1.0.${{ github.run_number }}
           release_name: "Release v1.0.${{ github.run_number }}"
           draft: false
@@ -43,9 +44,8 @@ jobs:
       - name: Upload Shaded JAR to Release
         if: success()
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/uml-editor-shaded.jar
           asset_name: uml-editor-shaded.jar
