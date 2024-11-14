@@ -143,7 +143,7 @@ public class GUIViewController  implements Initializable {
       String message = umlController.classCommands.removeClass(
         new String[]{"remove", "class", classNameRemove});
 
-      
+
       if (message == null || message.isEmpty()) {
         // Remove relationships involving the class
         canvas.getChildren().removeIf(node -> {
@@ -372,16 +372,16 @@ public class GUIViewController  implements Initializable {
           if (selectMethodIndex >= 0) {
             String currentMethod = methodList.getItems().get(selectMethodIndex);
 
-          if (currentMethod.endsWith("()")) {
-            currentMethod = currentMethod.replace("()",
-              "(" + parameterType + " " + parameterName + ")");
-          } else {
-            currentMethod = currentMethod.replace(")",
-              ", " + parameterType + " " + parameterName + ")");
-          }
+            if (currentMethod.endsWith("()")) {
+              currentMethod = currentMethod.replace("()",
+                "(" + parameterType + " " + parameterName + ")");
+            } else {
+              currentMethod = currentMethod.replace(")",
+                ", " + parameterType + " " + parameterName + ")");
+            }
 
-          parameterNameInput.clear();
-          methodList.getItems().set(selectMethodIndex, currentMethod);
+            parameterNameInput.clear();
+            methodList.getItems().set(selectMethodIndex, currentMethod);
           }
         }
       }
@@ -505,17 +505,17 @@ public class GUIViewController  implements Initializable {
       return (nodeId != null && (nodeId.startsWith(fromClassName + "->" + toClassName) || nodeId.startsWith(toClassName + "->" + fromClassName)));
     });
 
-   Line line = createAndBindLine(fromBox, toBox, relationshipId);
+    Line line = createAndBindLine(fromBox, toBox, relationshipId);
 
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
     arrowHead.getPoints().addAll(
-            -40.0, 0.0,
-            -20.0, -10.0,
-            0.0, 0.0,
-            -20.0, 10.0,
-            -40.0, 0.0
+      -40.0, 0.0,
+      -20.0, -10.0,
+      0.0, 0.0,
+      -20.0, 10.0,
+      -40.0, 0.0
     );
 
 
@@ -531,18 +531,18 @@ public class GUIViewController  implements Initializable {
       case "Generalization":
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0
+          -20.0, 10.0,
+          0.0, 0.0,
+          -20.0, -10.0
         );
         arrowHead.setFill(Color.BLACK);
         break;
       case "Realization":
         arrowHead.getPoints().clear();
         arrowHead.getPoints().addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0
+          -20.0, 10.0,
+          0.0, 0.0,
+          -20.0, -10.0
         );
         arrowHead.setStroke(Color.BLACK);
         arrowHead.setFill(Color.GRAY);
@@ -559,72 +559,72 @@ public class GUIViewController  implements Initializable {
   }
 
 
-    /**
-     * Returns the top, bottom, left, and right points of the class box.
-     * @param box the VBox representing the class box
-     * @return the points of the class box
-     */
-    private DoubleBinding[][] classBoxPoints(VBox box) {
-        DoubleBinding topX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
-        DoubleBinding topY = Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
-        DoubleBinding bottomX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
-        DoubleBinding bottomY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
-        DoubleBinding leftX = Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
-        DoubleBinding leftY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
-        DoubleBinding rightX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
-        DoubleBinding rightY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+  /**
+   * Returns the top, bottom, left, and right points of the class box.
+   * @param box the VBox representing the class box
+   * @return the points of the class box
+   */
+  private DoubleBinding[][] classBoxPoints(VBox box) {
+    DoubleBinding topX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+    DoubleBinding topY = Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
+    DoubleBinding bottomX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
+    DoubleBinding bottomY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
+    DoubleBinding leftX = Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
+    DoubleBinding leftY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+    DoubleBinding rightX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
+    DoubleBinding rightY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
 
-        return new DoubleBinding[][]{{topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}};
-    }
+    return new DoubleBinding[][]{{topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}};
+  }
 
 
-    /**
-     * Creates a line between two class boxes and binds the line to the class boxes.
-     * @param fromBox the VBox representing the source class box
-     * @param toBox the VBox representing the destination class box
-     * @param relationshipId the id of the relationship
-     * @return the line between the two class boxes
-     */
-    private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
-        Line line = new Line();
-        line.setId(relationshipId);
+  /**
+   * Creates a line between two class boxes and binds the line to the class boxes.
+   * @param fromBox the VBox representing the source class box
+   * @param toBox the VBox representing the destination class box
+   * @param relationshipId the id of the relationship
+   * @return the line between the two class boxes
+   */
+  private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
+    Line line = new Line();
+    line.setId(relationshipId);
 
-        DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
-        DoubleBinding[][] toPoints = classBoxPoints(toBox);
+    DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
+    DoubleBinding[][] toPoints = classBoxPoints(toBox);
 
-        DoubleProperty startX = new SimpleDoubleProperty();
-        DoubleProperty startY = new SimpleDoubleProperty();
-        DoubleProperty endX = new SimpleDoubleProperty();
-        DoubleProperty endY = new SimpleDoubleProperty();
+    DoubleProperty startX = new SimpleDoubleProperty();
+    DoubleProperty startY = new SimpleDoubleProperty();
+    DoubleProperty endX = new SimpleDoubleProperty();
+    DoubleProperty endY = new SimpleDoubleProperty();
 
-        Runnable updateLine = () -> {
-            double minDistance = Double.MAX_VALUE;
-            for (DoubleBinding[] fromPoint : fromPoints) {
-                for (DoubleBinding[] toPoint : toPoints) {
-                    double distance = Math.sqrt(Math.pow(fromPoint[0].get() - toPoint[0].get(), 2) + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        startX.set(fromPoint[0].get());
-                        startY.set(fromPoint[1].get());
-                        endX.set(toPoint[0].get());
-                        endY.set(toPoint[1].get());
-                    }
-                }
-            }
-            line.startXProperty().bind(startX);
-            line.startYProperty().bind(startY);
-            line.endXProperty().bind(endX);
-            line.endYProperty().bind(endY);
-        };
+    Runnable updateLine = () -> {
+      double minDistance = Double.MAX_VALUE;
+      for (DoubleBinding[] fromPoint : fromPoints) {
+        for (DoubleBinding[] toPoint : toPoints) {
+          double distance = Math.sqrt(Math.pow(fromPoint[0].get() - toPoint[0].get(), 2) + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
+          if (distance < minDistance) {
+            minDistance = distance;
+            startX.set(fromPoint[0].get());
+            startY.set(fromPoint[1].get());
+            endX.set(toPoint[0].get());
+            endY.set(toPoint[1].get());
+          }
+        }
+      }
+      line.startXProperty().bind(startX);
+      line.startYProperty().bind(startY);
+      line.endXProperty().bind(endX);
+      line.endYProperty().bind(endY);
+    };
 
-        fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
-        fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
-        toBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
-        toBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+    fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+    fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+    toBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
+    toBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
 
-        updateLine.run();
-        return line;
-    }
+    updateLine.run();
+    return line;
+  }
 
 
   /**
