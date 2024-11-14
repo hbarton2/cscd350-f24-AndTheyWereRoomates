@@ -1,4 +1,4 @@
-# This workflow will build a Java project with Maven, cache dependencies, run tests, and create a release
+# This workflow will build a Java project with Maven, cache dependencies, run tests, and create a release for multiple operating systems
 
 name: Java CI with Maven
 
@@ -11,11 +11,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    # Using a matrix strategy to run on multiple OS platforms
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    name: Build and Deploy on ${{ matrix.os }}
 
     steps:
-      - name: Get Code
+      - name: Check Out Code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -28,11 +33,12 @@ jobs:
       - name: Run Tests
         run: mvn clean test -B -Dstyle.color=always -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
-      - name: Build and Package
+      - name: Build with Maven
         run: mvn clean package -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
       - name: Create Release
         id: create_release
+        if: github.ref == 'refs/heads/main'  # Only create a release on main branch
         uses: actions/create-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -42,11 +48,11 @@ jobs:
           prerelease: false
 
       - name: Upload Shaded JAR to Release
-        if: success()
+        if: success() && github.ref == 'refs/heads/main'  # Only upload on main branch success
         uses: actions/upload-release-asset@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/uml-editor-shaded.jar
-          asset_name: uml-editor-shaded.jar
+          asset_name: uml-editor-shaded-${{ matrix.os }}.jar
           asset_content_type: application/java-archive
