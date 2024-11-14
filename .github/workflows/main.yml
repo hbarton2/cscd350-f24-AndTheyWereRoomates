@@ -28,20 +28,22 @@ jobs:
           cache: maven
 
       - name: Run Tests
+        shell: bash
         run: |
           mvn clean test -B \
-          -Dstyle.color=always \
-          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          "-Dstyle.color=always" \
+          "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Build with Maven
+        shell: bash
         run: |
           mvn clean package -B \
-          -Dstyle.color=always \
-          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          "-Dstyle.color=always" \
+          "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Create Release
         id: create_release
-        if: github.ref == 'refs/heads/main'  # Only create a release on main branch
+        if: github.ref == 'refs/heads/main'
         uses: actions/create-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +53,7 @@ jobs:
           prerelease: false
 
       - name: Upload Shaded JAR to Release
-        if: success() && github.ref == 'refs/heads/main'  # Only upload on main branch success
+        if: success() && github.ref == 'refs/heads/main'
         uses: actions/upload-release-asset@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
