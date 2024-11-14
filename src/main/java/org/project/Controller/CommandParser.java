@@ -53,8 +53,8 @@ public class CommandParser {
       CommandInfo commandInfo = entry.getValue();
 
       commandList.append("- ").append(commandName)
-        .append(": ").append(commandInfo.getDescription())
-        .append("\n  Syntax: ").append(commandInfo.getSyntax())
+        .append(": ").append(commandInfo.description())
+        .append("\n  Syntax: ").append(commandInfo.syntax())
         .append("\n\n");
     }
 
