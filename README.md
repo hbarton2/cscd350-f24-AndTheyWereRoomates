@@ -1,11 +1,11 @@
 # UML Editor
 
-v3.0.49
+v3.3.55
 * How to read version # Version main branch.demo release.pull request changes'
 * What's New:
-* 
+  * NEW CLI preview(alpha) 
 * Major changes:
-   MAJOR REFRACT HAS BEGUN
+  * MAJOR REFRACT HAS BEGUN
 ---
 
 ## Table of Contents

@@ -2,84 +2,90 @@ package org.project.Model;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.project.Controller.CommandResult;
 
 public class CommandRegistry {
-  private final JsonObject commandsJson;
+
+  // A map to store command information including syntax and description
   private final Map<String, CommandInfo> commandMap = new HashMap<>();
-  private final Map<String, Runnable> commandActions = new HashMap<>();
 
+  // Constructor with optional custom file path for flexibility
   public CommandRegistry(String jsonFilePath) {
-    this.commandsJson = loadCommands(jsonFilePath);
-    if (commandsJson != null) {
-      initializeCommands();
-      initializeCommandActions();  // Link commands to their logic
-    }
+    loadCommands(jsonFilePath);  // Load commands from JSON file
+    initializeCommandHandlers();  // Initialize command handler methods
   }
 
-  private JsonObject loadCommands(String jsonFilePath) {
+  // Method to load commands from a specified JSON file
+  private void loadCommands(String jsonFilePath) {
     try (FileReader reader = new FileReader(jsonFilePath)) {
-      return JsonParser.parseReader(reader).getAsJsonObject();
+      JsonObject commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
+      JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
+      for (String group : commandGroups.keySet()) {
+        JsonObject commands = commandGroups.getAsJsonObject(group);
+        for (String commandName : commands.keySet()) {
+          JsonObject commandDetails = commands.getAsJsonObject(commandName);
+          String syntax = commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
+          String description = commandDetails.has("description") ? commandDetails.get("description").getAsString() : "";
+          commandMap.put(commandName, new CommandInfo(syntax, description));
+        }
+      }
+      System.out.println("Commands loaded successfully from " + jsonFilePath);
     } catch (IOException e) {
-      System.out.println("Error: Could not load CLICommands.json.");
+      System.out.println("Error loading commands from JSON file.");
       e.printStackTrace();
-      return null;
     }
   }
 
-  private void initializeCommands() {
-    JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
-    for (String group : commandGroups.keySet()) {
-      JsonObject commands = commandGroups.getAsJsonObject(group);
-      for (String command : commands.keySet()) {
-        JsonObject commandDetails = commands.getAsJsonObject(command);
-        String syntax = commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "[Not Provided]";
-        String description = commandDetails.has("description") ? commandDetails.get("description").getAsString() : "[Not Provided]";
-        CommandInfo commandInfo = new CommandInfo(group, command, syntax, description);
-        commandMap.put(command, commandInfo);
-      }
+  // Return a map of all commands for listing purposes
+  public Map<String, CommandInfo> getAllCommands() {
+    return commandMap;
+  }
+
+  // Functional interface for command handlers
+  @FunctionalInterface
+  interface CommandHandler {
+    CommandResult handle(String[] args);
+  }
+
+  private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
+
+  // Initialize command handlers with specific implementations
+  private void initializeCommandHandlers() {
+    commandHandlers.put("create class", this::createClass);
+    commandHandlers.put("add field", this::addField);
+    // Add more command handlers as needed...
+  }
+
+  // Execute a command by finding and running the appropriate handler
+  public CommandResult executeCommand(String command, String[] args) {
+    CommandHandler handler = commandHandlers.get(command);
+    if (handler == null) {
+      return CommandResult.failure("Command not found: " + command);
     }
-    System.out.println("Commands loaded successfully into CommandRegistry.");
+    return handler.handle(args);
   }
 
-  private void initializeCommandActions() {
-    commandActions.put("create", this::createClass);
-    commandActions.put("remove", this::removeClass);
-    // Add more command-to-method mappings as needed
-  }
-
-  public void executeCommand(String commandName, String[] args) {
-    if (commandActions.containsKey(commandName)) {
-      commandActions.get(commandName).run();
-    } else {
-      System.out.println("Error: Command '" + commandName + "' not found.");
+  // Example command handler methods
+  private CommandResult createClass(String[] args) {
+    if (args.length < 1) {
+      return CommandResult.failure("Please specify a class name.");
     }
+    String className = args[0];
+    return CommandResult.success("Class created: " + className);
   }
 
-  public CommandInfo getCommandInfo(String commandName) {
-    return commandMap.get(commandName);
-  }
-
-  private void createClass() {
-    System.out.println("Executing createClass logic...");
-    // Your class creation logic here
-  }
-
-  private void removeClass() {
-    System.out.println("Executing removeClass logic...");
-    // Your class removal logic here
-  }
-
-  public record CommandInfo(String group, String name, String syntax, String description) {
-
-    @Override
-      public String toString() {
-        return "Command: " + name + "\nGroup: " + group + "\nSyntax: " + syntax + "\nDescription: "
-          + description;
-      }
+  private CommandResult addField(String[] args) {
+    if (args.length < 2) {
+      return CommandResult.failure("Please specify a field type and field name.");
     }
+    String fieldType = args[0];
+    String fieldName = args[1];
+    return CommandResult.success("Field added: " + fieldType + " " + fieldName);
+  }
+
+  // Additional command handler methods as needed...
 }
