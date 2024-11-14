@@ -368,8 +368,9 @@ public class GUIViewController  implements Initializable {
         String parameterType = parameterTypeComboBox.getValue();
 
         if (!parameterName.isEmpty() && parameterType != null) {
-          int lastMethodIndex = methodList.getItems().size() - 1;
-          String currentMethod = methodList.getItems().get(lastMethodIndex);
+          int selectMethodIndex = methodList.getSelectionModel().getSelectedIndex();
+          if (selectMethodIndex >= 0) {
+            String currentMethod = methodList.getItems().get(selectMethodIndex);
 
           if (currentMethod.endsWith("()")) {
             currentMethod = currentMethod.replace("()",
@@ -380,8 +381,8 @@ public class GUIViewController  implements Initializable {
           }
 
           parameterNameInput.clear();
-          methodList.getItems().set(lastMethodIndex, currentMethod);
-
+          methodList.getItems().set(selectMethodIndex, currentMethod);
+          }
         }
       }
     }
