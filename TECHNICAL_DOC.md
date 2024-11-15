@@ -294,22 +294,12 @@ These buttons all edit classes
 5. Delete Relation - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
 
 ## Known GUI Bugs
-1. Add Parameter - Cannot add a parameter to a specific method, instead defaulting to the most recent method created.
-To recreate: 
-<br> Create multiple Methods for one class and try to create parameters for any methods beyond the bottom most method. You cannot create any parameters
-in any methods besides the one in the bottom of the list.
 
-![img.png](doc/images/GUIbug.png)
-
-2.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the 
+1.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the 
 left of a class, creating weird graphical issues of overlapping 
 ![img.png](doc/images/GUIbug_RelationshipGraphicalIssues.png)
-
-3. Relationship Display - Deleting classes with relationships doesn't remove the arrows.
-Create two methods with relationships, delete one class with a relationship
-![img.png](doc/images/GUIbug_ReplationshipsNotRemoving.png)
-
-4. Relationship Display - Selecting Generalization or Realization for a Relationship will have the arrow offset from the class
-and the line is connected to the tip of the arrow and not go through it
-![img.png](doc/images/GUIbug_RelationshipDisplayBug.png)
-![img.png](doc/images/GUIbug_RelationshipDisplayBugRealization.png)
+2.  Class Display - Newly created classes appear over existing classes.  
+    Recreate: Create a new class, and then create a second class. Created class was moved to make the problem clear.
+![img.png](doc/images/classesOverlayingGuiIssue.png)
+3.  Saving Option - Trying to save the GUI doesn't open file explorer.
+    ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
