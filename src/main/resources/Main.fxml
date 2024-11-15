@@ -36,8 +36,8 @@
             <MenuItem mnemonicParsing="false" text="About"/>
         </Menu>
     </MenuBar>
-    <Pane fx:id="canvas" layoutY="25.0" prefHeight="614.0" prefWidth="576.0" AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="255.0" AnchorPane.topAnchor="25.0"/>
+    <Pane fx:id="canvas" layoutY="26.0" prefHeight="974.0" prefWidth="1135.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="26.0"/>
 
     <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
         <Button fx:id="addClass" onAction="#createClass" text="Add Class"/>

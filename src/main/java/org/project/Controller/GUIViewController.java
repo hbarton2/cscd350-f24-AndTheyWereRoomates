@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -73,11 +74,26 @@ public class GUIViewController implements Initializable {
   public void initialize(URL url, ResourceBundle resourceBundle) {
     String home = System.getProperty("user.home"); // This could be changed later
     fileChooser.setInitialDirectory(new File(home));
+
+    canvas.setStyle("-fx-background-color: black;");
   }
 
   /** This is the constructor for GUIViewController. Initializes UMLController */
   public GUIViewController() {
     this.umlController = new UMLController();
+  }
+
+  private String[] getInspectorValues() {
+    String className =
+        classNameInput.getText().isEmpty()
+            ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
+            : classNameInput.getText();
+    String fieldName = fieldNameInput.getText();
+    String fieldType = dataTypeComboBox.getValue();
+    String methodName = methodNameInput.getText();
+    String parameterName = parameterNameInput.getText();
+    String parameterType = parameterTypeComboBox.getValue();
+    return new String[] {className, fieldName, fieldType, methodName, parameterName, parameterType};
   }
 
   /**
@@ -86,9 +102,25 @@ public class GUIViewController implements Initializable {
    * @param event - When the "Create Class" button is clicked
    */
   public void createClass(ActionEvent event) {
+    String[] inspectorValues = getInspectorValues();
+    String className = inspectorValues[0];
+    String fieldName = inspectorValues[1];
+    String fieldType = inspectorValues[2];
+    String methodName = inspectorValues[3];
+    String parameterName = inspectorValues[4];
+    String parameterType = inspectorValues[5];
+
+    if (umlController.getStorage().hasClass(className)) {
+      showAlert(
+          "Class Creation Error", "A class with the name \"" + className + "\" already exists.");
+      return;
+    }
 
     ClassBox classBox =
-        new ClassBox("New Class #" + (umlController.getStorage().getClasses().size() + 1));
+        new ClassBox(
+            className.isEmpty()
+                ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
+                : className);
     classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
     // Calculate the center of the canvas
@@ -106,6 +138,25 @@ public class GUIViewController implements Initializable {
     canvas.getChildren().add(classBox);
 
     umlController.classCommands.addClass(new String[] {"add", "class", classBox.getName()});
+
+    if (!fieldName.isEmpty() && fieldType != null) {
+      ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
+      fieldList.getItems().add(fieldType + " " + fieldName);
+      umlController.fieldCommands.addField(
+          new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
+    }
+
+    if (!methodName.isEmpty()) {
+      ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
+      String formattedMethod = methodName + "()";
+      if (!parameterName.isEmpty() && parameterType != null) {
+        formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
+      }
+      methodList.getItems().add(formattedMethod);
+      umlController.methodCommands.addMethod(
+          new String[] {"add", "method", classBox.getName(), methodName});
+    }
+
     System.out.println("Size: " + umlController.getStorage().getClasses().size());
   }
 
@@ -145,6 +196,8 @@ public class GUIViewController implements Initializable {
         dataTypeComboBox.getItems().remove(classNameRemove);
         parameterTypeComboBox.getItems().remove(classNameRemove);
 
+        classNameInput.clear();
+
       } else {
         showAlert("Class", message);
       }
@@ -157,20 +210,26 @@ public class GUIViewController implements Initializable {
    * @param classBox - Representing the box that was selected
    */
   private void selectClassBox(ClassBox classBox) {
-    if (selectedClassBox != null) {
+    if (selectedClassBox != null && selectedClassBox.equals(classBox)) {
       selectedClassBox.setEffect(null);
+      selectedClassBox = null;
+      classNameInput.clear();
+    } else {
+      if (selectedClassBox != null) {
+        selectedClassBox.setEffect(null);
+      }
+
+      selectedClassBox = classBox;
+
+      DropShadow highlight = new DropShadow();
+      highlight.setColor(Color.RED);
+      highlight.setWidth(120);
+      highlight.setHeight(120);
+      selectedClassBox.setEffect(highlight);
+
+      Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
+      classNameInput.setText(classNameLabel.getText());
     }
-
-    selectedClassBox = classBox;
-
-    DropShadow highlight = new DropShadow();
-    highlight.setColor(Color.BLUE);
-    highlight.setWidth(10);
-    highlight.setHeight(10);
-    selectedClassBox.setEffect(highlight);
-
-    Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
-    classNameInput.setText(classNameLabel.getText());
   }
 
   /**
@@ -516,12 +575,12 @@ public class GUIViewController implements Initializable {
 
     switch (relationType) {
       case "Aggregation":
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.GRAY);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.WHITE);
         break;
       case "Composition":
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.BLACK);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.RED);
         break;
       case "Generalization":
         arrowHead.getPoints().clear();
@@ -531,7 +590,7 @@ public class GUIViewController implements Initializable {
                 -20.0, 10.0,
                 0.0, 0.0,
                 -20.0, -10.0);
-        arrowHead.setFill(Color.BLACK);
+        arrowHead.setFill(Color.WHITE);
         break;
       case "Realization":
         arrowHead.getPoints().clear();
@@ -541,8 +600,8 @@ public class GUIViewController implements Initializable {
                 -20.0, 10.0,
                 0.0, 0.0,
                 -20.0, -10.0);
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.GRAY);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.RED);
         line.getStrokeDashArray().addAll(10.0, 10.0);
         break;
       default:
@@ -609,6 +668,7 @@ public class GUIViewController implements Initializable {
   private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
     Line line = new Line();
     line.setId(relationshipId);
+    line.setStroke(Color.WHITE);
 
     DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
     DoubleBinding[][] toPoints = classBoxPoints(toBox);
