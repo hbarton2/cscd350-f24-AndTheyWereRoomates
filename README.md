@@ -208,7 +208,7 @@ For any inquiries, feel free to reach out
     * [Remove Commands](#remove-commands)
     * [Rename Commands](#rename-commands)
 4. [Sample Workflow](#sample-workflow)
-5.[Known Bugs](#known-bugs)
+5. [Known Bugs](#known-bugs)
 ## Table of contents for GUI
 1. [GUI Instructions](#gui-instructions)
 2. [Workspace UI](#workspace-ui)
@@ -497,7 +497,7 @@ These buttons all edit classes
     ![img.png](doc/images/GUIbug_RelationshipGraphicalIssues.png)
 2.  Class Display - Newly created classes appear over existing classes.  
     Recreate: Create a new class, and then create a second class. Created class was moved to make the problem clear.
-    ![img.png](doc/images/classesOverlayingGuiIssue.png)
+    ![img.png](doc/images/GUIbug_classesOverlayingGUIIssue.PNG)
 3.  Saving Option - Trying to save the GUI doesn't open file explorer.
     ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
 ---
