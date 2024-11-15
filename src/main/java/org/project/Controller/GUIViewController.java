@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -25,52 +26,37 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class GUIViewController  implements Initializable {
+public class GUIViewController implements Initializable {
 
-  @FXML
-  private Pane canvas;
+  @FXML private Pane canvas;
 
-  @FXML
-  private VBox inspectorPane;
+  @FXML private VBox inspectorPane;
 
-  @FXML
-  private Button toggleInspectorButton;
+  @FXML private Button toggleInspectorButton;
 
-  @FXML
-  private TextField classNameInput;
+  @FXML private TextField classNameInput;
 
-  @FXML
-  private TextField fieldNameInput;
+  @FXML private TextField fieldNameInput;
 
-  @FXML
-  private ComboBox<String> dataTypeComboBox;
+  @FXML private ComboBox<String> dataTypeComboBox;
 
-  @FXML
-  private TextField methodNameInput;
+  @FXML private TextField methodNameInput;
 
-  @FXML
-  private TextField parameterNameInput;
+  @FXML private TextField parameterNameInput;
 
-  @FXML
-  private ComboBox<String> parameterTypeComboBox;
+  @FXML private ComboBox<String> parameterTypeComboBox;
 
-  @FXML
-  private ComboBox<String> fromComboBox;
+  @FXML private ComboBox<String> fromComboBox;
 
-  @FXML
-  private ComboBox<String> toComboBox;
+  @FXML private ComboBox<String> toComboBox;
 
-  @FXML
-  private ComboBox<String> relationshipTypeComboBox;
+  @FXML private ComboBox<String> relationshipTypeComboBox;
 
-  @FXML
-  private MenuBar menuBar;
+  @FXML private MenuBar menuBar;
 
-  @FXML
-  private MenuItem saveButton;
+  @FXML private MenuItem saveButton;
 
-  @FXML
-  private  MenuItem openButton;
+  @FXML private MenuItem openButton;
 
   private ClassBox selectedClassBox = null;
 
@@ -78,26 +64,37 @@ public class GUIViewController  implements Initializable {
 
   FileChooser fileChooser = new FileChooser();
 
-
   /**
    * This sets the default path to be the user's home directory.
+   *
    * @param url - These are not setup
    * @param resourceBundle - Not setup
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    String home = System.getProperty("user.home"); //This could be changed later
+    String home = System.getProperty("user.home"); // This could be changed later
     fileChooser.setInitialDirectory(new File(home));
+
+    canvas.setStyle("-fx-background-color: black;");
   }
 
-  /**
-   * This is the constructor for GUIViewController. Initializes UMLController
-   */
+  /** This is the constructor for GUIViewController. Initializes UMLController */
   public GUIViewController() {
     this.umlController = new UMLController();
   }
 
-
+  private String[] getInspectorValues() {
+    String className =
+        classNameInput.getText().isEmpty()
+            ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
+            : classNameInput.getText();
+    String fieldName = fieldNameInput.getText();
+    String fieldType = dataTypeComboBox.getValue();
+    String methodName = methodNameInput.getText();
+    String parameterName = parameterNameInput.getText();
+    String parameterType = parameterTypeComboBox.getValue();
+    return new String[] {className, fieldName, fieldType, methodName, parameterName, parameterType};
+  }
 
   /**
    * This method creates a Class object with a default name of "Class Name #"
@@ -105,9 +102,25 @@ public class GUIViewController  implements Initializable {
    * @param event - When the "Create Class" button is clicked
    */
   public void createClass(ActionEvent event) {
+    String[] inspectorValues = getInspectorValues();
+    String className = inspectorValues[0];
+    String fieldName = inspectorValues[1];
+    String fieldType = inspectorValues[2];
+    String methodName = inspectorValues[3];
+    String parameterName = inspectorValues[4];
+    String parameterType = inspectorValues[5];
 
-    ClassBox classBox = new ClassBox(
-      "New Class #" + (umlController.getStorage().getClasses().size() + 1));
+    if (umlController.getStorage().hasClass(className)) {
+      showAlert(
+          "Class Creation Error", "A class with the name \"" + className + "\" already exists.");
+      return;
+    }
+
+    ClassBox classBox =
+        new ClassBox(
+            className.isEmpty()
+                ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
+                : className);
     classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
     // Calculate the center of the canvas
@@ -124,10 +137,28 @@ public class GUIViewController  implements Initializable {
     parameterTypeComboBox.getItems().add(classBox.getName());
     canvas.getChildren().add(classBox);
 
-    umlController.classCommands.addClass(new String[]{"add", "class", classBox.getName()});
+    umlController.classCommands.addClass(new String[] {"add", "class", classBox.getName()});
+
+    if (!fieldName.isEmpty() && fieldType != null) {
+      ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
+      fieldList.getItems().add(fieldType + " " + fieldName);
+      umlController.fieldCommands.addField(
+          new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
+    }
+
+    if (!methodName.isEmpty()) {
+      ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
+      String formattedMethod = methodName + "()";
+      if (!parameterName.isEmpty() && parameterType != null) {
+        formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
+      }
+      methodList.getItems().add(formattedMethod);
+      umlController.methodCommands.addMethod(
+          new String[] {"add", "method", classBox.getName(), methodName});
+    }
+
     System.out.println("Size: " + umlController.getStorage().getClasses().size());
   }
-
 
   /**
    * This method deletes the class from the model and gui view
@@ -140,16 +171,21 @@ public class GUIViewController  implements Initializable {
       Label className = (Label) selectedClassBox.getChildren().get(0);
       String classNameRemove = className.getText();
 
-      String message = umlController.classCommands.removeClass(
-        new String[]{"remove", "class", classNameRemove});
-
+      String message =
+          umlController.classCommands.removeClass(
+              new String[] {"remove", "class", classNameRemove});
 
       if (message == null || message.isEmpty()) {
         // Remove relationships involving the class
-        canvas.getChildren().removeIf(node -> {
-          String nodeId = node.getId();
-          return nodeId != null && (nodeId.startsWith(classNameRemove + "->") || nodeId.contains("->" + classNameRemove));
-        });
+        canvas
+            .getChildren()
+            .removeIf(
+                node -> {
+                  String nodeId = node.getId();
+                  return nodeId != null
+                      && (nodeId.startsWith(classNameRemove + "->")
+                          || nodeId.contains("->" + classNameRemove));
+                });
 
         // GUI update
         canvas.getChildren().remove(selectedClassBox);
@@ -160,6 +196,7 @@ public class GUIViewController  implements Initializable {
         dataTypeComboBox.getItems().remove(classNameRemove);
         parameterTypeComboBox.getItems().remove(classNameRemove);
 
+        classNameInput.clear();
 
       } else {
         showAlert("Class", message);
@@ -173,20 +210,26 @@ public class GUIViewController  implements Initializable {
    * @param classBox - Representing the box that was selected
    */
   private void selectClassBox(ClassBox classBox) {
-    if (selectedClassBox != null) {
+    if (selectedClassBox != null && selectedClassBox.equals(classBox)) {
       selectedClassBox.setEffect(null);
+      selectedClassBox = null;
+      classNameInput.clear();
+    } else {
+      if (selectedClassBox != null) {
+        selectedClassBox.setEffect(null);
+      }
+
+      selectedClassBox = classBox;
+
+      DropShadow highlight = new DropShadow();
+      highlight.setColor(Color.RED);
+      highlight.setWidth(120);
+      highlight.setHeight(120);
+      selectedClassBox.setEffect(highlight);
+
+      Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
+      classNameInput.setText(classNameLabel.getText());
     }
-
-    selectedClassBox = classBox;
-
-    DropShadow highlight = new DropShadow();
-    highlight.setColor(Color.BLUE);
-    highlight.setWidth(10);
-    highlight.setHeight(10);
-    selectedClassBox.setEffect(highlight);
-
-    Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
-    classNameInput.setText(classNameLabel.getText());
   }
 
   /**
@@ -208,14 +251,13 @@ public class GUIViewController  implements Initializable {
    *
    * @param event - Representing the action of the button being clicked
    */
-
   @FXML
   public void handleSetClassName(ActionEvent event) {
     if (selectedClassBox != null) {
       String newName = classNameInput.getText();
       if (umlController.getStorage().hasClass(newName)) {
-        showAlert("Class Creation Error",
-          "A class with the name \"" + newName + "\" already exists.");
+        showAlert(
+            "Class Creation Error", "A class with the name \"" + newName + "\" already exists.");
         return;
       }
       Label className = (Label) selectedClassBox.getChildren().get(0);
@@ -239,18 +281,23 @@ public class GUIViewController  implements Initializable {
       if (dataTypeIndex >= 0) {
         dataTypeComboBox.getItems().set(dataTypeIndex, newName);
       }
-      if (paramTypeIndex >=0){
+      if (paramTypeIndex >= 0) {
         parameterTypeComboBox.getItems().set(paramTypeIndex, newName);
       }
 
       // Update relationships
-      canvas.getChildren().forEach(node -> {
-        String nodeId = node.getId();
-        if (nodeId != null && (nodeId.startsWith(currentName + "->") || nodeId.contains("->" + currentName))) {
-          String newNodeId = nodeId.replace(currentName, newName);
-          node.setId(newNodeId);
-        }
-      });
+      canvas
+          .getChildren()
+          .forEach(
+              node -> {
+                String nodeId = node.getId();
+                if (nodeId != null
+                    && (nodeId.startsWith(currentName + "->")
+                        || nodeId.contains("->" + currentName))) {
+                  String newNodeId = nodeId.replace(currentName, newName);
+                  node.setId(newNodeId);
+                }
+              });
     }
   }
 
@@ -271,9 +318,11 @@ public class GUIViewController  implements Initializable {
 
       String fieldName = fieldNameInput.getText();
       ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
-      String message = umlController.fieldCommands.addField(
-        new String[]{"add", "field", selectedClassBox.getName(), fieldName,
-          dataTypeComboBox.getValue()});
+      String message =
+          umlController.fieldCommands.addField(
+              new String[] {
+                "add", "field", selectedClassBox.getName(), fieldName, dataTypeComboBox.getValue()
+              });
 
       if (message.isEmpty()) {
         fieldNameInput.clear();
@@ -282,12 +331,9 @@ public class GUIViewController  implements Initializable {
         showAlert("Error", message);
       }
       System.out.println(
-        umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
-
-
+          umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
     }
   }
-
 
   /**
    * Inside the selected class the user will have a field selected. When the user clicks on "Delete
@@ -305,13 +351,13 @@ public class GUIViewController  implements Initializable {
 
       if (selectedField != null) {
         umlController.fieldCommands.removeField(
-          new String[]{"add", "field", selectedClassBox.getName(), fieldName,
-            fieldType}); // "add field [class name] [field name] [field type]"
+            new String[] {
+              "add", "field", selectedClassBox.getName(), fieldName, fieldType
+            }); // "add field [class name] [field name] [field type]"
         fieldList.getItems().remove(selectedField);
       }
     }
   }
-
 
   /**
    * Inside the selected class the user has a field selected. When the user clicks "Rename Field"
@@ -339,17 +385,23 @@ public class GUIViewController  implements Initializable {
           // update storage
           String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
           umlController.fieldCommands.renameField(
-            new String[]{"rename", "field", selectedClassBox.getName(), oldFieldName, newFieldName,
-              newFieldType});
+              new String[] {
+                "rename",
+                "field",
+                selectedClassBox.getName(),
+                oldFieldName,
+                newFieldName,
+                newFieldType
+              });
           System.out.println(
-            umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
-          System.out.println("Size of fields: " + umlController.getStorage()
-            .getClass(selectedClassBox.getName()).fields.size());
+              umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
+          System.out.println(
+              "Size of fields: "
+                  + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
         }
       }
     }
   }
-
 
   /**
    * When the user has a class selected and a method in the class selected. When the user clicks on
@@ -373,11 +425,11 @@ public class GUIViewController  implements Initializable {
             String currentMethod = methodList.getItems().get(selectMethodIndex);
 
             if (currentMethod.endsWith("()")) {
-              currentMethod = currentMethod.replace("()",
-                "(" + parameterType + " " + parameterName + ")");
+              currentMethod =
+                  currentMethod.replace("()", "(" + parameterType + " " + parameterName + ")");
             } else {
-              currentMethod = currentMethod.replace(")",
-                ", " + parameterType + " " + parameterName + ")");
+              currentMethod =
+                  currentMethod.replace(")", ", " + parameterType + " " + parameterName + ")");
             }
 
             parameterNameInput.clear();
@@ -387,7 +439,6 @@ public class GUIViewController  implements Initializable {
       }
     }
   }
-
 
   /**
    * Adds a new method to the selected class box
@@ -401,8 +452,9 @@ public class GUIViewController  implements Initializable {
 
       if (!methodName.isEmpty()) {
 
-        String message = umlController.methodCommands.addMethod(
-          new String[]{"add", "method", selectedClassBox.getName(), methodName});
+        String message =
+            umlController.methodCommands.addMethod(
+                new String[] {"add", "method", selectedClassBox.getName(), methodName});
         if (message.isEmpty()) {
           String formattedMethod = methodName + "()";
           ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
@@ -412,12 +464,9 @@ public class GUIViewController  implements Initializable {
         } else {
           showAlert("Error", message);
         }
-
-
       }
     }
   }
-
 
   /**
    * Deletes selected method from the selected class box.
@@ -433,16 +482,16 @@ public class GUIViewController  implements Initializable {
       if (selectedMethod != null) {
 
         umlController.methodCommands.removeMethod(
-          new String[]{"delete", "method", selectedClassBox.getName(), selectedMethod});
-        System.out.println("Number of methods: " + umlController.getStorage()
-          .getClass(selectedClassBox.getName()).fields.size());
+            new String[] {"delete", "method", selectedClassBox.getName(), selectedMethod});
+        System.out.println(
+            "Number of methods: "
+                + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
         methodList.getItems().remove(selectedMethod);
 
         methodNameInput.clear();
       }
     }
   }
-
 
   /**
    * Renames the selected method in the selected class box.
@@ -462,12 +511,13 @@ public class GUIViewController  implements Initializable {
           String oldMethodName = selectedMethod.substring(0, selectedMethod.indexOf("("));
 
           umlController.methodCommands.renameMethod(
-            new String[]{"rename", "method", selectedClassBox.getName(), oldMethodName,
-              newMethodName});
+              new String[] {
+                "rename", "method", selectedClassBox.getName(), oldMethodName, newMethodName
+              });
 
           int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
           String updatedMethod =
-            newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
+              newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
           methodList.getItems().set(selectedIndex, updatedMethod);
 
           methodNameInput.clear();
@@ -476,15 +526,14 @@ public class GUIViewController  implements Initializable {
     }
   }
 
-
   /**
    * Draws a relationship line with an arrowhead between two class boxes, based on the selected
    * relationship type.
    *
-   * @param fromBox      the VBox representing the source class box
-   * @param toBox        the Vbox representing the destination class box
+   * @param fromBox the VBox representing the source class box
+   * @param toBox the Vbox representing the destination class box
    * @param relationType the type of relationship (Aggregation, Composition, Generalization,
-   *                     Realization)
+   *     Realization)
    */
   @FXML
   public void drawRelationLine(VBox fromBox, VBox toBox, String relationType) {
@@ -500,52 +549,59 @@ public class GUIViewController  implements Initializable {
     String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
     // Remove the existing relationship if it exists
-    canvas.getChildren().removeIf(node -> {
-      String nodeId = node.getId();
-      return (nodeId != null && (nodeId.startsWith(fromClassName + "->" + toClassName) || nodeId.startsWith(toClassName + "->" + fromClassName)));
-    });
+    canvas
+        .getChildren()
+        .removeIf(
+            node -> {
+              String nodeId = node.getId();
+              return (nodeId != null
+                  && (nodeId.startsWith(fromClassName + "->" + toClassName)
+                      || nodeId.startsWith(toClassName + "->" + fromClassName)));
+            });
 
     Line line = createAndBindLine(fromBox, toBox, relationshipId);
 
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
-    arrowHead.getPoints().addAll(
-      -40.0, 0.0,
-      -20.0, -10.0,
-      0.0, 0.0,
-      -20.0, 10.0,
-      -40.0, 0.0
-    );
-
+    arrowHead
+        .getPoints()
+        .addAll(
+            -40.0, 0.0,
+            -20.0, -10.0,
+            0.0, 0.0,
+            -20.0, 10.0,
+            -40.0, 0.0);
 
     switch (relationType) {
       case "Aggregation":
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.GRAY);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.WHITE);
         break;
       case "Composition":
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.BLACK);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.RED);
         break;
       case "Generalization":
         arrowHead.getPoints().clear();
-        arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
-        );
-        arrowHead.setFill(Color.BLACK);
+        arrowHead
+            .getPoints()
+            .addAll(
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0);
+        arrowHead.setFill(Color.WHITE);
         break;
       case "Realization":
         arrowHead.getPoints().clear();
-        arrowHead.getPoints().addAll(
-          -20.0, 10.0,
-          0.0, 0.0,
-          -20.0, -10.0
-        );
-        arrowHead.setStroke(Color.BLACK);
-        arrowHead.setFill(Color.GRAY);
+        arrowHead
+            .getPoints()
+            .addAll(
+                -20.0, 10.0,
+                0.0, 0.0,
+                -20.0, -10.0);
+        arrowHead.setStroke(Color.WHITE);
+        arrowHead.setFill(Color.RED);
         line.getStrokeDashArray().addAll(10.0, 10.0);
         break;
       default:
@@ -558,28 +614,52 @@ public class GUIViewController  implements Initializable {
     canvas.getChildren().addAll(line, arrowHead);
   }
 
-
   /**
    * Returns the top, bottom, left, and right points of the class box.
+   *
    * @param box the VBox representing the class box
    * @return the points of the class box
    */
   private DoubleBinding[][] classBoxPoints(VBox box) {
-    DoubleBinding topX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
-    DoubleBinding topY = Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
-    DoubleBinding bottomX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth() / 2, box.layoutXProperty(), box.widthProperty());
-    DoubleBinding bottomY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
-    DoubleBinding leftX = Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
-    DoubleBinding leftY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
-    DoubleBinding rightX = Bindings.createDoubleBinding(() -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
-    DoubleBinding rightY = Bindings.createDoubleBinding(() -> box.getLayoutY() + box.getHeight() / 2, box.layoutYProperty(), box.heightProperty());
+    DoubleBinding topX =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutX() + box.getWidth() / 2,
+            box.layoutXProperty(),
+            box.widthProperty());
+    DoubleBinding topY =
+        Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
+    DoubleBinding bottomX =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutX() + box.getWidth() / 2,
+            box.layoutXProperty(),
+            box.widthProperty());
+    DoubleBinding bottomY =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
+    DoubleBinding leftX =
+        Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
+    DoubleBinding leftY =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutY() + box.getHeight() / 2,
+            box.layoutYProperty(),
+            box.heightProperty());
+    DoubleBinding rightX =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
+    DoubleBinding rightY =
+        Bindings.createDoubleBinding(
+            () -> box.getLayoutY() + box.getHeight() / 2,
+            box.layoutYProperty(),
+            box.heightProperty());
 
-    return new DoubleBinding[][]{{topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}};
+    return new DoubleBinding[][] {
+      {topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}
+    };
   }
-
 
   /**
    * Creates a line between two class boxes and binds the line to the class boxes.
+   *
    * @param fromBox the VBox representing the source class box
    * @param toBox the VBox representing the destination class box
    * @param relationshipId the id of the relationship
@@ -588,6 +668,7 @@ public class GUIViewController  implements Initializable {
   private Line createAndBindLine(VBox fromBox, VBox toBox, String relationshipId) {
     Line line = new Line();
     line.setId(relationshipId);
+    line.setStroke(Color.WHITE);
 
     DoubleBinding[][] fromPoints = classBoxPoints(fromBox);
     DoubleBinding[][] toPoints = classBoxPoints(toBox);
@@ -597,25 +678,29 @@ public class GUIViewController  implements Initializable {
     DoubleProperty endX = new SimpleDoubleProperty();
     DoubleProperty endY = new SimpleDoubleProperty();
 
-    Runnable updateLine = () -> {
-      double minDistance = Double.MAX_VALUE;
-      for (DoubleBinding[] fromPoint : fromPoints) {
-        for (DoubleBinding[] toPoint : toPoints) {
-          double distance = Math.sqrt(Math.pow(fromPoint[0].get() - toPoint[0].get(), 2) + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
-          if (distance < minDistance) {
-            minDistance = distance;
-            startX.set(fromPoint[0].get());
-            startY.set(fromPoint[1].get());
-            endX.set(toPoint[0].get());
-            endY.set(toPoint[1].get());
+    Runnable updateLine =
+        () -> {
+          double minDistance = Double.MAX_VALUE;
+          for (DoubleBinding[] fromPoint : fromPoints) {
+            for (DoubleBinding[] toPoint : toPoints) {
+              double distance =
+                  Math.sqrt(
+                      Math.pow(fromPoint[0].get() - toPoint[0].get(), 2)
+                          + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
+              if (distance < minDistance) {
+                minDistance = distance;
+                startX.set(fromPoint[0].get());
+                startY.set(fromPoint[1].get());
+                endX.set(toPoint[0].get());
+                endY.set(toPoint[1].get());
+              }
+            }
           }
-        }
-      }
-      line.startXProperty().bind(startX);
-      line.startYProperty().bind(startY);
-      line.endXProperty().bind(endX);
-      line.endYProperty().bind(endY);
-    };
+          line.startXProperty().bind(startX);
+          line.startYProperty().bind(startY);
+          line.endXProperty().bind(endX);
+          line.endYProperty().bind(endY);
+        };
 
     fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
     fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
@@ -625,7 +710,6 @@ public class GUIViewController  implements Initializable {
     updateLine.run();
     return line;
   }
-
 
   /**
    * Adds a relationship line between two selected classes, based on the selected relationship type
@@ -648,7 +732,6 @@ public class GUIViewController  implements Initializable {
     drawRelationLine(fromBox, toBox, relationType);
   }
 
-
   /**
    * Finds and returns a class box by its name.
    *
@@ -667,7 +750,6 @@ public class GUIViewController  implements Initializable {
     }
     return null;
   }
-
 
   /**
    * Deletes the selected relationship between two classes from the canvas, based on the selected
@@ -690,11 +772,10 @@ public class GUIViewController  implements Initializable {
     canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
   }
 
-
   /**
    * Displays an alert pop up with a title and content.
    *
-   * @param title   the title of the alert pop up
+   * @param title the title of the alert pop up
    * @param content the message content to be displayed in the alert
    */
   private void showAlert(String title, String content) {
@@ -705,8 +786,7 @@ public class GUIViewController  implements Initializable {
     alert.showAndWait();
   }
 
-
-  private String getFileName(){
+  private String getFileName() {
     String filename = "";
     TextInputDialog dialog = new TextInputDialog("Enter File Name");
     dialog.setTitle("Enter File Name");
@@ -714,7 +794,6 @@ public class GUIViewController  implements Initializable {
     Optional<String> result = dialog.showAndWait();
     return result.orElse("");
   }
-
 
   /**
    * Exits the program when the exit button is clicked.
@@ -726,27 +805,23 @@ public class GUIViewController  implements Initializable {
     System.exit(0);
   }
 
-
   @FXML
-  public void onSave(ActionEvent event){
+  public void onSave(ActionEvent event) {
     String fileName = getFileName();
-
   }
 
-
   /**
-   * When the open button is clicked it will ask the user to choose a file they like to upload.
-   * *It will only allow them to enter a .json file*
+   * When the open button is clicked it will ask the user to choose a file they like to upload. *It
+   * will only allow them to enter a .json file*
+   *
    * @param event - The action for opening a file.
    */
   @FXML
-  public void onOpen(ActionEvent event){
-    FileChooser.ExtensionFilter jsonFilter =  new FileChooser.ExtensionFilter("Json Files", "*.json");
+  public void onOpen(ActionEvent event) {
+    FileChooser.ExtensionFilter jsonFilter =
+        new FileChooser.ExtensionFilter("Json Files", "*.json");
     fileChooser.getExtensionFilters().add(jsonFilter);
 
     File file = fileChooser.showOpenDialog(new Stage());
   }
-
-
-
 }

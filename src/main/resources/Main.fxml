@@ -16,119 +16,114 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="637.0" prefWidth="831.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GUIViewController">
-    <children>
-      <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <menus>
-            <Menu fx:id="menubar" mnemonicParsing="false" text="File">
-               <items>
-                  <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Quit" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Undo" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="About" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
-        <Pane fx:id="canvas" layoutY="25.0" prefHeight="614.0" prefWidth="576.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="255.0" AnchorPane.topAnchor="25.0" />
+<AnchorPane prefHeight="1000.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21.0.5"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GUIViewController">
+    <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0"
+             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Menu fx:id="menubar" mnemonicParsing="false" text="File">
+            <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Quit"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+            <MenuItem mnemonicParsing="false" text="Undo"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="Redo"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" text="About"/>
+        </Menu>
+    </MenuBar>
+    <Pane fx:id="canvas" layoutY="26.0" prefHeight="974.0" prefWidth="1135.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="26.0"/>
 
-        <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
-            <Button fx:id="addClass" onAction="#createClass" text="Add Class" />
-            <Button fx:id="deleteClassButton" onAction="#deleteClass" text="Delete Class" />
-            <Button fx:id="toggleInspectorButton" onAction="#toggleInspector" style="-fx-font-weight: bold;" text="Hide" />
-        </HBox>
+    <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+        <Button fx:id="addClass" onAction="#createClass" text="Add Class"/>
+        <Button fx:id="deleteClassButton" onAction="#deleteClass" text="Delete Class"/>
+        <Button fx:id="toggleInspectorButton" onAction="#toggleInspector" style="-fx-font-weight: bold;" text="Hide"/>
+    </HBox>
 
-        <VBox fx:id="inspectorPane" alignment="TOP_LEFT" layoutX="567.0" layoutY="76.0" prefWidth="250.0" spacing="8.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="76.0">
+    <VBox fx:id="inspectorPane" alignment="TOP_LEFT" layoutX="567.0" layoutY="76.0" prefWidth="250.0" spacing="8.0"
+          style="-fx-background-color: #f0f0f0; -fx-padding: 10;" AnchorPane.bottomAnchor="14.0"
+          AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="76.0">
 
-            <Label text="Class Name:" />
-            <TextField fx:id="classNameInput" promptText="Enter class name" />
-            <Button fx:id="setClassName" onAction="#handleSetClassName" text="Set Class Name" />
+        <Label text="Class Name:"/>
+        <TextField fx:id="classNameInput" promptText="Enter class name"/>
+        <Button fx:id="setClassName" onAction="#handleSetClassName" text="Set Class Name"/>
 
-            <Label text="Field Name:" />
-            <TextField fx:id="fieldNameInput" promptText="Enter field name" />
-            <HBox spacing="10.0">
-                <ComboBox fx:id="dataTypeComboBox" prefWidth="100" promptText="Type">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Int" />
-                            <String fx:value="String" />
-                            <String fx:value="Double" />
-                            <String fx:value="Boolean" />
-                        </FXCollections>
-                    </items>
-                </ComboBox>
-                <Button fx:id="addField" onAction="#handleAddField" text="Add" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Button fx:id="renameFieldButton" onAction="#handleRenameField" text="Rename Field" />
-                <Button fx:id="deleteField" onAction="#handleDeleteField" text="Delete Field" />
-            </HBox>
-
-            <Separator />
-
-            <Label text="Method Name:" />
-            <TextField fx:id="methodNameInput" promptText="Enter method name" />
-
-            <Label text="Add Parameter:" />
-            <HBox spacing="15.0">
-                <TextField fx:id="parameterNameInput" prefWidth="80" promptText="Name" />
-                <ComboBox fx:id="parameterTypeComboBox" prefWidth="110" promptText="Type">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Int" />
-                            <String fx:value="String" />
-                            <String fx:value="Double" />
-                            <String fx:value="Boolean" />
-                        </FXCollections>
-                    </items>
-                </ComboBox>
-                <Button fx:id="addParameter" onAction="#addParameter" prefWidth="90" text="Add" />
-            </HBox>
-
-            <Separator />
-
-            <HBox spacing="10.0">
-                <Button fx:id="addMethod" onAction="#handleAddMethod" text="Add" />
-                <Button fx:id="deleteMethod" onAction="#handleDeleteMethod" text="Delete" />
-                <Button fx:id="renameMethodButton" onAction="#handleRenameMethod" text="Rename Method" />
-            </HBox>
-
-            <Separator />
-
-            <Label text="Relationship:" />
-            <HBox spacing="5.0">
-                <ComboBox fx:id="fromComboBox" prefWidth="110" promptText="From" />
-                <ComboBox fx:id="toComboBox" prefWidth="110" promptText="To" />
-            </HBox>
-            <ComboBox fx:id="relationshipTypeComboBox" prefWidth="225" promptText="Type">
+        <Label text="Field Name:"/>
+        <TextField fx:id="fieldNameInput" promptText="Enter field name"/>
+        <HBox spacing="10.0">
+            <ComboBox fx:id="dataTypeComboBox" prefWidth="100" promptText="Type">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Aggregation" />
-                        <String fx:value="Composition" />
-                        <String fx:value="Generalization" />
-                        <String fx:value="Realization" />
+                        <String fx:value="Int"/>
+                        <String fx:value="String"/>
+                        <String fx:value="Double"/>
+                        <String fx:value="Boolean"/>
                     </FXCollections>
                 </items>
             </ComboBox>
+            <Button fx:id="addField" onAction="#handleAddField" text="Add"/>
+        </HBox>
+        <HBox spacing="10.0">
+            <Button fx:id="renameFieldButton" onAction="#handleRenameField" text="Rename Field"/>
+            <Button fx:id="deleteField" onAction="#handleDeleteField" text="Delete Field"/>
+        </HBox>
 
-            <HBox spacing="5.0">
-                <Button fx:id="addRelationButton" onAction="#addRelation" text="Add Relation" />
-                <Button fx:id="deleteRelationButton" onAction="#deleteRelation" text="Delete Relation" />
-            </HBox>
+        <Separator/>
 
-        </VBox>
-    </children>
+        <Label text="Method Name:"/>
+        <TextField fx:id="methodNameInput" promptText="Enter method name"/>
+
+        <Label text="Add Parameter:"/>
+        <HBox spacing="15.0">
+            <TextField fx:id="parameterNameInput" prefWidth="80" promptText="Name"/>
+            <ComboBox fx:id="parameterTypeComboBox" prefWidth="110" promptText="Type">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Int"/>
+                        <String fx:value="String"/>
+                        <String fx:value="Double"/>
+                        <String fx:value="Boolean"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Button fx:id="addParameter" onAction="#addParameter" prefWidth="90" text="Add"/>
+        </HBox>
+
+        <Separator/>
+
+        <HBox spacing="10.0">
+            <Button fx:id="addMethod" onAction="#handleAddMethod" text="Add"/>
+            <Button fx:id="deleteMethod" onAction="#handleDeleteMethod" text="Delete"/>
+            <Button fx:id="renameMethodButton" onAction="#handleRenameMethod" text="Rename Method"/>
+        </HBox>
+
+        <Separator/>
+
+        <Label text="Relationship:"/>
+        <HBox spacing="5.0">
+            <ComboBox fx:id="fromComboBox" prefWidth="110" promptText="From"/>
+            <ComboBox fx:id="toComboBox" prefWidth="110" promptText="To"/>
+        </HBox>
+        <ComboBox fx:id="relationshipTypeComboBox" prefWidth="225" promptText="Type">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Aggregation"/>
+                    <String fx:value="Composition"/>
+                    <String fx:value="Generalization"/>
+                    <String fx:value="Realization"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <HBox spacing="5.0">
+            <Button fx:id="addRelationButton" onAction="#addRelation" text="Add Relation"/>
+            <Button fx:id="deleteRelationButton" onAction="#deleteRelation" text="Delete Relation"/>
+        </HBox>
+
+    </VBox>
 </AnchorPane>
