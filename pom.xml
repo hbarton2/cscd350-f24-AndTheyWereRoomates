@@ -17,6 +17,33 @@
   </properties>
 
   <dependencies>
+    <!-- Autocomplete key detection -->
+    <dependency>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>3.21.0</version>
+    </dependency>
+    <!-- Autocomplete -->
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>9.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-suggest</artifactId>
+      <version>9.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-codecs</artifactId>
+      <version>9.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-analysis-common</artifactId>
+      <version>9.7.0</version>
+    </dependency>
     <!-- JavaFX Dependencies -->
     <dependency>
       <groupId>org.openjfx</groupId>

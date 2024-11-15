@@ -14,7 +14,7 @@
 4. [Known Bugs](#known-bugs)
 ---
 ## CLI Introduction
-Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
+Upon booting up in CLI mode, you'll be presented with the commandLineTerminal. You should see a line saying
 
 `Welcome to our UML Editor application
 If you would like a list of commands enter 'help'`

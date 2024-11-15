@@ -1,18 +1,30 @@
 package org.project.Controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import org.project.Model.AutoComplete;
 import org.project.Model.CommandInfo;
-import org.project.Model.CommandRegistry;
+import org.project.Model.CommandRegistries;
 
 /**
- * Responsible for parsing user input and delegating command execution to the CommandRegistry.
+ * Responsible for parsing user input and delegating command execution to the CommandRegistries.
  * Provides methods to parse commands and retrieve a formatted list of available commands.
  */
 public class CommandParser {
-  private final CommandRegistry commandRegistry;
+  private final CommandRegistries commandRegistries;
+  private final AutoComplete autoComplete;
 
-  public CommandParser(CommandRegistry commandRegistry) {
-    this.commandRegistry = commandRegistry;
+  public CommandParser(CommandRegistries commandRegistries) throws IOException {
+    this.commandRegistries = commandRegistries;
+    this.autoComplete = new AutoComplete(); // Initialize AutoComplete
+
+    // Load all commands into AutoComplete
+    for (String commandName : commandRegistries.getAllCommands().keySet()) {
+      autoComplete.addCommand(commandName);
+      System.out.println(commandName + " Loaded"); // TODO: TEST DEBUG
+    }
   }
 
   /**
@@ -32,7 +44,7 @@ public class CommandParser {
     String[] args = tokens.length > 2 ? extractArgs(tokens) : new String[0];
 
     // Execute command
-    return commandRegistry.executeCommand(commandName, args);
+    return commandRegistries.executeCommand(commandName, args);
   }
 
   private String[] extractArgs(String[] tokens) {
@@ -48,7 +60,7 @@ public class CommandParser {
   public String getCommandList() {
     StringBuilder commandList = new StringBuilder("Available Commands:\n");
 
-    for (Map.Entry<String, CommandInfo> entry : commandRegistry.getAllCommands().entrySet()) {
+    for (Map.Entry<String, CommandInfo> entry : commandRegistries.getAllCommands().entrySet()) {
       String commandName = entry.getKey();
       CommandInfo commandInfo = entry.getValue();
 
@@ -59,5 +71,25 @@ public class CommandParser {
     }
 
     return commandList.toString();
+  }
+
+  /**
+   * Handles autocomplete functionality.
+   * @param partialInput The current input entered by the user.
+   * @return A list of matching commands or a single completed command.
+   */
+  public List<String> autocomplete(String partialInput) throws IOException {
+    return autoComplete.getSuggestions(partialInput);
+  }
+
+  /**
+   * Releases resources used by AutoComplete.
+   */
+  public void close() throws IOException {
+    autoComplete.close(); // Release resources
+  }
+
+  public List<String> getAllCommandNames() {
+    return new ArrayList<>(commandRegistries.getAllCommands().keySet());
   }
 }

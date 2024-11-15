@@ -66,7 +66,7 @@ Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
         - Press `Enter` to navigate to the folder.
 
 4. **Run the JAR File**:
-    - Type the following command in the terminal:
+    - Type the following command in the commandLineTerminal:
       ```bash
       java -jar uml-editor.jar
       ```
@@ -87,7 +87,7 @@ This SDK is intended to streamline the experience of creating class diagrams, mo
 
 ## Features
 
-- **Command-Line Interface (CLI):** Provides a terminal-like environment where users can execute commands within the JavaFX terminal window.
+- **Command-Line Interface (CLI):** Provides a commandLineTerminal-like environment where users can execute commands within the JavaFX commandLineTerminal window.
 - **Graphical User Interface (GUI):** Application has an elegant, easy-to-use graphical interface for an enhanced user experience.
 - **JSON Integration:** Uses Gson for saving/loading the project data in JSON format.
 - **Multi-platform Support:** Designed to work on Windows, macOS, and Linux with cross-platform capabilities.
@@ -146,10 +146,10 @@ src/main/java/uml-editor/EntryPoint.java
 
 ## Usage
 ### Console Interaction 
-The application includes an in-app terminal/console feature, allowing users to input commands within the JavaFX interface. Users can enter specific commands for various operations such as creating, renaming, and removing classes, attributes, and methods.
+The application includes an in-app commandLineTerminal/console feature, allowing users to input commands within the JavaFX interface. Users can enter specific commands for various operations such as creating, renaming, and removing classes, attributes, and methods.
 
 - Help Menu: Users can access the help menu for detailed guidance.
-- Command-Line Operations: Integration of the command-line terminal where you can execute operations directly without leaving the graphical interface.
+- Command-Line Operations: Integration of the command-line commandLineTerminal where you can execute operations directly without leaving the graphical interface.
 
 ### Graphic User Interface Interaction
 

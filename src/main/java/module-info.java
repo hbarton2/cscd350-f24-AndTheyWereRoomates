@@ -1,5 +1,5 @@
 /**
- * minimum requirements for v3.0.48+
+ * minimum requirements for v3.0.56+
  */
 module org.project {
   requires javafx.controls;
@@ -7,7 +7,10 @@ module org.project {
   requires javafx.graphics;
   requires java.desktop;
   requires com.google.gson;
+  requires org.apache.lucene.suggest;
+  requires org.apache.lucene.core;
   requires java.logging;
+  requires org.jline;
 
   exports org.project.Controller;
   exports org.project.Model;
