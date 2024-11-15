@@ -1,14 +1,15 @@
 package org.project;
 
+import java.io.IOException;
 import java.util.Scanner;
-import org.project.Model.CommandRegistry;
+import org.project.Model.CommandRegistries;
 import org.project.View.CLIView;
+import org.project.View.CommandLineTerminal;
 import org.project.View.GUIView;
-import org.project.View.Terminal;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     boolean answer = true;
     Scanner scanner = new Scanner(System.in);
 
@@ -33,9 +34,9 @@ public class Main {
         }
         case "new cli", "n" -> {
           answer = false;
-          CommandRegistry commands = new CommandRegistry("src/main/resources/CLICommands.json");
-          Terminal terminal = new Terminal(commands);
-          terminal.launch();
+          CommandRegistries commands = new CommandRegistries("src/main/resources/CLICommands.json");
+          CommandLineTerminal commandLineTerminal = new CommandLineTerminal(commands);
+          commandLineTerminal.launch();
         }
         case "exit", "quit" -> answer = false;
         default -> System.out.println("Please enter a valid option.");

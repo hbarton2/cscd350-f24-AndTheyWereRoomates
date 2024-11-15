@@ -89,7 +89,7 @@ public class CLIView {
         if ("class".equals(input[1]) && input.length == 3) {
           setCurrentClass(input[2]);
         } else {
-          System.out.println("invalid syntax. Useage: set class <class name>");
+          System.out.println("invalid syntax. Usage: set class <class name>");
         }
       }
       case "add" -> addCommand(input);
@@ -124,7 +124,7 @@ public class CLIView {
   /**
    * addCommand handles adding a class, method, field, parameter, or relationship. Calls the
    * appropriate UMLController add function for each type. Outputs "no class selected. Try: set
-   * class <class name>" and returns if there is no set class and it's not adding a class.
+   * class <class name>" and returns if there is no set class, and it's not adding a class.
    *
    * @param input is the user input.
    */
@@ -150,7 +150,7 @@ public class CLIView {
   /**
    * removeCommand handles removing a class, method, field, parameter, or relationship. Calls the
    * appropriate UMLController remove function for each type. Outputs "no class selected. Try: set
-   * class <class name>" and returns if there is no set class and it's not removing a class.
+   * class <class name>" and returns if there is no set class, and it's not removing a class.
    *
    * @param input is the user input.
    */
@@ -236,7 +236,7 @@ public class CLIView {
           listClass(new String[]{"List", "class", currentClass.getName()});
         } else {
           System.out.println(
-            "not active class set. use set command to set a class you want to see. Useage: set class <classname>");
+            "not active class set. use set command to set a class you want to see. Usage: set class <classname>");
         }
       }
       case "classes" -> listClasses();
