@@ -76,6 +76,10 @@ public class UMLClassNode {
       return name;
     }
 
+    public void setName(String name) {
+      this.name = name;
+    }
+
     @Override
     public String toString() {
       return "Field{" +
@@ -107,9 +111,18 @@ public class UMLClassNode {
       return name;
     }
 
+    public void setName(String name) {
+      this.name = name;
+    }
+    public void setType(String type) {
+      this.type = type;
+    }
+
     public List<Parameter> getParameters() {
       return parameters;
     }
+
+    public void setParameters(List<Parameter> parameters) {}
 
     public boolean isOverloaded() {
       return isOverloaded;
