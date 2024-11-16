@@ -78,9 +78,16 @@ public class CommandParser {
    * @param partialInput The current input entered by the user.
    * @return A list of matching commands or a single completed command.
    */
+//  public List<String> autocomplete(String partialInput) throws IOException {
+//    return autoComplete.getSuggestions(partialInput);
+//  }
   public List<String> autocomplete(String partialInput) throws IOException {
-    return autoComplete.getSuggestions(partialInput);
+    System.out.println("Autocomplete Input: " + partialInput);
+    List<String> suggestions = autoComplete.getSuggestions(partialInput);
+    System.out.println("Suggestions: " + suggestions);
+    return suggestions;
   }
+
 
   /**
    * Releases resources used by AutoComplete.
