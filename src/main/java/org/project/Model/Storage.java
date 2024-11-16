@@ -16,7 +16,7 @@ public class Storage {
     this.storage = new TreeMap<>();
   }
 
-  // Public method to provide access to the instance
+  // Public method to provide access to the instance Singleton Design pattern
   public static Storage getInstance() {
     if (instance == null) {
       instance = new Storage(); // Create the instance if it doesn't exist
@@ -51,8 +51,8 @@ public class Storage {
 
   // Method to print all nodes
   public void printAllNodes() {
-    for (Map.Entry<String, UMLClassNode> entry : storage.entrySet()) {
-      System.out.println("Class: " + entry.getKey() + " => Node: " + entry.getValue());
+    for(UMLClassNode node : storage.values()) {
+      System.out.println(node.toString());
     }
   }
 
