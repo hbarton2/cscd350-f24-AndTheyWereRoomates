@@ -110,11 +110,17 @@ private void processCommand(String input) {
 //    return input.replace("\\", "").trim();
 //  }
 private String sanitizeInput(String input) {
-  System.out.println("Raw Input: " + input);
-  String sanitized = input.replace("\\", "").strip();
-  System.out.println("Sanitized Input: " + sanitized);
-  return sanitized;
+  // Remove backslashes and redundant spaces introduced by JLine
+  input = input.replace("\\", "").trim();
+  // Split and sanitize each word (prevent duplication from autocomplete)
+  String[] tokens = input.split("\\s+");
+  if (tokens.length > 1) {
+    // Prevent malformed concatenations
+    tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
+  }
+  return String.join(" ", tokens).trim();
 }
+
 
 
 

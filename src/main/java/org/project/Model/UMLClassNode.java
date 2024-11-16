@@ -1,5 +1,6 @@
 package org.project.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UMLClassNode {
@@ -17,6 +18,13 @@ public class UMLClassNode {
     this.methods = methods;
     this.relationships = relationships;
   }
+  // Constructor with only className
+  public UMLClassNode(String className) {
+    this.className = className;
+    this.fields = new ArrayList<>();
+    this.methods = new ArrayList<>();
+    this.relationships = new ArrayList<>();
+  }
 
   // Getters
   public String getClassName() {
@@ -33,6 +41,10 @@ public class UMLClassNode {
 
   public List<Relationship> getRelationships() {
     return relationships;
+  }
+//Setters
+  public void setClassName(String className) {
+    this.className = className;
   }
 
   @Override
