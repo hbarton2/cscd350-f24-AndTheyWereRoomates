@@ -26,6 +26,22 @@ public class UMLClassNode {
     this.relationships = new ArrayList<>();
   }
 
+  public UMLClassNode(UMLClassNode other) {
+    this.className = other.className;
+    this.fields = new ArrayList<>();
+    for (Field field : other.fields) {
+      this.fields.add(new Field(field));
+    }
+    this.methods = new ArrayList<>();
+    for (Method method : other.methods) {
+      this.methods.add(new Method(method));
+    }
+    this.relationships = new ArrayList<>();
+    for (Relationship relationship : other.relationships) {
+      this.relationships.add(new Relationship(relationship));
+    }
+  }
+
   // Getters
   public String getClassName() {
     return className;
@@ -67,6 +83,10 @@ public class UMLClassNode {
       this.type = type;
       this.name = name;
     }
+    public Field(Field other) {
+      this.type = other.type;
+      this.name = other.name;
+    }
 
     public String getType() {
       return type;
@@ -101,6 +121,16 @@ public class UMLClassNode {
       this.name = name;
       this.parameters = parameters;
       this.isOverloaded = isOverloaded;
+    }
+
+    public Method(Method other) {
+      this.type = other.type;
+      this.name = other.name;
+      this.parameters = new ArrayList<>();
+      for (Parameter parameter : other.parameters) {
+        this.parameters.add(new Parameter(parameter.getType(), parameter.getName()));
+      }
+      this.isOverloaded = other.isOverloaded;
     }
 
     public String getType() {
@@ -174,6 +204,11 @@ public class UMLClassNode {
     public Relationship(String type, String target) {
       this.type = type;
       this.target = target;
+    }
+
+    public Relationship(Relationship other) {
+      this.type = other.type;
+      this.target = other.target;
     }
 
     public String getType() {

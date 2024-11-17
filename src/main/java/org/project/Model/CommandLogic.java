@@ -9,6 +9,9 @@ import java.util.List;
 import com.google.gson.*;
 import org.project.Controller.ClassNodeService;
 import org.project.Controller.CommandResult;
+import org.project.Memento.Caretaker;
+import org.project.Memento.Memento;
+import java.util.HashMap;
 
 public class CommandLogic {
 
@@ -16,8 +19,16 @@ public class CommandLogic {
 
   private UMLClassNode currentClass;
   private String loadedfileName = "";
+  private final Caretaker caretaker = new Caretaker();
 
-  public CommandLogic() {}
+  public CommandLogic() {
+    saveState(new String[]{});
+  }
+
+  protected CommandResult saveState(String[] args) {
+    caretaker.saveState(new Memento(new HashMap<>(storage.getAllNodes())));
+    return CommandResult.success("State saved");
+  }
 
   // Example command handler methods
   //  private CommandResult createClass(String[] args) {// TODO: should not be able to duplicate
@@ -42,6 +53,7 @@ public class CommandLogic {
   public void addClass(String className) {
     storage.addNode(className, new UMLClassNode(className));
     currentClass = storage.getNode(className);
+    saveState(new String[]{});
   }
 
   public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
@@ -93,7 +105,6 @@ public class CommandLogic {
     if (args.length < 2) {
       return CommandResult.failure("add field <field type> <field name>");
     }
-
     if (fieldExists(currentClass.getFields(), args[1])){
       return CommandResult.failure("Error: Field '" + args[1] + "' already exists.");
     }
@@ -101,6 +112,7 @@ public class CommandLogic {
     UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
     currentClass.getFields().add(field);
     storage.addNode(currentClass.getClassName(), currentClass);
+    saveState(new String[]{});
 
     return CommandResult.success("Field added: " + args[0] + " " + args[1]);
   }
@@ -111,10 +123,12 @@ public class CommandLogic {
     } else if (args.length > 1) {
       return CommandResult.failure("remove class <classname>");
     }
+
     if (!classExists(args[0])) {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     } else {
       storage.removeNode(args[0]);
+      saveState(new String[]{});
       return CommandResult.success("Class removed: " + args[0]);
     }
   }
@@ -138,6 +152,8 @@ public class CommandLogic {
       storage.removeNode(className);
       classNode.setClassName(newClassName);
       storage.addNode(newClassName, classNode);
+      saveState(new String[]{});
+
       return CommandResult.success("Class renamed: " + className + " to " + newClassName);
     } else {
       return CommandResult.failure("Error: Failed to rename class.");
@@ -155,6 +171,7 @@ public class CommandLogic {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
     currentClass = storage.getNode(args[0]);
+    saveState(new String[]{});
 
     return CommandResult.success("Class Switched to: " + args[0]);
   }
@@ -174,6 +191,7 @@ public class CommandLogic {
     } else if (args.length > 1) {
       return CommandResult.failure("remove field <field name>");
     }
+    saveState(new String[]{});
 
     String fieldName = args[0];
     List<UMLClassNode.Field> fields = currentClass.getFields();
@@ -196,6 +214,7 @@ public class CommandLogic {
     } else if (args.length > 2) {
       return CommandResult.failure("rename field <existing field name> <new field name>");
     }
+    saveState(new String[]{});
 
     String oldfieldName = args[0];
     String newFieldName = args[1];
@@ -220,6 +239,7 @@ public class CommandLogic {
       return CommandResult.failure(
           "add method <return type> <method name> [<parameter type> <parameter name> ...]");
     }
+
     String returnType = args[0];
     String methodName = args[1];
     List<UMLClassNode.Method.Parameter> params = new ArrayList<>();
@@ -231,11 +251,12 @@ public class CommandLogic {
     }
     UMLClassNode.Method method = new UMLClassNode.Method(returnType, methodName, params, false);
     currentClass.getMethods().add(method);
+    saveState(new String[]{});
     return CommandResult.success("Method added: " + methodName);
   }
 
   public CommandResult removeMethod(String[] args) {
-    if (args.length < 2 || args.length % 2 != 0) {
+    if (args.length < 1) {
       return CommandResult.failure(
           "remove method <method name> [<parameter type> <parameter name>...]");
     }
@@ -245,6 +266,7 @@ public class CommandLogic {
     for (UMLClassNode.Method method : currentClass.getMethods()) {
       if (method.getName().equals(args[0])) {
         currentClass.getMethods().remove(method);
+        saveState(new String[]{});
         return CommandResult.success("Method removed: " + method.getName());
       }
     }
@@ -259,7 +281,6 @@ public class CommandLogic {
       return CommandResult.failure(
           "rename method <existing method name> <new method name> <return type>");
     }
-
     String oldMethodName = args[0];
     String newMethodName = args[1];
     String methodType = args[2];
@@ -274,6 +295,7 @@ public class CommandLogic {
       if (method.getName().equals(oldMethodName)) {
         method.setName(newMethodName);
         method.setType(methodType);
+        saveState(new String[]{});
         return CommandResult.success("Method: " + oldMethodName + " to " + newMethodName);
       }
     }
@@ -288,6 +310,7 @@ public class CommandLogic {
       return CommandResult.failure(
           "add parameter <method name> <parameter type> <parameter name> [<parameter type> <parameter name> ...]");
     }
+
     if (!methodExists(currentClass.getMethods(), args[0])) {
       return CommandResult.failure("Error: Method '" + args[0] + "' does not exist.");
     }
@@ -302,6 +325,7 @@ public class CommandLogic {
     for (UMLClassNode.Method method : currentClass.getMethods()) {
       if (method.getName().equals(args[0])) {
         method.getParameters().addAll(params);
+        saveState(new String[]{});
         return CommandResult.success("Method: " + args[0] + " to " + args[1]);
       }
     }
@@ -331,7 +355,7 @@ public class CommandLogic {
     for (UMLClassNode.Method method : currentClass.getMethods()) {
       if (method.getName().equals(methodName)) {
         method.getParameters().removeIf(param -> parameterNamesToRemove.contains(param.getName()));
-
+        saveState(new String[]{});
         return CommandResult.success("Parameters removed from " + methodName);
       }
     }
@@ -363,6 +387,7 @@ public class CommandLogic {
 
     UMLClassNode.Relationship relationship = new UMLClassNode.Relationship(args[0], args[1]);
     currentClass.getRelationships().add(relationship);
+    saveState(new String[]{});
     return CommandResult.success("Added relationship to " + args[1] + " type of " + args[0]);
   }
 
@@ -374,6 +399,7 @@ public class CommandLogic {
     for (UMLClassNode.Relationship relationship : currentClass.getRelationships()) {
       if (relationship.getTarget().equals(args[1]) || relationship.getType().equals(args[0])) {
         currentClass.getRelationships().remove(relationship);
+        saveState(new String[]{});
         return CommandResult.success(
             "Relationship removed from " + args[1] + " type of " + args[0]);
       }
@@ -385,8 +411,12 @@ public class CommandLogic {
     if (args.length != 0) {
       return CommandResult.failure("list detail ");
     }
-    System.out.println(currentClass.toString());
+    if (currentClass == null) {
+      return CommandResult.failure("Error: No class selected");
+    }
 
+
+    System.out.println(currentClass.toString());
     return CommandResult.success("Listing Detail...");
   }
 
@@ -451,14 +481,39 @@ public class CommandLogic {
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
-    return CommandResult.success("Undone");
+    if (currentClass == null) {
+      return CommandResult.failure("Error: No class selected");
+    }
+    Memento memento = caretaker.undo();
+    if (memento != null) {
+      storage.setAllNodes(memento.getState());
+      updateCurrentClass();
+      return CommandResult.success("Undone");
+    }
+    return CommandResult.failure("Error: Nothing to undo");
   }
 
   public CommandResult redo(String[] args) { // TODO: REDO does not work
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
-    return CommandResult.success("Undone");
+    Memento memento = caretaker.redo();
+    if (memento != null) {
+      storage.setAllNodes(memento.getState());
+      updateCurrentClass();
+      return CommandResult.success("Redone");
+    }
+    return CommandResult.failure("Error: Nothing to redo");
+  }
+  private void updateCurrentClass() {
+    if (currentClass != null) {
+      currentClass = storage.getNode(currentClass.getClassName());
+    }
+    else
+      if (!storage.getStorage().isEmpty()) {
+      currentClass = storage.getAllNodes().values().iterator().next();
+    }
+
   }
 
   public CommandResult help(String[] args) {

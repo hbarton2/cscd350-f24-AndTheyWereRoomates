@@ -82,6 +82,7 @@ public class CommandRegistries extends CommandLogic {
     commandHandlers.put("add relationship", this::addRelationship);
     commandHandlers.put("remove relationship", this::removeRelationship);
     commandHandlers.put("save as", this::saveNewfile);
+    commandHandlers.put("saveState", this::saveState);
     commandHandlers.put("save", this::save);
     commandHandlers.put("load file", this::load);
     commandHandlers.put("undo", this::undo);
