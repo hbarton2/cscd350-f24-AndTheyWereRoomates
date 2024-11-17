@@ -55,6 +55,13 @@ public class Storage {
       System.out.println(node.toString());
     }
   }
+  public Map<String, UMLClassNode> getAllNodes() {
+    return new TreeMap<>(storage);
+  }
+  public void setAllNodes(Map<String, UMLClassNode> nodes) {
+    storage.clear();
+    storage.putAll(nodes);
+  }
 
   // Method to get the size of the storage
   public int getSize() {
