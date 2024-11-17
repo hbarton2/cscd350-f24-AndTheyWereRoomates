@@ -1,9 +1,13 @@
 package org.project.Model;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import com.google.gson.*;
+import org.project.Controller.ClassNodeService;
 import org.project.Controller.CommandResult;
 
 public class CommandLogic {
@@ -11,9 +15,9 @@ public class CommandLogic {
   private final Storage storage = new Storage();
 
   private UMLClassNode currentClass;
+  private String loadedfileName = "";
 
-  public CommandLogic(){
-  }
+  public CommandLogic() {}
 
   // Example command handler methods
   //  private CommandResult createClass(String[] args) {// TODO: should not be able to duplicate
@@ -40,18 +44,18 @@ public class CommandLogic {
     currentClass = storage.getNode(className);
   }
 
-
-  public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name){
-    for(UMLClassNode.Field field : fieldList) {
-      if(field.getName().equals(name)){
+  public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
+    for (UMLClassNode.Field field : fieldList) {
+      if (field.getName().equals(name)) {
         return true;
       }
     }
     return false;
   }
-  public boolean methodExists(List<UMLClassNode.Method> methodList, String name){
-    for(UMLClassNode.Method method : methodList) {
-      if(method.getName().equals(name)){
+
+  public boolean methodExists(List<UMLClassNode.Method> methodList, String name) {
+    for (UMLClassNode.Method method : methodList) {
+      if (method.getName().equals(name)) {
         return true;
       }
     }
@@ -85,19 +89,20 @@ public class CommandLogic {
 
   // TODO: Need a class where the logic and storage device
 
-  public CommandResult addField(String[] args) {//TODO: does not check for field duplicates
+  public CommandResult addField(String[] args) {
     if (args.length < 2) {
       return CommandResult.failure("add field <field type> <field name>");
     }
-    String fieldType = args[0];
-    String fieldName = args[1];
 
-    UMLClassNode.Field field = new UMLClassNode.Field(fieldType, fieldName);
+    if (fieldExists(currentClass.getFields(), args[1])){
+      return CommandResult.failure("Error: Field '" + args[1] + "' already exists.");
+    }
+
+    UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
     currentClass.getFields().add(field);
     storage.addNode(currentClass.getClassName(), currentClass);
 
-    return CommandResult.success("Field added: " + fieldType + " " + fieldName);
-
+    return CommandResult.success("Field added: " + args[0] + " " + args[1]);
   }
 
   public CommandResult removeClass(String[] args) {
@@ -124,8 +129,8 @@ public class CommandLogic {
     String newClassName = args[1];
     if (!classExists(className)) {
       return CommandResult.failure("Error: Class '" + className + "' does not exist.");
-      }
-    if(classExists(newClassName)){
+    }
+    if (classExists(newClassName)) {
       return CommandResult.failure("Error: Class '" + newClassName + "' already exists.");
     }
     UMLClassNode classNode = storage.getNode(className);
@@ -137,9 +142,9 @@ public class CommandLogic {
     } else {
       return CommandResult.failure("Error: Failed to rename class.");
     }
-   // UMLClassNode classNode = storage.getNode(className);
-   // classNode.setClassName(newClassName);
-   // return CommandResult.success("Class renamed: " + className);
+    // UMLClassNode classNode = storage.getNode(className);
+    // classNode.setClassName(newClassName);
+    // return CommandResult.success("Class renamed: " + className);
   }
 
   public CommandResult switchClass(String[] args) {
@@ -159,7 +164,7 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: list classes");
     }
 
-      storage.printAllNodes();
+    storage.printAllNodes();
     return CommandResult.success("Classes listed!");
   }
 
@@ -173,11 +178,11 @@ public class CommandLogic {
     String fieldName = args[0];
     List<UMLClassNode.Field> fields = currentClass.getFields();
 
-    if(!fieldExists(fields, fieldName)){
+    if (!fieldExists(fields, fieldName)) {
       return CommandResult.failure("Error: Field '" + fieldName + "' already exists.");
     }
-    for(UMLClassNode.Field field : fields){
-      if(field.getName().equals(fieldName)){
+    for (UMLClassNode.Field field : fields) {
+      if (field.getName().equals(fieldName)) {
         fields.remove(field);
         break;
       }
@@ -197,12 +202,12 @@ public class CommandLogic {
     if (!fieldExists(currentClass.getFields(), oldfieldName)) {
       return CommandResult.failure("Error: Field '" + oldfieldName + "' does not exist.");
     }
-    if(fieldExists(currentClass.getFields(), newFieldName)){
+    if (fieldExists(currentClass.getFields(), newFieldName)) {
       return CommandResult.failure("Error: Field '" + newFieldName + "' already exists.");
     }
 
-    for(UMLClassNode.Field field : currentClass.getFields()) {
-      if(field.getName().equals(oldfieldName)){
+    for (UMLClassNode.Field field : currentClass.getFields()) {
+      if (field.getName().equals(oldfieldName)) {
         field.setName(newFieldName);
         return CommandResult.success("Field: " + oldfieldName + " to " + newFieldName);
       }
@@ -210,7 +215,7 @@ public class CommandLogic {
     return CommandResult.failure("Error: Failed to rename field.");
   }
 
-  public CommandResult addMethod(String[] args) {//TODO: Implement overloading
+  public CommandResult addMethod(String[] args) { // TODO: Implement overloading
     if (args.length < 2 || args.length % 2 != 0) {
       return CommandResult.failure(
           "add method <return type> <method name> [<parameter type> <parameter name> ...]");
@@ -275,8 +280,7 @@ public class CommandLogic {
     return CommandResult.failure("Error: Failed to rename method");
   }
 
-
-  public CommandResult addParameters(String[] args) {//TODO: Checks for duplicate Parameter named
+  public CommandResult addParameters(String[] args) { // TODO: Checks for duplicate Parameter names
     if (args.length < 3) {
       return CommandResult.failure(
           "add parameter <method name> <parameter type> <parameter name> [<parameter type> <parameter name> ...]");
@@ -305,7 +309,7 @@ public class CommandLogic {
     return CommandResult.failure("Error: Failed to rename method");
   }
 
-  public CommandResult removeParameters(String[] args) {//TODO: Refactor/Cleanup
+  public CommandResult removeParameters(String[] args) { // TODO: Refactor/Cleanup
     if (args.length == 0) {
       return CommandResult.failure(
           "remove parameter <method name> <parameter name> [<parameter name> ...]");
@@ -333,7 +337,6 @@ public class CommandLogic {
     }
 
     return CommandResult.failure("Error: Method " + methodName + " not found.");
-
   }
 
   public CommandResult renameParameters(String[] args) {
@@ -343,20 +346,15 @@ public class CommandLogic {
     }
 
     return CommandResult.success(
-        "Ready to rename parameter from "
-            + args[1]
-            + " to "
-            + args[2]
-            + " in method "
-            + args[0]);
+        "Ready to rename parameter from " + args[1] + " to " + args[2] + " in method " + args[0]);
   }
 
   public CommandResult addRelationship(String[] args) {
-    if (args.length != 2){
+    if (args.length != 2) {
       return CommandResult.failure("add relationship <relationship type> <target class name>");
     }
 
-    if (!classExists(args[1])){
+    if (!classExists(args[1])) {
       return CommandResult.failure("Error: Class '" + args[1] + "' does not exist.");
     }
     if (currentClass.getClassName().equals(args[1])) {
@@ -365,19 +363,19 @@ public class CommandLogic {
 
     UMLClassNode.Relationship relationship = new UMLClassNode.Relationship(args[0], args[1]);
     currentClass.getRelationships().add(relationship);
-    return CommandResult.success(
-        "Added relationship to " + args[1] + " type of " + args[0]);
+    return CommandResult.success("Added relationship to " + args[1] + " type of " + args[0]);
   }
 
   public CommandResult removeRelationship(String[] args) {
-    if(args.length != 2){
+    if (args.length != 2) {
       return CommandResult.failure("remove relationship <relationship type> <target class name>");
     }
 
-    for(UMLClassNode.Relationship relationship : currentClass.getRelationships()){
-      if (relationship.getTarget().equals(args[1]) || relationship.getType().equals(args[0])){
+    for (UMLClassNode.Relationship relationship : currentClass.getRelationships()) {
+      if (relationship.getTarget().equals(args[1]) || relationship.getType().equals(args[0])) {
         currentClass.getRelationships().remove(relationship);
-        return CommandResult.success("Relationship removed from " + args[1] + " type of " + args[0]);
+        return CommandResult.success(
+            "Relationship removed from " + args[1] + " type of " + args[0]);
       }
     }
     return CommandResult.failure("Error: Relationship " + args[1] + " not found.");
@@ -392,34 +390,71 @@ public class CommandLogic {
     return CommandResult.success("Listing Detail...");
   }
 
-  public CommandResult save(String[] args) {//TODO: Save isn't currently working
-    if (args.length == 0) {
-      return CommandResult.failure("Specify file name");
-    } else if (args.length > 1) {
-      return CommandResult.failure("Too many arguments");
+  public CommandResult saveNewfile(String[] args) {
+    if (args.length != 1) {
+      return CommandResult.failure("Syntax : save <fileName>");
     }
+    String filename = args[0];
+    if (!filename.endsWith(".json")) {
+      filename += ".json";
+    }
+    String filePath = "src/main/resources/saves/" + filename;
 
-    String fileName = args[0];
-    return CommandResult.success("Saved" + fileName);
+    ClassNodeService classNodeService = new ClassNodeService();
+    classNodeService.StorageSaveToJsonArray(this.storage, filePath);
+    return CommandResult.success("Saved");
   }
 
-  public CommandResult load(String[] args) {//TODO: Load does not work
-    if (args.length == 0) {
-      return CommandResult.failure("Specify fileName");
-    } else if (args.length > 1) {
-      return CommandResult.failure("Too many arguments");
+  public CommandResult save(String[] args) {
+    if (args.length != 0) {
+      return CommandResult.failure("syntax: save");
+    }
+
+    String filePath = "src/main/resources/saves/" + loadedfileName;
+    ClassNodeService classNodeService = new ClassNodeService();
+    classNodeService.StorageSaveToJsonArray(this.storage, filePath);
+    return CommandResult.success("Saved");
+  }
+
+  public CommandResult load(String[] args) {
+    if (args.length != 1) {
+      return CommandResult.failure("syntax: load file <filName");
+    }
+    try {
+      // Read JSON file into a String
+      String jsonContent =
+          Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
+      loadedfileName = args[0] + ".json";
+
+      // Parse the JSON string into a JsonArray
+      Gson gson = new Gson();
+      JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
+
+      // Create an instance of ClassNodeService
+      ClassNodeService classNodeService = new ClassNodeService();
+
+      // Iterate over the array and create UMLClassNode for each JSON object
+      for (JsonElement element : jsonArray) {
+        JsonObject jsonObject = element.getAsJsonObject();
+        UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+        storage.addNode(classNode.getClassName(), classNode);
+      }
+    } catch (IOException e) {
+      System.err.println("Error reading JSON file: ");
+    } catch (JsonSyntaxException e) {
+      System.err.println("Error parsing JSON: " + e.getMessage());
     }
     return CommandResult.success("Loaded!");
   }
 
-  public CommandResult undo(String[] args) {//TODO: UNDO does not work
+  public CommandResult undo(String[] args) { // TODO: UNDO does not work
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
     return CommandResult.success("Undone");
   }
 
-  public CommandResult redo(String[] args) {//TODO: REDO does not work
+  public CommandResult redo(String[] args) { // TODO: REDO does not work
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }

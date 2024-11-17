@@ -1,20 +1,25 @@
 package org.project.Controller;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.Gson;
+import org.project.Model.Storage;
 import org.project.Model.UMLClassNode;
 import org.project.Model.UMLClassNode.Field;
 import org.project.Model.UMLClassNode.Method;
 import org.project.Model.UMLClassNode.Method.Parameter;
 import org.project.Model.UMLClassNode.Relationship;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ClassNodeService {
 
-  private final Gson json = new Gson();
+  private final Gson json = new GsonBuilder().setPrettyPrinting().create();
 
   public UMLClassNode createClassNodeFromJson(JsonObject jsonData) {
     // Parse class name
@@ -64,6 +69,27 @@ public class ClassNodeService {
 
     // Create and return the UMLClassNode instance
     return new UMLClassNode(className, fields, methods, relationships);
+  }
+
+  public void StorageSaveToJsonArray(Storage storage, String fileName) {
+    try {
+      // Get the values from the TreeMap as a collection
+      Collection<UMLClassNode> classNodes = storage.getStorage().values();
+
+      // Create a Gson instance
+
+      // Serialize the collection of UMLClassNodes to a JSON string
+      String json = this.json.toJson(classNodes);
+
+      // Write the JSON string to a file
+      try (FileWriter writer = new FileWriter(fileName)) {
+        writer.write(json);
+      }
+
+      System.out.println("TreeMap saved to " + fileName);
+    } catch (IOException e) {
+      System.err.println("Error saving TreeMap to JSON: " + e.getMessage());
+    }
   }
 
   public Gson getJson() {

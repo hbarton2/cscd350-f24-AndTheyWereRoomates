@@ -244,9 +244,9 @@
     },
     "misc commands": {
       "save": {
-        "syntax": "save",
+        "syntax": "save as <filename>",
         "description": "Saves the current project to a JSON file.",
-        "example": "save",
+        "example": "save as myProject",
         "errors": {
           "saveFailed": [
             "Error: Could not save the project.",
@@ -255,9 +255,9 @@
         }
       },
       "load": {
-        "syntax": "load",
+        "syntax": "load file <filename>",
         "description": "Loads a project from a JSON file.",
-        "example": "load",
+        "example": "load file myProject",
         "errors": {
           "loadFailed": [
             "Error: Could not load the project. File may be missing or corrupted.",
