@@ -72,3 +72,10 @@ Usually the code will terminate for these two reasons:
 * The Length of the input is too small (IE: if some commands require a type)
 * Name of a given property exists/doesn't exist
 
+# Adapter
+For the GUI, there are two files that adapts all the CLI commands from the code to GUI functionalities.
+#### CommandBridgeAdapter.java
+This converts everything from the CLI commands into GUI functionality
+
+#### CommandBridge.java
+An interface class that allows quick access for the GUI to preform commands.
