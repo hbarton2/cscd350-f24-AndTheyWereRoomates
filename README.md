@@ -104,7 +104,7 @@ Before running the project, ensure you have the following installed:
 - **Java JDK 17**
 - **Maven 3.9.9**
 
-### Dependencies
+### Project Dependencies
 
 The project uses the following dependencies, which are defined in the `pom.xml` file:
 
