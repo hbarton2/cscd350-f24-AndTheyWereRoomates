@@ -122,9 +122,9 @@
         }
       },
       "rename field": {
-        "syntax": "rename field <existing field name> <new field name>",
+        "syntax": "rename field <existing field name> <new field name> <newType>",
         "description": "Renames a field in the currently set class.",
-        "example": "rename field exampleField newFieldName",
+        "example": "rename field exampleField newFieldName newFieldType",
         "errors": {
           "classNotSet": [
             "Error: No class is currently set. Use 'switch <classname>' first."

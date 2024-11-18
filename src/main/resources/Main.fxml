@@ -24,20 +24,22 @@
             <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…"/>
             <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save"/>
+            <MenuItem fx:id="loadButton" mnemonicParsing="false" onAction="#onLoad" text="Load"/>
             <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Quit"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
-            <MenuItem mnemonicParsing="false" text="Undo"/>
+            <MenuItem mnemonicParsing="false" onAction="#onUndo" text="Undo"/>
             <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" text="Redo"/>
+            <MenuItem mnemonicParsing="false" onAction="#onRedo" text="Redo"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
             <MenuItem mnemonicParsing="false" text="About"/>
         </Menu>
     </MenuBar>
-    <Pane fx:id="canvas" layoutY="26.0" prefHeight="974.0" prefWidth="1135.0" AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="265.0" AnchorPane.topAnchor="26.0"/>
+    <Pane fx:id="canvas" layoutX="-15.0" layoutY="28.0" prefHeight="974.0" prefWidth="1135.0"
+          AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="-15.0" AnchorPane.rightAnchor="280.0"
+          AnchorPane.topAnchor="28.0"/>
 
     <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
         <Button fx:id="addClass" onAction="#createClass" text="Add Class"/>
@@ -54,7 +56,7 @@
         <Button fx:id="setClassName" onAction="#handleSetClassName" text="Set Class Name"/>
 
         <Label text="Field Name:"/>
-        <TextField fx:id="fieldNameInput" promptText="Enter field name"/>
+        <TextField fx:id="fieldNameInput" prefHeight="26.0" prefWidth="195.0" promptText="Enter field name"/>
         <HBox spacing="10.0">
             <ComboBox fx:id="dataTypeComboBox" prefWidth="100" promptText="Type">
                 <items>
@@ -76,12 +78,17 @@
         <Separator/>
 
         <Label text="Method Name:"/>
-        <TextField fx:id="methodNameInput" promptText="Enter method name"/>
+        <TextField fx:id="methodNameInput" prefHeight="26.0" prefWidth="150.0" promptText="Enter method name"/>
+
+        <HBox spacing="10.0">
+            <Button fx:id="addMethod" onAction="#handleAddMethod" text="Add"/>
+            <Button fx:id="deleteMethod" onAction="#handleDeleteMethod" text="Delete"/>
+            <Button fx:id="renameMethodButton" onAction="#handleRenameMethod" text="Rename Method"/>
+        </HBox>
 
         <Label text="Add Parameter:"/>
         <HBox spacing="15.0">
-            <TextField fx:id="parameterNameInput" prefWidth="80" promptText="Name"/>
-            <ComboBox fx:id="parameterTypeComboBox" prefWidth="110" promptText="Type">
+            <ComboBox fx:id="parameterTypeComboBox" prefHeight="26.0" prefWidth="77.0" promptText="Type">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Int"/>
@@ -91,16 +98,9 @@
                     </FXCollections>
                 </items>
             </ComboBox>
-            <Button fx:id="addParameter" onAction="#addParameter" prefWidth="90" text="Add"/>
+            <TextField fx:id="parameterNameInput" prefHeight="26.0" prefWidth="132.0" promptText="Name"/>
         </HBox>
-
-        <Separator/>
-
-        <HBox spacing="10.0">
-            <Button fx:id="addMethod" onAction="#handleAddMethod" text="Add"/>
-            <Button fx:id="deleteMethod" onAction="#handleDeleteMethod" text="Delete"/>
-            <Button fx:id="renameMethodButton" onAction="#handleRenameMethod" text="Rename Method"/>
-        </HBox>
+        <Button fx:id="addParameter" onAction="#addParameter" prefHeight="26.0" prefWidth="44.0" text="Add"/>
 
         <Separator/>
 

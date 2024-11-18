@@ -1,5 +1,6 @@
 package org.project.Controller;
 
+import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,10 +15,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.project.Model.CommandLogic;
-import org.project.Model.CommandRegistries;
-import org.project.Model.Storage;
-import org.project.Model.UMLModel;
+import org.project.Model.*;
 import org.project.View.ClassBox;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -83,7 +81,6 @@ public class GUIViewController implements Initializable {
 
   }
 
-  /** This is the constructor for GUIViewController. Initializes UMLController */
   public GUIViewController() {
     CommandLogic commandLogic = new CommandRegistries("src/main/resources/CLICommands.json");
     this.commandBridge = new CommandBridgeAdapter(commandLogic);
@@ -196,6 +193,7 @@ public class GUIViewController implements Initializable {
    * @param classBox - Representing the box that was selected
    */
   private void selectClassBox(ClassBox classBox) {
+
     if (selectedClassBox != null && selectedClassBox.equals(classBox)) {
       selectedClassBox.setEffect(null);
       selectedClassBox = null;
@@ -215,6 +213,7 @@ public class GUIViewController implements Initializable {
 
       Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
       classNameInput.setText(classNameLabel.getText());
+      commandBridge.switchClass(new String[]{classBox.getName()});
     }
   }
 
@@ -369,7 +368,6 @@ public class GUIViewController implements Initializable {
           // Extract the old field name from the selected field string
           String oldFieldName = selectedField.split(" ")[1];
           CommandResult result = commandBridge.renameField(new String[] {
-                  selectedClassBox.getName(),
                   oldFieldName,
                   newFieldName,
                   newFieldType
@@ -426,24 +424,27 @@ public class GUIViewController implements Initializable {
    * @param event the action event triggered by clicking on the add method button.
    */
   @FXML
-  public void handleAddMethod(ActionEvent event) {
+  public void handleAddMethod(ActionEvent event) {//TODO: add method return type comboBox
+
     if (selectedClassBox != null) {
       String methodName = methodNameInput.getText();
+      String returnType = parameterTypeComboBox.getValue();
 
       if (!methodName.isEmpty()) {
 
-        String message =
-            umlController.methodCommands.addMethod(
-                new String[] {"add", "method", selectedClassBox.getName(), methodName});
-        if (message.isEmpty()) {
-          String formattedMethod = methodName + "()";
+
+        CommandResult result = commandBridge.addMethod(new String[] {returnType, methodName});
+
+        if (result.isSuccess()) {
+          String formattedMethod = returnType + " " + methodName + "()";
           ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
           methodList.getItems().add(formattedMethod);
 
-          methodNameInput.clear();
         } else {
-          showAlert("Error", message);
+          showAlert("Error", result.getMessage());
         }
+
+        methodNameInput.clear();
       }
     }
   }
@@ -460,14 +461,14 @@ public class GUIViewController implements Initializable {
       String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
       if (selectedMethod != null) {
+        String methodName = selectedMethod.split(" ")[1];
+        CommandResult result = commandBridge.removeMethod(new String[]{methodName});
 
-        umlController.methodCommands.removeMethod(
-            new String[] {"delete", "method", selectedClassBox.getName(), selectedMethod});
-        System.out.println(
-            "Number of methods: "
-                + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
-        methodList.getItems().remove(selectedMethod);
-
+        if (result.isSuccess())
+        { methodList.getItems().remove(selectedMethod);
+        }else {
+          showAlert("Error", result.getMessage());
+        }
         methodNameInput.clear();
       }
     }
@@ -556,7 +557,7 @@ public class GUIViewController implements Initializable {
     switch (relationType) {
       case "Aggregation":
         arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.WHITE);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Composition":
         arrowHead.setStroke(Color.WHITE);
@@ -570,7 +571,7 @@ public class GUIViewController implements Initializable {
                 -20.0, 10.0,
                 0.0, 0.0,
                 -20.0, -10.0);
-        arrowHead.setFill(Color.WHITE);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Realization":
         arrowHead.getPoints().clear();
@@ -706,10 +707,17 @@ public class GUIViewController implements Initializable {
     if (fromClassName == null || toClassName == null || fromClassName.equals(toClassName)) {
       return;
     }
-    VBox fromBox = findClassName(fromClassName);
-    VBox toBox = findClassName(toClassName);
 
-    drawRelationLine(fromBox, toBox, relationType);
+    CommandResult result = commandBridge.addRelationship(new String[]{relationType, toClassName});
+
+    if(result.isSuccess()){
+      VBox fromBox = findClassName(fromClassName);
+      VBox toBox = findClassName(toClassName);
+
+      drawRelationLine(fromBox, toBox, relationType);
+    }else {
+      showAlert("Error", result.getMessage());
+    }
   }
 
   /**
@@ -747,9 +755,18 @@ public class GUIViewController implements Initializable {
       return;
     }
 
-    String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-    canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
+    CommandResult result = commandBridge.removeRelationship(new String[]{relationType, toClassName});
+
+    if(result.isSuccess()){
+      String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
+
+      canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
+    }else{
+      showAlert("Error", result.getMessage());
+    }
+
+    
   }
 
   /**
@@ -817,14 +834,42 @@ public class GUIViewController implements Initializable {
     }
 
     File file = fileChooser.showOpenDialog(new Stage());
-    if (file != null) {
-      String fileName = file.getAbsolutePath();
-      CommandResult result = commandBridge.executeCommand("load", new String[] {fileName});
-      if (!result.isSuccess()) {
-        showAlert("Load Error", result.getMessage());
-      }
-    } else {
-      showAlert("Load Error", "File selection was cancelled.");
+    String name = file.getName();
+
+    CommandResult result = commandBridge.load(new String[]{name});
+
+    if(result.isSuccess()){
+      Gson gson = new Gson();
     }
+
   }
+
+  @FXML
+  public void onLoad(ActionEvent event){
+
+
+  }
+
+  @FXML
+  public void onRedo(ActionEvent event){
+    /*CommandResult result = commandBridge.undo(new String[0]);
+    if (result.isSuccess()) {
+      //refreshCanvas();
+      showAlert("Undo", "Action successfully undone.");
+    } else {
+      showAlert("Undo Failed", result.getMessage());
+    }
+    */
+
+  }
+
+
+  @FXML
+  public void onUndo(ActionEvent event){
+
+  }
+
+
+
+
 }

@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
-import org.project.Controller.ClassNodeService;
+
 import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
 import org.project.Memento.Memento;
+import org.project.Controller.ClassNodeService;
 import java.util.HashMap;
 
 public class CommandLogic {
@@ -96,6 +97,7 @@ public class CommandLogic {
 
     // Add class to the registry
     addClass(className);
+    switchClass(new String[]{className});
     return CommandResult.success("Class created: " + className);
   }
 
@@ -209,15 +211,14 @@ public class CommandLogic {
   }
 
   public CommandResult renameField(String[] args) {
-    if (args.length < 2) {
-      return CommandResult.failure("rename field <existing field name> <new field name>");
-    } else if (args.length > 2) {
-      return CommandResult.failure("rename field <existing field name> <new field name>");
+    if(args.length != 3){
+      return CommandResult.failure("rename field <existing field name> <new field name> <newType>");
     }
     saveState(new String[]{});
 
     String oldfieldName = args[0];
     String newFieldName = args[1];
+    String newFieldType = args[2];
     if (!fieldExists(currentClass.getFields(), oldfieldName)) {
       return CommandResult.failure("Error: Field '" + oldfieldName + "' does not exist.");
     }
@@ -228,6 +229,7 @@ public class CommandLogic {
     for (UMLClassNode.Field field : currentClass.getFields()) {
       if (field.getName().equals(oldfieldName)) {
         field.setName(newFieldName);
+        field.setType(newFieldType);
         return CommandResult.success("Field: " + oldfieldName + " to " + newFieldName);
       }
     }
@@ -260,9 +262,12 @@ public class CommandLogic {
       return CommandResult.failure(
           "remove method <method name> [<parameter type> <parameter name>...]");
     }
+    /*
     if (!methodExists(currentClass.getMethods(), args[0])) {
       return CommandResult.failure("Error: Method '" + args[0] + "' does not exist.");
     }
+    */
+
     for (UMLClassNode.Method method : currentClass.getMethods()) {
       if (method.getName().equals(args[0])) {
         currentClass.getMethods().remove(method);
@@ -391,6 +396,7 @@ public class CommandLogic {
     return CommandResult.success("Added relationship to " + args[1] + " type of " + args[0]);
   }
 
+
   public CommandResult removeRelationship(String[] args) {
     if (args.length != 2) {
       return CommandResult.failure("remove relationship <relationship type> <target class name>");
@@ -477,7 +483,7 @@ public class CommandLogic {
     return CommandResult.success("Loaded!");
   }
 
-  public CommandResult undo(String[] args) { // TODO: UNDO does not work
+  public CommandResult undo(String[] args) {
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
@@ -493,7 +499,7 @@ public class CommandLogic {
     return CommandResult.failure("Error: Nothing to undo");
   }
 
-  public CommandResult redo(String[] args) { // TODO: REDO does not work
+  public CommandResult redo(String[] args) {
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
