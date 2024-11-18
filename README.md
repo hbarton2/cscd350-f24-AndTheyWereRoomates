@@ -247,17 +247,6 @@ For any inquiries, feel free to reach out
 
 ## Project Details
 
-## Table of contents for CLI
-
-1. [CLI Introduction](#cli-introduction)
-2. [CLI Overview](#cli-overview)
-3. [CLI Usage](#cli-usage)
-    * [General Commands](#general-commands)
-    * [Add Commands](#add-commands)
-    * [Remove Commands](#remove-commands)
-    * [Rename Commands](#rename-commands)
-4. [Sample Workflow](#sample-workflow)
-5. [Known Bugs](#known-bugs)
 ## Table of contents for GUI
 1. [GUI Instructions](#gui-instructions)
 2. [Workspace UI](#workspace-ui)
@@ -268,6 +257,28 @@ For any inquiries, feel free to reach out
 7. [Parameter Buttons](#parameter-editing)
 8. [Relationship Buttons](#relationship-editing)
 9. [Known Bugs](#known-gui-bugs)
+
+## Table of contents for CLI
+1. [CLI Introduction](#cli-introduction)
+2. [CLI Overview](#cli-overview)
+3. [CLI Usage](#cli-usage)
+    * [General Commands](#general-commands)
+    * [Add Commands](#add-commands)
+    * [Remove Commands](#remove-commands)
+    * [Rename Commands](#rename-commands)
+4. [Sample Workflow](#sample-workflow)
+5. [Known Bugs](#known-bugs)
+
+## Table of contents for new CLI
+1. [CLI Introduction](#cli-introduction)
+2. [CLI Overview](#cli-overview)
+3. [CLI Usage](#cli-usage)
+    * [General Commands](#new-general-commands)
+    * [Add Commands](#new-add-commands)
+    * [Remove Commands](#new-remove-commands)
+    * [Rename Commands](#new-rename-commands)
+
+
 ---
 
 ## CLI Introduction
@@ -549,4 +560,86 @@ These buttons all edit classes
     ![img.png](doc/images/GUIbug_classesOverlayingGUIIssue.PNG)
 3.  Saving Option - Trying to save the GUI doesn't open file explorer.
     ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
+---
+# New CLI Commands
+
+## New CLI Introduction
+Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
+
+`Welcome to our UML Editor application
+If you would like a list of commands enter 'help'`
+
+and you should see a dollar sign `$` on the far left of the terminal.
+
+## New General Commands
+* Please make sure to read new CLI Introduction before reading this section.
+* These commands are general commands that can be used in the CLI.
+
+1. help - displays all possible commands
+
+2. list details - Lists everything in the currently selected class
+
+3. list classes - List all created classes
+    * Example: `list classes`
+4. save `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save fruitbowl.json`
+5. load - loads a json as a UML class. It will ask you to input a name after typing load
+    * Example: `save fruitbowl.json`
+
+6. exit - exits the program
+---
+## New Add Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands add things to the editor.
+
+1. create class `<class name>` - creates a class with that name
+    * Example: `create class Apple`
+
+2. add method `<return type> <method name>` - creates a method with the given name and following parameters
+    * Example: `add method Boolean eat`
+
+3. add field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+    * Example: `add field String color`
+
+4. add parameter `<method name> <parameter type> <parameter name>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+    * Example: `add parameter eat food String`
+
+5. add relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
+    * Example: `add relationship Apple Banana Aggregation`
+---
+## New Remove Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands remove things in the editor.
+
+1. `remove class <classname>` - removes the class that is currently set
+   These commands remove things in the editor.
+    * Example: `remove class Apple`
+
+2. remove method `<method name>` - removes a method with the given name
+    * Example: `remove method method1`
+
+3. remove field `<field name>` - removes a field with the given name
+    * Example: `remove field field1`
+
+4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+    * Example: `remove parameter method1 param1`
+
+5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+    * Example: `remove relationship Apple Banana Aggregation`
+---
+## New Rename Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands rename things in the editor.
+
+1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+    * Example: `rename class Apple Banana`
+
+2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+    * Example: `rename method method1 method2`
+
+3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+    * Example: `rename field field1 field2 String`
+
+4. rename parameter `<existing method> <existing parameter> <new name>` - renames a parameter in currently selected class to the new name
+    * Example: `rename parameter method1 param1 param2`
 ---
