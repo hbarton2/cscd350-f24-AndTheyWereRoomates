@@ -108,8 +108,8 @@ Before running the project, ensure you have the following installed:
 
 The project uses the following dependencies, which are defined in the `pom.xml` file:
 
-
 See the `pom.xml` file for full details on dependencies.
+See [Dependencies](#Dependencies) for details preview.
 
 ### Building the Project
 
