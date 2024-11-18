@@ -169,7 +169,7 @@ public class CommandLogic {
 
   public CommandResult switchClass(String[] args) {
     if (args.length != 1) {
-      return CommandResult.failure("switch class <class name>");
+      return CommandResult.failure("switch class <existing classname>");
     }
     if (!classExists(args[0])) {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");

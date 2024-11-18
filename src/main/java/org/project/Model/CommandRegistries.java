@@ -67,7 +67,7 @@ public class CommandRegistries extends CommandLogic {
 
   // Initialize command handlers with specific implementations
   private void initializeCommandHandlers() {
-    commandHandlers.put("switch", super::switchClass);
+    commandHandlers.put("switch class", super::switchClass);
     commandHandlers.put("list classes", this::listClasses);
     commandHandlers.put("list detail", this::listDetail);
     commandHandlers.put("create class", this::createClass); // TODO: Logic

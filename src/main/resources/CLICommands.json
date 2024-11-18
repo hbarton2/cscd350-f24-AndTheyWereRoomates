@@ -55,7 +55,7 @@
         }
       },
       "switch": {
-        "syntax": "switch <existing classname>",
+        "syntax": "switch class <existing classname>",
         "description": "Sets an existing class as the current class for quick-editing.",
         "example": "switch Car",
         "errors": {
