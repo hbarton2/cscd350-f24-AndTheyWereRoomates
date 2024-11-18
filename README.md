@@ -1,11 +1,11 @@
 # UML Editor
 
-v3.3.56
-* How to read version # Version main branch.demo release.pull request changes'
+v3.3.68
+* How to read version # Version main branch_demo release_pull_request changes
 * What's New:
   * NEW CLI preview(alpha) 
 * Major changes:
-  * MAJOR REFRACT HAS BEGUN
+  * MAJOR REFRACT HAS BEGUN 
 ---
 
 ## Table of Contents
@@ -15,13 +15,14 @@ v3.3.56
 3. [Overview](#overview)
 4. [Features](#features)
 5. [Installation for Developers](#installation-for-Developers)
-6. [Usage](#usage)
-7. [Testing](#testing)
+6. [Testing](#testing)
+7. [Dependencies](#Dependencies)
 8. [Contributing](#contributing)
 9. [License](#license)
 10. [Contact](#contact)
-11. [Project Details/Technical Document](#Project-Details)
+11. [Project Details/Technical Document include Usage](#Project-Details)
 ---
+
 ## Getting Started for User
 
 ### Prerequisites
@@ -72,7 +73,7 @@ Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
       ```
     - Press `Enter` to execute the command.
 
-*Did you know: If this file is currently viewed in a dedicated markdown viewer, you can click the arrow icon next to the bash command and launch the application.*
+*Did you know? If this file is currently viewed in a dedicated markdown viewer, you can click the arrow icon next to the bash command and launch the application.*
 
 
 ---
@@ -103,12 +104,12 @@ Before running the project, ensure you have the following installed:
 - **Java JDK 17**
 - **Maven 3.9.9**
 
-### Dependencies
+### Project Dependencies
 
 The project uses the following dependencies, which are defined in the `pom.xml` file:
 
-
 See the `pom.xml` file for full details on dependencies.
+See [Dependencies](#Dependencies) for details preview.
 
 ### Building the Project
 
@@ -144,29 +145,20 @@ src/main/java/uml-editor/EntryPoint.java
    ``` 
 ---
 
-## Usage
-### Console Interaction 
-The application includes an in-app commandLineTerminal/console feature, allowing users to input commands within the JavaFX interface. Users can enter specific commands for various operations such as creating, renaming, and removing classes, attributes, and methods.
-
-- Help Menu: Users can access the help menu for detailed guidance.
-- Command-Line Operations: Integration of the command-line commandLineTerminal where you can execute operations directly without leaving the graphical interface.
-
-### Graphic User Interface Interaction
-
-placeholder under construction
-
 ### JSON Integration
 The project uses Gson for storing and loading UML project data as JSON files. The data includes class names, attributes, and methods, allowing for an easily shareable format.
 
-### Unit Testing
-JUnit is used for unit testing throughout the project. To run the tests, use:
+### Testing
+![Testing Pyramid](doc/images/testing_pyr.png)
+
+JUnit 4 or 5 and Mockito is used for all testing throughout the project. To run the tests, use:
 
 ```bash
 mvn test
 ```
 ---
 
-## Testing
+## Run Tests
 To run unit tests, execute the following command:
 ```bash
 mvn test
@@ -178,6 +170,63 @@ Testing is performed using JUnit 5 and includes:
 You can find tests under the src/test directory.
 
 ---
+# Dependencies
+
+## Runtime Dependencies
+- **[JLine (3.21.0)](https://github.com/jline/jline3)**  
+  Used for handling command-line input and key detection for autocomplete.
+
+- **[Apache Lucene](https://lucene.apache.org/core/) (9.7.0)**
+    - `lucene-core`: Core library for text indexing and search.
+    - `lucene-suggest`: Used for autocomplete suggestions.
+    - `lucene-codecs`: Provides custom encoding/decoding for Lucene indexes.
+    - `lucene-analysis-common`: Supports common text analysis tasks (e.g., tokenization).
+
+- **[JavaFX (21.0.5)](https://openjfx.io/)**
+    - `javafx-base`: Core JavaFX functionalities.
+    - `javafx-graphics`: Graphics and rendering support.
+    - `javafx-controls`: Provides UI components.
+    - `javafx-fxml`: Enables FXML support for UI development.
+
+- **[GSON (2.11.0)](https://github.com/google/gson)**  
+  A library for converting Java objects to JSON and vice versa.
+
+- **[Glisten (0.1.0)](https://github.com/gluonhq/glisten)**  
+  GluonHQ's library for enhancing JavaFX with material design components.
+
+- **[XBean Reflect (3.7)](https://github.com/xbean/xbean)**  
+  Provides reflection utilities for Java applications.
+
+## Testing Dependencies
+- **[JUnit (4.13.2)](https://junit.org/junit4/)**  
+  JUnit 4 for basic unit testing.
+
+- **[JUnit Jupiter API (5.10.0)](https://junit.org/junit5/)**  
+  JUnit 5 for modern, modularized testing.
+
+- **[Mockito Core (5.5.0)](https://site.mockito.org/)**  
+  For mocking objects during unit testing.
+
+- **[Mockito JUnit Jupiter (5.5.0)](https://site.mockito.org/)**  
+  Provides integration between Mockito and JUnit 5.
+
+## Build Tool Plugins
+- **[Maven Compiler Plugin (3.13.0)](https://maven.apache.org/plugins/maven-compiler-plugin/)**  
+  Ensures the project compiles with Java 17.
+
+- **[Maven Shade Plugin (3.6.0)](https://maven.apache.org/plugins/maven-shade-plugin/)**  
+  Packages the project as an executable JAR with all dependencies included.
+
+- **[JavaFX Maven Plugin (0.0.8)](https://github.com/openjfx/javafx-maven-plugin)**  
+  Helps integrate JavaFX applications with Maven.
+
+---
+### Additional Notes
+Ensure you have the correct Java version (Java 17) and Maven installed to use these dependencies effectively.
+
+
+
+
 
 ## Contributing
 
@@ -198,17 +247,6 @@ For any inquiries, feel free to reach out
 
 ## Project Details
 
-## Table of contents for CLI
-
-1. [CLI Introduction](#cli-introduction)
-2. [CLI Overview](#cli-overview)
-3. [CLI Usage](#cli-usage)
-    * [General Commands](#general-commands)
-    * [Add Commands](#add-commands)
-    * [Remove Commands](#remove-commands)
-    * [Rename Commands](#rename-commands)
-4. [Sample Workflow](#sample-workflow)
-5. [Known Bugs](#known-bugs)
 ## Table of contents for GUI
 1. [GUI Instructions](#gui-instructions)
 2. [Workspace UI](#workspace-ui)
@@ -219,6 +257,28 @@ For any inquiries, feel free to reach out
 7. [Parameter Buttons](#parameter-editing)
 8. [Relationship Buttons](#relationship-editing)
 9. [Known Bugs](#known-gui-bugs)
+
+## Table of contents for CLI
+1. [CLI Introduction](#cli-introduction)
+2. [CLI Overview](#cli-overview)
+3. [CLI Usage](#cli-usage)
+    * [General Commands](#general-commands)
+    * [Add Commands](#add-commands)
+    * [Remove Commands](#remove-commands)
+    * [Rename Commands](#rename-commands)
+4. [Sample Workflow](#sample-workflow)
+5. [Known Bugs](#known-bugs)
+
+## Table of contents for new CLI
+1. [CLI Introduction](#cli-introduction)
+2. [CLI Overview](#cli-overview)
+3. [CLI Usage](#cli-usage)
+    * [General Commands](#new-general-commands)
+    * [Add Commands](#new-add-commands)
+    * [Remove Commands](#new-remove-commands)
+    * [Rename Commands](#new-rename-commands)
+
+
 ---
 
 ## CLI Introduction
@@ -500,4 +560,86 @@ These buttons all edit classes
     ![img.png](doc/images/GUIbug_classesOverlayingGUIIssue.PNG)
 3.  Saving Option - Trying to save the GUI doesn't open file explorer.
     ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
+---
+# New CLI Commands
+
+## New CLI Introduction
+Upon booting up in CLI mode, you'll be presented with the terminal. You should see a line saying
+
+`Welcome to our UML Editor application
+If you would like a list of commands enter 'help'`
+
+and you should see a dollar sign `$` on the far left of the terminal.
+
+## New General Commands
+* Please make sure to read new CLI Introduction before reading this section.
+* These commands are general commands that can be used in the CLI.
+
+1. help - displays all possible commands
+
+2. list details - Lists everything in the currently selected class
+
+3. list classes - List all created classes
+    * Example: `list classes`
+4. save `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save fruitbowl.json`
+5. load - loads a json as a UML class. It will ask you to input a name after typing load
+    * Example: `save fruitbowl.json`
+
+6. exit - exits the program
+---
+## New Add Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands add things to the editor.
+
+1. create class `<class name>` - creates a class with that name
+    * Example: `create class Apple`
+
+2. add method `<return type> <method name>` - creates a method with the given name and following parameters
+    * Example: `add method Boolean eat`
+
+3. add field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+    * Example: `add field String color`
+
+4. add parameter `<method name> <parameter type> <parameter name>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+    * Example: `add parameter eat food String`
+
+5. add relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
+    * Example: `add relationship Apple Banana Aggregation`
+---
+## New Remove Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands remove things in the editor.
+
+1. `remove class <classname>` - removes the class that is currently set
+   These commands remove things in the editor.
+    * Example: `remove class Apple`
+
+2. remove method `<method name>` - removes a method with the given name
+    * Example: `remove method method1`
+
+3. remove field `<field name>` - removes a field with the given name
+    * Example: `remove field field1`
+
+4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+    * Example: `remove parameter method1 param1`
+
+5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+    * Example: `remove relationship Apple Banana Aggregation`
+---
+## New Rename Commands
+* Please make sure to read CLI Introduction before reading this section.
+* These commands rename things in the editor.
+
+1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+    * Example: `rename class Apple Banana`
+
+2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+    * Example: `rename method method1 method2`
+
+3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+    * Example: `rename field field1 field2 String`
+
+4. rename parameter `<existing method> <existing parameter> <new name>` - renames a parameter in currently selected class to the new name
+    * Example: `rename parameter method1 param1 param2`
 ---
