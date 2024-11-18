@@ -329,7 +329,8 @@ public class GUIViewController implements Initializable {
         return;
       }
 
-      String fieldName = selectedField; // Directly use the selected field name
+      // Extract the field name from the selected field string
+      String fieldName = selectedField.split(" ")[1];
       CommandResult result = commandBridge.removeField(new String[] {fieldName});
 
       if (result.isSuccess()) {
@@ -365,22 +366,18 @@ public class GUIViewController implements Initializable {
 
           fieldNameInput.clear();
 
-          // update storage
-          String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
-          umlController.fieldCommands.renameField(
-              new String[] {
-                "rename",
-                "field",
-                selectedClassBox.getName(),
-                oldFieldName,
-                newFieldName,
-                newFieldType
-              });
-          System.out.println(
-              umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
-          System.out.println(
-              "Size of fields: "
-                  + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
+          // Extract the old field name from the selected field string
+          String oldFieldName = selectedField.split(" ")[1];
+          CommandResult result = commandBridge.renameField(new String[] {
+                  selectedClassBox.getName(),
+                  oldFieldName,
+                  newFieldName,
+                  newFieldType
+          });
+
+          if (!result.isSuccess()) {
+            showAlert("Error", result.getMessage());
+          }
         }
       }
     }
