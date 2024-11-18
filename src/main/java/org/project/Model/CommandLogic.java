@@ -25,7 +25,7 @@ public class CommandLogic {
     saveState(new String[]{});
   }
 
-  protected CommandResult saveState(String[] args) {
+  public CommandResult saveState(String[] args) {
     caretaker.saveState(new Memento(new HashMap<>(storage.getAllNodes())));
     return CommandResult.success("State saved");
   }
@@ -191,7 +191,6 @@ public class CommandLogic {
     } else if (args.length > 1) {
       return CommandResult.failure("remove field <field name>");
     }
-    saveState(new String[]{});
 
     String fieldName = args[0];
     List<UMLClassNode.Field> fields = currentClass.getFields();
@@ -202,6 +201,7 @@ public class CommandLogic {
     for (UMLClassNode.Field field : fields) {
       if (field.getName().equals(fieldName)) {
         fields.remove(field);
+        saveState(new String[]{});
         break;
       }
     }
