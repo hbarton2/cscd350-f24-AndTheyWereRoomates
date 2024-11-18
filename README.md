@@ -1,11 +1,11 @@
 # UML Editor
 
-v3.3.56
-* How to read version # Version main branch.demo release.pull request changes'
+v3.3.68
+* How to read version # Version main branch_demo release_pull_request changes
 * What's New:
   * NEW CLI preview(alpha) 
 * Major changes:
-  * MAJOR REFRACT HAS BEGUN
+  * MAJOR REFRACT HAS BEGUN 
 ---
 
 ## Table of Contents
@@ -15,13 +15,14 @@ v3.3.56
 3. [Overview](#overview)
 4. [Features](#features)
 5. [Installation for Developers](#installation-for-Developers)
-6. [Usage](#usage)
-7. [Testing](#testing)
+6. [Testing](#testing)
+7. [Dependencies](#Dependencies)
 8. [Contributing](#contributing)
 9. [License](#license)
 10. [Contact](#contact)
-11. [Project Details/Technical Document](#Project-Details)
+11. [Project Details/Technical Document include Usage](#Project-Details)
 ---
+
 ## Getting Started for User
 
 ### Prerequisites
@@ -72,7 +73,7 @@ Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
       ```
     - Press `Enter` to execute the command.
 
-*Did you know: If this file is currently viewed in a dedicated markdown viewer, you can click the arrow icon next to the bash command and launch the application.*
+*Did you know? If this file is currently viewed in a dedicated markdown viewer, you can click the arrow icon next to the bash command and launch the application.*
 
 
 ---
@@ -144,29 +145,20 @@ src/main/java/uml-editor/EntryPoint.java
    ``` 
 ---
 
-## Usage
-### Console Interaction 
-The application includes an in-app commandLineTerminal/console feature, allowing users to input commands within the JavaFX interface. Users can enter specific commands for various operations such as creating, renaming, and removing classes, attributes, and methods.
-
-- Help Menu: Users can access the help menu for detailed guidance.
-- Command-Line Operations: Integration of the command-line commandLineTerminal where you can execute operations directly without leaving the graphical interface.
-
-### Graphic User Interface Interaction
-
-placeholder under construction
-
 ### JSON Integration
 The project uses Gson for storing and loading UML project data as JSON files. The data includes class names, attributes, and methods, allowing for an easily shareable format.
 
-### Unit Testing
-JUnit is used for unit testing throughout the project. To run the tests, use:
+### Testing
+![Testing Pyramid](doc/images/testing_pyr.png)
+
+JUnit 4 or 5 and Mockito is used for all testing throughout the project. To run the tests, use:
 
 ```bash
 mvn test
 ```
 ---
 
-## Testing
+## Run Tests
 To run unit tests, execute the following command:
 ```bash
 mvn test
@@ -178,6 +170,63 @@ Testing is performed using JUnit 5 and includes:
 You can find tests under the src/test directory.
 
 ---
+# Dependencies
+
+## Runtime Dependencies
+- **[JLine (3.21.0)](https://github.com/jline/jline3)**  
+  Used for handling command-line input and key detection for autocomplete.
+
+- **[Apache Lucene](https://lucene.apache.org/core/) (9.7.0)**
+    - `lucene-core`: Core library for text indexing and search.
+    - `lucene-suggest`: Used for autocomplete suggestions.
+    - `lucene-codecs`: Provides custom encoding/decoding for Lucene indexes.
+    - `lucene-analysis-common`: Supports common text analysis tasks (e.g., tokenization).
+
+- **[JavaFX (21.0.5)](https://openjfx.io/)**
+    - `javafx-base`: Core JavaFX functionalities.
+    - `javafx-graphics`: Graphics and rendering support.
+    - `javafx-controls`: Provides UI components.
+    - `javafx-fxml`: Enables FXML support for UI development.
+
+- **[GSON (2.11.0)](https://github.com/google/gson)**  
+  A library for converting Java objects to JSON and vice versa.
+
+- **[Glisten (0.1.0)](https://github.com/gluonhq/glisten)**  
+  GluonHQ's library for enhancing JavaFX with material design components.
+
+- **[XBean Reflect (3.7)](https://github.com/xbean/xbean)**  
+  Provides reflection utilities for Java applications.
+
+## Testing Dependencies
+- **[JUnit (4.13.2)](https://junit.org/junit4/)**  
+  JUnit 4 for basic unit testing.
+
+- **[JUnit Jupiter API (5.10.0)](https://junit.org/junit5/)**  
+  JUnit 5 for modern, modularized testing.
+
+- **[Mockito Core (5.5.0)](https://site.mockito.org/)**  
+  For mocking objects during unit testing.
+
+- **[Mockito JUnit Jupiter (5.5.0)](https://site.mockito.org/)**  
+  Provides integration between Mockito and JUnit 5.
+
+## Build Tool Plugins
+- **[Maven Compiler Plugin (3.13.0)](https://maven.apache.org/plugins/maven-compiler-plugin/)**  
+  Ensures the project compiles with Java 17.
+
+- **[Maven Shade Plugin (3.6.0)](https://maven.apache.org/plugins/maven-shade-plugin/)**  
+  Packages the project as an executable JAR with all dependencies included.
+
+- **[JavaFX Maven Plugin (0.0.8)](https://github.com/openjfx/javafx-maven-plugin)**  
+  Helps integrate JavaFX applications with Maven.
+
+---
+### Additional Notes
+Ensure you have the correct Java version (Java 17) and Maven installed to use these dependencies effectively.
+
+
+
+
 
 ## Contributing
 
