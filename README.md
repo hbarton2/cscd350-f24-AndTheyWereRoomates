@@ -3,7 +3,7 @@
 v3.3.72
 * How to read version # Version main branch_demo release_pull_request changes
 * What's New:
-  * NEW CLI preview(alpha) 
+  * NEW CLI (Beta) Note to Grader <- grade this version
 * Major changes:
   * MAJOR REFRACT HAS BEGUN 
 ---
