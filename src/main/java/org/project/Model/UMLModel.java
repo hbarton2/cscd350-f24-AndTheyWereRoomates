@@ -860,6 +860,7 @@ public class UMLModel {
   }
 
   public static class Load {
+
     private Storage storage;
 
     public Load(final Storage storage) {
@@ -875,7 +876,8 @@ public class UMLModel {
       try {
         FileReader reader = new FileReader(filePath);
         Gson gson = new Gson();
-        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {}.getType();
+        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {
+        }.getType();
         storage.list = gson.fromJson(reader, type);
         reader.close();
         return true;
@@ -887,6 +889,7 @@ public class UMLModel {
   }
 
   public static class Save {
+
     private Storage storage;
 
     public Save(final Storage storage) {

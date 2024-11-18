@@ -18,6 +18,7 @@ public class UMLClassNode {
     this.methods = methods;
     this.relationships = relationships;
   }
+
   // Constructor with only className
   public UMLClassNode(String className) {
     this.className = className;
@@ -58,7 +59,8 @@ public class UMLClassNode {
   public List<Relationship> getRelationships() {
     return relationships;
   }
-//Setters
+
+  //Setters
   public void setClassName(String className) {
     this.className = className;
   }
@@ -83,6 +85,7 @@ public class UMLClassNode {
       this.type = type;
       this.name = name;
     }
+
     public Field(Field other) {
       this.type = other.type;
       this.name = other.name;
@@ -148,6 +151,7 @@ public class UMLClassNode {
     public void setName(String name) {
       this.name = name;
     }
+
     public void setType(String type) {
       this.type = type;
     }
@@ -156,7 +160,8 @@ public class UMLClassNode {
       return parameters;
     }
 
-    public void setParameters(List<Parameter> parameters) {}
+    public void setParameters(List<Parameter> parameters) {
+    }
 
     public boolean isOverloaded() {
       return isOverloaded;
