@@ -1,5 +1,6 @@
 package org.project.Controller;
 
+import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +15,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.project.Model.UMLModel;
+import org.project.Model.*;
 import org.project.View.ClassBox;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -59,7 +60,8 @@ public class GUIViewController implements Initializable {
   @FXML private MenuItem openButton;
 
   private ClassBox selectedClassBox = null;
-
+  private final CommandBridge commandBridge;
+  private final ClassNodeService classNodeService = new ClassNodeService();
   public UMLController umlController;
 
   FileChooser fileChooser = new FileChooser();
@@ -76,18 +78,16 @@ public class GUIViewController implements Initializable {
     fileChooser.setInitialDirectory(new File(home));
 
     canvas.setStyle("-fx-background-color: black;");
+
   }
 
-  /** This is the constructor for GUIViewController. Initializes UMLController */
   public GUIViewController() {
-    this.umlController = new UMLController();
+    CommandLogic commandLogic = new CommandRegistries("src/main/resources/CLICommands.json");
+    this.commandBridge = new CommandBridgeAdapter(commandLogic);
   }
 
   private String[] getInspectorValues() {
-    String className =
-        classNameInput.getText().isEmpty()
-            ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
-            : classNameInput.getText();
+    String className = classNameInput.getText();
     String fieldName = fieldNameInput.getText();
     String fieldType = dataTypeComboBox.getValue();
     String methodName = methodNameInput.getText();
@@ -103,61 +103,52 @@ public class GUIViewController implements Initializable {
    */
   public void createClass(ActionEvent event) {
     String[] inspectorValues = getInspectorValues();
-    String className = inspectorValues[0];
+    String className = inspectorValues[0].isEmpty() ? "New_Class_" + (canvas.getChildren().size() + 1) : inspectorValues[0];
     String fieldName = inspectorValues[1];
     String fieldType = inspectorValues[2];
     String methodName = inspectorValues[3];
     String parameterName = inspectorValues[4];
     String parameterType = inspectorValues[5];
 
-    if (umlController.getStorage().hasClass(className)) {
-      showAlert(
-          "Class Creation Error", "A class with the name \"" + className + "\" already exists.");
-      return;
-    }
+    CommandResult result = commandBridge.createClass(new String[] {className});
+    if (result.isSuccess()) {
+      ClassBox classBox = new ClassBox(className);
+      classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-    ClassBox classBox =
-        new ClassBox(
-            className.isEmpty()
-                ? "New Class #" + (umlController.getStorage().getClasses().size() + 1)
-                : className);
-    classBox.setOnMouseClicked(e -> selectClassBox(classBox));
+      // Calculate the center of the canvas
+      double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
+      double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
 
-    // Calculate the center of the canvas
-    double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
-    double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+      // Set the position of the classBox to the center of the canvas
+      classBox.setLayoutX(centerX);
+      classBox.setLayoutY(centerY);
 
-    // Set the position of the classBox to the center of the canvas
-    classBox.setLayoutX(centerX);
-    classBox.setLayoutY(centerY);
+      fromComboBox.getItems().add(classBox.getName());
+      toComboBox.getItems().add(classBox.getName());
+      dataTypeComboBox.getItems().add(classBox.getName());
+      parameterTypeComboBox.getItems().add(classBox.getName());
+      canvas.getChildren().add(classBox);
 
-    fromComboBox.getItems().add(classBox.getName());
-    toComboBox.getItems().add(classBox.getName());
-    dataTypeComboBox.getItems().add(classBox.getName());
-    parameterTypeComboBox.getItems().add(classBox.getName());
-    canvas.getChildren().add(classBox);
-
-    umlController.classCommands.addClass(new String[] {"add", "class", classBox.getName()});
-
-    if (!fieldName.isEmpty() && fieldType != null) {
-      ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
-      fieldList.getItems().add(fieldType + " " + fieldName);
-      umlController.fieldCommands.addField(
-          new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
-    }
-
-    if (!methodName.isEmpty()) {
-      ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
-      String formattedMethod = methodName + "()";
-      if (!parameterName.isEmpty() && parameterType != null) {
-        formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
+      if (!fieldName.isEmpty() && fieldType != null) {
+        ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
+        fieldList.getItems().add(fieldType + " " + fieldName);
+        commandBridge.addField(new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
       }
-      methodList.getItems().add(formattedMethod);
-      umlController.methodCommands.addMethod(
-          new String[] {"add", "method", classBox.getName(), methodName});
-    }
 
-    System.out.println("Size: " + umlController.getStorage().getClasses().size());
+      if (!methodName.isEmpty()) {
+        ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
+        String formattedMethod = methodName + "()";
+        if (!parameterName.isEmpty() && parameterType != null) {
+          formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
+        }
+        methodList.getItems().add(formattedMethod);
+        commandBridge.addMethod(new String[] {"add", "method", classBox.getName(), methodName});
+      }
+
+      System.out.println("Class created: " + className);
+    } else {
+      showAlert("Class Creation Error", result.getMessage());
+    }
   }
 
   /**
@@ -171,21 +162,14 @@ public class GUIViewController implements Initializable {
       Label className = (Label) selectedClassBox.getChildren().get(0);
       String classNameRemove = className.getText();
 
-      String message =
-          umlController.classCommands.removeClass(
-              new String[] {"remove", "class", classNameRemove});
+      CommandResult result = commandBridge.removeClass(new String[] {classNameRemove});
 
-      if (message == null || message.isEmpty()) {
+      if (result.isSuccess()) {
         // Remove relationships involving the class
-        canvas
-            .getChildren()
-            .removeIf(
-                node -> {
-                  String nodeId = node.getId();
-                  return nodeId != null
-                      && (nodeId.startsWith(classNameRemove + "->")
-                          || nodeId.contains("->" + classNameRemove));
-                });
+        canvas.getChildren().removeIf(node -> {
+          String nodeId = node.getId();
+          return nodeId != null && (nodeId.startsWith(classNameRemove + "->") || nodeId.contains("->" + classNameRemove));
+        });
 
         // GUI update
         canvas.getChildren().remove(selectedClassBox);
@@ -197,12 +181,11 @@ public class GUIViewController implements Initializable {
         parameterTypeComboBox.getItems().remove(classNameRemove);
 
         classNameInput.clear();
-
       } else {
-        showAlert("Class", message);
+        showAlert("Class Deletion Error", result.getMessage());
       }
     }
-  }
+    }
 
   /**
    * This method saves the box that was last selected by the user
@@ -210,6 +193,7 @@ public class GUIViewController implements Initializable {
    * @param classBox - Representing the box that was selected
    */
   private void selectClassBox(ClassBox classBox) {
+
     if (selectedClassBox != null && selectedClassBox.equals(classBox)) {
       selectedClassBox.setEffect(null);
       selectedClassBox = null;
@@ -229,6 +213,7 @@ public class GUIViewController implements Initializable {
 
       Label classNameLabel = (Label) selectedClassBox.getChildren().get(0);
       classNameInput.setText(classNameLabel.getText());
+      commandBridge.switchClass(new String[]{classBox.getName()});
     }
   }
 
@@ -255,15 +240,16 @@ public class GUIViewController implements Initializable {
   public void handleSetClassName(ActionEvent event) {
     if (selectedClassBox != null) {
       String newName = classNameInput.getText();
-      if (umlController.getStorage().hasClass(newName)) {
-        showAlert(
-            "Class Creation Error", "A class with the name \"" + newName + "\" already exists.");
-        return;
-      }
       Label className = (Label) selectedClassBox.getChildren().get(0);
       String currentName = className.getText();
+
       // Rename class in storage
-      umlController.getStorage().renameClass(currentName, newName);
+      CommandResult result = commandBridge.renameClass(new String[] {currentName, newName});
+      if (!result.isSuccess()) {
+        showAlert("Class Rename Error", result.getMessage());
+        return;
+      }
+
       // Rename class in View
       className.setText(newName);
 
@@ -286,18 +272,13 @@ public class GUIViewController implements Initializable {
       }
 
       // Update relationships
-      canvas
-          .getChildren()
-          .forEach(
-              node -> {
-                String nodeId = node.getId();
-                if (nodeId != null
-                    && (nodeId.startsWith(currentName + "->")
-                        || nodeId.contains("->" + currentName))) {
-                  String newNodeId = nodeId.replace(currentName, newName);
-                  node.setId(newNodeId);
-                }
-              });
+      canvas.getChildren().forEach(node -> {
+        String nodeId = node.getId();
+        if (nodeId != null && (nodeId.startsWith(currentName + "->") || nodeId.contains("->" + currentName))) {
+          String newNodeId = nodeId.replace(currentName, newName);
+          node.setId(newNodeId);
+        }
+      });
     }
   }
 
@@ -312,26 +293,21 @@ public class GUIViewController implements Initializable {
     if (selectedClassBox != null) {
 
       if (dataTypeComboBox.getValue() == null) {
-        showAlert("Error", "Chose the type of field");
+        showAlert("Error", "Choose the type of field");
         return;
       }
 
       String fieldName = fieldNameInput.getText();
+      String fieldType = dataTypeComboBox.getValue();
       ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
-      String message =
-          umlController.fieldCommands.addField(
-              new String[] {
-                "add", "field", selectedClassBox.getName(), fieldName, dataTypeComboBox.getValue()
-              });
+      CommandResult result = commandBridge.addField(new String[] {fieldType, fieldName});
 
-      if (message.isEmpty()) {
+      if (result.isSuccess()) {
         fieldNameInput.clear();
-        fieldList.getItems().add(dataTypeComboBox.getValue() + " " + fieldName);
+        fieldList.getItems().add(fieldType + " " + fieldName);
       } else {
-        showAlert("Error", message);
+        showAlert("Error", result.getMessage());
       }
-      System.out.println(
-          umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
     }
   }
 
@@ -346,18 +322,25 @@ public class GUIViewController implements Initializable {
     if (selectedClassBox != null) {
       ListView<String> fieldList = (ListView<String>) selectedClassBox.getChildren().get(1);
       String selectedField = fieldList.getSelectionModel().getSelectedItem();
-      String fieldType = selectedField.split(" ")[0].toLowerCase().trim();
-      String fieldName = selectedField.split(" ")[1].toLowerCase().trim();
 
-      if (selectedField != null) {
-        umlController.fieldCommands.removeField(
-            new String[] {
-              "add", "field", selectedClassBox.getName(), fieldName, fieldType
-            }); // "add field [class name] [field name] [field type]"
-        fieldList.getItems().remove(selectedField);
+      if (selectedField == null) {
+        showAlert("Error", "Select a field to delete");
+        return;
       }
+
+      // Extract the field name from the selected field string
+      String fieldName = selectedField.split(" ")[1];
+      CommandResult result = commandBridge.removeField(new String[] {fieldName});
+
+      if (result.isSuccess()) {
+        fieldList.getItems().remove(selectedField);
+      } else {
+        showAlert("Error", result.getMessage());
+      }
+    } else {
+      showAlert("Error", "Select a class to delete a field from");
     }
-  }
+    }
 
   /**
    * Inside the selected class the user has a field selected. When the user clicks "Rename Field"
@@ -382,22 +365,17 @@ public class GUIViewController implements Initializable {
 
           fieldNameInput.clear();
 
-          // update storage
-          String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
-          umlController.fieldCommands.renameField(
-              new String[] {
-                "rename",
-                "field",
-                selectedClassBox.getName(),
-                oldFieldName,
-                newFieldName,
-                newFieldType
-              });
-          System.out.println(
-              umlController.getStorage().getClass(selectedClassBox.getName()).fields.toString());
-          System.out.println(
-              "Size of fields: "
-                  + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
+          // Extract the old field name from the selected field string
+          String oldFieldName = selectedField.split(" ")[1];
+          CommandResult result = commandBridge.renameField(new String[] {
+                  oldFieldName,
+                  newFieldName,
+                  newFieldType
+          });
+
+          if (!result.isSuccess()) {
+            showAlert("Error", result.getMessage());
+          }
         }
       }
     }
@@ -446,24 +424,27 @@ public class GUIViewController implements Initializable {
    * @param event the action event triggered by clicking on the add method button.
    */
   @FXML
-  public void handleAddMethod(ActionEvent event) {
+  public void handleAddMethod(ActionEvent event) {//TODO: add method return type comboBox
+
     if (selectedClassBox != null) {
       String methodName = methodNameInput.getText();
+      String returnType = parameterTypeComboBox.getValue();
 
       if (!methodName.isEmpty()) {
 
-        String message =
-            umlController.methodCommands.addMethod(
-                new String[] {"add", "method", selectedClassBox.getName(), methodName});
-        if (message.isEmpty()) {
-          String formattedMethod = methodName + "()";
+
+        CommandResult result = commandBridge.addMethod(new String[] {returnType, methodName});
+
+        if (result.isSuccess()) {
+          String formattedMethod = returnType + " " + methodName + "()";
           ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
           methodList.getItems().add(formattedMethod);
 
-          methodNameInput.clear();
         } else {
-          showAlert("Error", message);
+          showAlert("Error", result.getMessage());
         }
+
+        methodNameInput.clear();
       }
     }
   }
@@ -480,14 +461,14 @@ public class GUIViewController implements Initializable {
       String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
       if (selectedMethod != null) {
+        String methodName = selectedMethod.split(" ")[1];
+        CommandResult result = commandBridge.removeMethod(new String[]{methodName});
 
-        umlController.methodCommands.removeMethod(
-            new String[] {"delete", "method", selectedClassBox.getName(), selectedMethod});
-        System.out.println(
-            "Number of methods: "
-                + umlController.getStorage().getClass(selectedClassBox.getName()).fields.size());
-        methodList.getItems().remove(selectedMethod);
-
+        if (result.isSuccess())
+        { methodList.getItems().remove(selectedMethod);
+        }else {
+          showAlert("Error", result.getMessage());
+        }
         methodNameInput.clear();
       }
     }
@@ -576,7 +557,7 @@ public class GUIViewController implements Initializable {
     switch (relationType) {
       case "Aggregation":
         arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.WHITE);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Composition":
         arrowHead.setStroke(Color.WHITE);
@@ -590,7 +571,7 @@ public class GUIViewController implements Initializable {
                 -20.0, 10.0,
                 0.0, 0.0,
                 -20.0, -10.0);
-        arrowHead.setFill(Color.WHITE);
+        arrowHead.setFill(Color.GRAY);
         break;
       case "Realization":
         arrowHead.getPoints().clear();
@@ -726,10 +707,17 @@ public class GUIViewController implements Initializable {
     if (fromClassName == null || toClassName == null || fromClassName.equals(toClassName)) {
       return;
     }
-    VBox fromBox = findClassName(fromClassName);
-    VBox toBox = findClassName(toClassName);
 
-    drawRelationLine(fromBox, toBox, relationType);
+    CommandResult result = commandBridge.addRelationship(new String[]{relationType, toClassName});
+
+    if(result.isSuccess()){
+      VBox fromBox = findClassName(fromClassName);
+      VBox toBox = findClassName(toClassName);
+
+      drawRelationLine(fromBox, toBox, relationType);
+    }else {
+      showAlert("Error", result.getMessage());
+    }
   }
 
   /**
@@ -767,9 +755,18 @@ public class GUIViewController implements Initializable {
       return;
     }
 
-    String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
 
-    canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
+    CommandResult result = commandBridge.removeRelationship(new String[]{relationType, toClassName});
+
+    if(result.isSuccess()){
+      String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
+
+      canvas.getChildren().removeIf(node -> relationshipId.equals(node.getId()));
+    }else{
+      showAlert("Error", result.getMessage());
+    }
+
+    
   }
 
   /**
@@ -808,6 +805,14 @@ public class GUIViewController implements Initializable {
   @FXML
   public void onSave(ActionEvent event) {
     String fileName = getFileName();
+    if (!fileName.isEmpty()) {
+      CommandResult result = commandBridge.executeCommand("save as", new String[] {fileName});
+      if (!result.isSuccess()) {
+        showAlert("Save Error", result.getMessage());
+      }
+    } else {
+      showAlert("Save Error", "File name cannot be empty.");
+    }
   }
 
   /**
@@ -822,6 +827,49 @@ public class GUIViewController implements Initializable {
         new FileChooser.ExtensionFilter("Json Files", "*.json");
     fileChooser.getExtensionFilters().add(jsonFilter);
 
+    // Set the initial directory to src/main/resources/saves
+    File initialDirectory = new File("src/main/resources/saves");
+    if (initialDirectory.exists()) {
+      fileChooser.setInitialDirectory(initialDirectory);
+    }
+
     File file = fileChooser.showOpenDialog(new Stage());
+    String name = file.getName();
+
+    CommandResult result = commandBridge.load(new String[]{name});
+
+    if(result.isSuccess()){
+      Gson gson = new Gson();
+    }
+
   }
+
+  @FXML
+  public void onLoad(ActionEvent event){
+
+
+  }
+
+  @FXML
+  public void onRedo(ActionEvent event){
+    /*CommandResult result = commandBridge.undo(new String[0]);
+    if (result.isSuccess()) {
+      //refreshCanvas();
+      showAlert("Undo", "Action successfully undone.");
+    } else {
+      showAlert("Undo Failed", result.getMessage());
+    }
+    */
+
+  }
+
+
+  @FXML
+  public void onUndo(ActionEvent event){
+
+  }
+
+
+
+
 }

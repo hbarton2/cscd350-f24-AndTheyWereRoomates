@@ -1,0 +1,23 @@
+{
+  "commands": {
+    "test commands": {
+      "create class": {
+        "syntax": "create class <class name>",
+        "description": "Creates a new class.",
+        "example": "create class TestClass",
+        "errors": {
+          "classExists": ["Error: Class <class name> already exists."],
+          "invalidName": ["Error: <class name> is an invalid class name."]
+        }
+      },
+      "remove class": {
+        "syntax": "remove class <class name>",
+        "description": "Removes an existing class.",
+        "example": "remove class TestClass",
+        "errors": {
+          "classNotFound": ["Error: Class <class name> does not exist."]
+        }
+      }
+    }
+  }
+}
