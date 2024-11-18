@@ -1,11 +1,11 @@
 package org.project.Memento;
 
-import org.project.Model.UMLClassNode;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.project.Model.UMLClassNode;
 
 public class Memento {
+
   private final Map<String, UMLClassNode> state;
 
   public Memento(Map<String, UMLClassNode> state) {

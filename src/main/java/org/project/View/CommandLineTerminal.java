@@ -40,88 +40,51 @@ public class CommandLineTerminal {
 
   }
 
-//  public void launch() {
-//    System.out.println("Welcome to the UML Editor CLI.");
-//    System.out.println("Type 'help' to see available commands, or 'exit' to quit.");
-//
-//    while (running) {
-//      try {
-//        // Use LineReader to read input with autocomplete
-//        String input = lineReader.readLine("$ ").trim();
-//        processCommand(input);
-//      } catch (Exception e) {
-//        System.err.println("Error: " + e.getMessage());
-//      }
-//    }
-//  }
-public void launch() {
-  System.out.println("Welcome to the UML Editor CLI.");
-  System.out.println("Type 'help' to see available commands, or 'exit' to quit.");
+  public void launch() {
+    System.out.println("Welcome to the UML Editor CLI.");
+    System.out.println("Type 'help' to see available commands, or 'exit' to quit.");
 
-  while (running) {
-    try {
-      // Read input from JLine with autocomplete
-      String rawInput = lineReader.readLine("$ ");
-      String sanitizedInput = sanitizeInput(rawInput); // Sanitize input
-      processCommand(sanitizedInput);
-    } catch (Exception e) {
-      System.err.println("Error: " + e.getMessage());
+    while (running) {
+      try {
+        // Read input from JLine with autocomplete
+        String rawInput = lineReader.readLine("$ ");
+        String sanitizedInput = sanitizeInput(rawInput); // Sanitize input
+        processCommand(sanitizedInput);
+      } catch (Exception e) {
+        System.err.println("Error: " + e.getMessage());
+      }
     }
   }
-}
 
-  //private void processCommand(String input) {
-//  // Remove escape characters (backslashes) added by JLine
-//  input = input.replace("\\", "").trim();
-//
-//  if (input.equalsIgnoreCase("exit")) {
-//    handleExitCommand();
-//  } else if (input.equalsIgnoreCase("help")) {
-//    handleHelpCommand();
-//  } else {
-//    // Process user command
-//    CommandResult result = commandParser.parseCommand(input);
-//    displayResult(result);
-//  }
-//}
-private void processCommand(String input) {
-  input = sanitizeInput(input); // Remove escape characters
+  private void processCommand(String input) {
+    input = sanitizeInput(input); // Remove escape characters
 
-  if (input.isBlank()) {
-    System.out.println("Error: Command cannot be empty.");
-    return;
+    if (input.isBlank()) {
+      System.out.println("Error: Command cannot be empty.");
+      return;
+    }
+
+    if (input.equalsIgnoreCase("exit")) {
+      handleExitCommand();
+    } else if (input.equalsIgnoreCase("help")) {
+      handleHelpCommand();
+    } else {
+      CommandResult result = commandParser.parseCommand(input);
+      displayResult(result);
+    }
   }
 
-  if (input.equalsIgnoreCase("exit")) {
-    handleExitCommand();
-  } else if (input.equalsIgnoreCase("help")) {
-    handleHelpCommand();
-  } else {
-    CommandResult result = commandParser.parseCommand(input);
-    displayResult(result);
+  private String sanitizeInput(String input) {
+    // Remove backslashes and redundant spaces introduced by JLine
+    input = input.replace("\\", "").trim();
+    // Split and sanitize each word (prevent duplication from autocomplete)
+    String[] tokens = input.split("\\s+");
+    if (tokens.length > 1) {
+      // Prevent malformed concatenations
+      tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
+    }
+    return String.join(" ", tokens).trim();
   }
-}
-
-//  private String sanitizeInput(String input) {
-//    if (input == null || input.isBlank()) {
-//      return "";
-//    }
-//    // Remove escape characters like backslashes added by JLine
-//    return input.replace("\\", "").trim();
-//  }
-private String sanitizeInput(String input) {
-  // Remove backslashes and redundant spaces introduced by JLine
-  input = input.replace("\\", "").trim();
-  // Split and sanitize each word (prevent duplication from autocomplete)
-  String[] tokens = input.split("\\s+");
-  if (tokens.length > 1) {
-    // Prevent malformed concatenations
-    tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
-  }
-  return String.join(" ", tokens).trim();
-}
-
-
 
 
   private void handleExitCommand() {

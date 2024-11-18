@@ -13,6 +13,7 @@ import org.project.Model.CommandRegistries;
  * Provides methods to parse commands and retrieve a formatted list of available commands.
  */
 public class CommandParser {
+
   private final CommandRegistries commandRegistries;
   private final AutoComplete autoComplete;
 
@@ -23,12 +24,13 @@ public class CommandParser {
     // Load all commands into AutoComplete
     for (String commandName : commandRegistries.getAllCommands().keySet()) {
       autoComplete.addCommand(commandName);
-      System.out.println(commandName + " Loaded"); // TODO: TEST DEBUG
+//      System.out.println(commandName + " Loaded"); // TODO: TEST DEBUG
     }
   }
 
   /**
    * Parses and executes the command given as input.
+   *
    * @param input The raw user input containing the command and arguments.
    * @return A CommandResult indicating the success or failure of the command.
    */
@@ -55,6 +57,7 @@ public class CommandParser {
 
   /**
    * Provides a formatted list of all available commands and their descriptions.
+   *
    * @return A formatted string listing all commands with syntax and descriptions.
    */
   public String getCommandList() {
@@ -75,6 +78,7 @@ public class CommandParser {
 
   /**
    * Handles autocomplete functionality.
+   *
    * @param partialInput The current input entered by the user.
    * @return A list of matching commands or a single completed command.
    */

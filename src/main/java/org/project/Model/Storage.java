@@ -51,13 +51,15 @@ public class Storage {
 
   // Method to print all nodes
   public void printAllNodes() {
-    for(UMLClassNode node : storage.values()) {
+    for (UMLClassNode node : storage.values()) {
       System.out.println(node.toString());
     }
   }
+
   public Map<String, UMLClassNode> getAllNodes() {
     return new TreeMap<>(storage);
   }
+
   public void setAllNodes(Map<String, UMLClassNode> nodes) {
     storage.clear();
     storage.putAll(nodes);

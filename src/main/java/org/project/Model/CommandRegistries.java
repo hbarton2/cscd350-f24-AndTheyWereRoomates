@@ -34,11 +34,11 @@ public class CommandRegistries extends CommandLogic {
         for (String commandName : commands.keySet()) {
           JsonObject commandDetails = commands.getAsJsonObject(commandName);
           String syntax =
-              commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
+            commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
           String description =
-              commandDetails.has("description")
-                  ? commandDetails.get("description").getAsString()
-                  : "";
+            commandDetails.has("description")
+              ? commandDetails.get("description").getAsString()
+              : "";
           commandMap.put(commandName, new CommandInfo(syntax, description));
         }
       }
@@ -56,10 +56,13 @@ public class CommandRegistries extends CommandLogic {
   // Functional interface for command handlers
   @FunctionalInterface
   interface CommandHandler {
+
     CommandResult handle(String[] args);
   }
 
-  /** Future nested keys ie quit and exit does same job */
+  /**
+   * Future nested keys ie quit and exit does same job
+   */
   private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
 
   // Initialize command handlers with specific implementations

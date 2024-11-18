@@ -16,10 +16,10 @@ public class Main {
     while (answer) {
       System.out.println("Welcome to the Unified Modeling Language Editor.");
       System.out.println("Please choose an interface to start:");
-      System.out.println("  - Graphical User Interface    (GUI): Type 'gui'     or 'g'");
-      System.out.println("  - Command Line Interface      (CLI): Type 'cli'     or 'c'");
-      System.out.println("  - NEW Command Line Interface  (CLI): Type 'new cli' or 'n'");
-      System.out.println("  - Terminate launcher:                Type 'exit'    or 'quit'");
+      System.out.println("   - Graphical User Interface    (GUI): Type 'gui'     or 'g'");
+      System.out.println("OLD- Command Line Interface      (CLI): Type 'cli'     or 'c'");
+      System.out.println("NEW- NEW Command Line Interface  (CLI): Type 'new cli' or 'n'");
+      System.out.println("   - Terminate launcher:                Type 'exit'    or 'quit'");
       System.out.print("Your choice: ");
       String input = scanner.nextLine().toLowerCase();
 

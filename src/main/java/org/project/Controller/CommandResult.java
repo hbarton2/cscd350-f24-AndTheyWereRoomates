@@ -1,12 +1,12 @@
 package org.project.Controller;
 
 /**
- * Represents the results of a command execution, capturing information about the success
- * of a command, an optional message and command name.
- * The class provides methods to create success and failure results
- * includes methods to retrieve the success status, message, and command name
+ * Represents the results of a command execution, capturing information about the success of a
+ * command, an optional message and command name. The class provides methods to create success and
+ * failure results includes methods to retrieve the success status, message, and command name
  */
 public class CommandResult {
+
   private final boolean success;
   private final String message;
   private final String commandName; // Optional field to store command name

@@ -352,8 +352,9 @@ public class CLIView {
 
 
   /**
-   * loadCommand prompts the user for a file name, loads the .json file from src/main/resources/saves,
-   * and loads it into the application. Prints "Successfully Loaded" if successful, and "Not Successfully Loaded" if unsuccessful.
+   * loadCommand prompts the user for a file name, loads the .json file from
+   * src/main/resources/saves, and loads it into the application. Prints "Successfully Loaded" if
+   * successful, and "Not Successfully Loaded" if unsuccessful.
    *
    * @param input is a string list that is never used.
    */
