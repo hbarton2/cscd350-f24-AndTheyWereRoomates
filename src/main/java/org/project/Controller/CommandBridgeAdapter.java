@@ -22,17 +22,17 @@ public class CommandBridgeAdapter implements CommandBridge {
 
   @Override
   public CommandResult undo() {
-    return commandRegistries.undo(new String[]{});
+    return commandRegistries.undo(new String[] {});
   }
 
   @Override
   public CommandResult redo() {
-    return commandRegistries.redo(new String[]{});
+    return commandRegistries.redo(new String[] {});
   }
 
   @Override
   public CommandResult saveState() {
-    return commandRegistries.saveState(new String[]{});
+    return commandRegistries.saveState(new String[] {});
   }
 
   @Override
@@ -144,5 +144,4 @@ public class CommandBridgeAdapter implements CommandBridge {
   public CommandResult exit(String[] args) {
     return commandRegistries.exit(args);
   }
-
 }

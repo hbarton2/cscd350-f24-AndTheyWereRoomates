@@ -10,7 +10,6 @@ import org.project.Controller.CommandResult;
 
 public class CommandResultUnitTest {
 
-
   @Test
   public void testConstructorWithoutCommandName() {
     CommandResult result = new CommandResult(true, "Operation successful");
@@ -65,7 +64,7 @@ public class CommandResultUnitTest {
   public void testToStringWithCommandName() {
     CommandResult result = new CommandResult(false, "Command failed", "testCommand");
     String expected =
-      "CommandResult{success=false, message='Command failed', commandName='testCommand'}";
+        "CommandResult{success=false, message='Command failed', commandName='testCommand'}";
 
     assertEquals(expected, result.toString());
   }

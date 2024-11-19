@@ -24,7 +24,7 @@ public class CommandParser {
     // Load all commands into AutoComplete
     for (String commandName : commandRegistries.getAllCommands().keySet()) {
       autoComplete.addCommand(commandName);
-//      System.out.println(commandName + " Loaded"); // TODO: TEST DEBUG
+      //      System.out.println(commandName + " Loaded"); // TODO: TEST DEBUG
     }
   }
 
@@ -67,10 +67,14 @@ public class CommandParser {
       String commandName = entry.getKey();
       CommandInfo commandInfo = entry.getValue();
 
-      commandList.append("- ").append(commandName)
-        .append(": ").append(commandInfo.description())
-        .append("\n  Syntax: ").append(commandInfo.syntax())
-        .append("\n\n");
+      commandList
+          .append("- ")
+          .append(commandName)
+          .append(": ")
+          .append(commandInfo.description())
+          .append("\n  Syntax: ")
+          .append(commandInfo.syntax())
+          .append("\n\n");
     }
 
     return commandList.toString();
@@ -82,9 +86,9 @@ public class CommandParser {
    * @param partialInput The current input entered by the user.
    * @return A list of matching commands or a single completed command.
    */
-//  public List<String> autocomplete(String partialInput) throws IOException {
-//    return autoComplete.getSuggestions(partialInput);
-//  }
+  //  public List<String> autocomplete(String partialInput) throws IOException {
+  //    return autoComplete.getSuggestions(partialInput);
+  //  }
   public List<String> autocomplete(String partialInput) throws IOException {
     System.out.println("Autocomplete Input: " + partialInput);
     List<String> suggestions = autoComplete.getSuggestions(partialInput);
@@ -92,10 +96,7 @@ public class CommandParser {
     return suggestions;
   }
 
-
-  /**
-   * Releases resources used by AutoComplete.
-   */
+  /** Releases resources used by AutoComplete. */
   public void close() throws IOException {
     autoComplete.close(); // Release resources
   }

@@ -30,13 +30,15 @@ public class GUIView extends Application {
     stage.setTitle("UML EDITOR");
 
     // Add an event listener to minimize and restore the window only once
-    stage.addEventHandler(WindowEvent.WINDOW_SHOWN, e -> {
-      if (firstTimeShown) {
-        stage.setIconified(true);  // Minimize the window briefly
-        stage.setIconified(false); // Restore the window to bring it to the front
-        firstTimeShown = false; // Set the flag to prevent further minimize/restore
-      }
-    });
+    stage.addEventHandler(
+        WindowEvent.WINDOW_SHOWN,
+        e -> {
+          if (firstTimeShown) {
+            stage.setIconified(true); // Minimize the window briefly
+            stage.setIconified(false); // Restore the window to bring it to the front
+            firstTimeShown = false; // Set the flag to prevent further minimize/restore
+          }
+        });
 
     stage.show(); // Show initially
   }

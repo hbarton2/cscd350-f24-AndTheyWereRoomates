@@ -17,7 +17,7 @@ public class AutoComplete {
   public AutoComplete() throws IOException {
     Directory directory = new ByteBuffersDirectory(); // In-memory storage
     suggester = new AnalyzingInfixSuggester(directory, new StandardAnalyzer());
-//    System.out.println("AutoComplete suggester initialized."); // TODO: Debug log
+    //    System.out.println("AutoComplete suggester initialized."); // TODO: Debug log
   }
 
   /**
@@ -30,7 +30,7 @@ public class AutoComplete {
     BytesRef key = new BytesRef(command);
     suggester.add(key, null, 1, null); // Add command with default weight
     suggester.refresh(); // Refresh the suggester to apply changes
-//    System.out.println("Command added to suggester: " + command); // TODO: Debug log
+    //    System.out.println("Command added to suggester: " + command); // TODO: Debug log
   }
 
   /**
@@ -41,13 +41,13 @@ public class AutoComplete {
    * @throws IOException If an error occurs during lookup.
    */
   public List<String> getSuggestions(String prefix) throws IOException {
-//    System.out.println("Fetching suggestions for prefix: " + prefix); // TODO: Debug log
+    //    System.out.println("Fetching suggestions for prefix: " + prefix); // TODO: Debug log
     List<LookupResult> results = suggester.lookup(prefix, false, 10); // Use String directly
     List<String> suggestions =
-      results.stream()
-        .map(result -> result.key.toString()) // Convert result to String
-        .collect(Collectors.toList());
-//    System.out.println("Suggestions found: " + suggestions); // TODO: Debug log
+        results.stream()
+            .map(result -> result.key.toString()) // Convert result to String
+            .collect(Collectors.toList());
+    //    System.out.println("Suggestions found: " + suggestions); // TODO: Debug log
     return suggestions;
   }
 
@@ -58,6 +58,6 @@ public class AutoComplete {
    */
   public void close() throws IOException {
     suggester.close(); // Close resources
-//    System.out.println("AutoComplete suggester closed."); // TODO: Debug log
+    //    System.out.println("AutoComplete suggester closed."); // TODO: Debug log
   }
 }

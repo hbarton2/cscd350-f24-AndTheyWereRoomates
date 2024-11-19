@@ -21,23 +21,22 @@ public class CommandLineTerminal {
     this.commandParser = new CommandParser(commandRegistries);
 
     // Initialize JLine Terminal
-    org.jline.terminal.Terminal terminal = TerminalBuilder.builder()
-      .system(true)
-      .build();
+    org.jline.terminal.Terminal terminal = TerminalBuilder.builder().system(true).build();
 
     // Fetch all command names from CommandRegistries for autocomplete
     List<String> commandList = commandParser.getAllCommandNames();
 
     // Initialize JLine LineReader with autocomplete support
-//    this.lineReader = LineReaderBuilder.builder()
-//      .terminal(terminal) // Use the JLine Terminal
-//      .completer(new StringsCompleter(commandList)) // Autocomplete based on available commands
-//      .build();
-    this.lineReader = LineReaderBuilder.builder()
-      .terminal(terminal)
-      .completer(new StringsCompleter(commandList)) // Provide raw command names
-      .build();
-
+    //    this.lineReader = LineReaderBuilder.builder()
+    //      .terminal(terminal) // Use the JLine Terminal
+    //      .completer(new StringsCompleter(commandList)) // Autocomplete based on available
+    // commands
+    //      .build();
+    this.lineReader =
+        LineReaderBuilder.builder()
+            .terminal(terminal)
+            .completer(new StringsCompleter(commandList)) // Provide raw command names
+            .build();
   }
 
   public void launch() {
@@ -85,7 +84,6 @@ public class CommandLineTerminal {
     }
     return String.join(" ", tokens).trim();
   }
-
 
   private void handleExitCommand() {
     System.out.println("Terminating Application...");

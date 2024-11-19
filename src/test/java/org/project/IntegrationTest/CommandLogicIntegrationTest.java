@@ -26,21 +26,22 @@ class CommandLogicIntegrationTest {
     commandLogic = new CommandLogic();
   }
 
-//    TODO: This test failed
-//    @Test
-//    void testCreateClassIntegration() {
-//        // Test creating a class
-//        CommandResult result = commandRegistries.executeCommand("create class", new String[]{"TestClass"});
-//        assertTrue(result.isSuccess(), "Class should be created successfully.");
-//        assertEquals("Class created: TestClass", result.getMessage());
-//    }
+  //    TODO: This test failed
+  //    @Test
+  //    void testCreateClassIntegration() {
+  //        // Test creating a class
+  //        CommandResult result = commandRegistries.executeCommand("create class", new
+  // String[]{"TestClass"});
+  //        assertTrue(result.isSuccess(), "Class should be created successfully.");
+  //        assertEquals("Class created: TestClass", result.getMessage());
+  //    }
 
   @Test
   void testRemoveClassIntegration() {
     // Create and then remove a class
-    commandRegistries.executeCommand("create class", new String[]{"TestClass"});
-    CommandResult result = commandRegistries.executeCommand("remove class",
-      new String[]{"TestClass"});
+    commandRegistries.executeCommand("create class", new String[] {"TestClass"});
+    CommandResult result =
+        commandRegistries.executeCommand("remove class", new String[] {"TestClass"});
     assertTrue(result.isSuccess(), "Class should be removed successfully.");
     assertEquals("Class removed: TestClass", result.getMessage());
   }
@@ -48,9 +49,9 @@ class CommandLogicIntegrationTest {
   @Test
   void testCreateClassDuplicate() {
     // Create a class and attempt to create it again
-    commandRegistries.executeCommand("create class", new String[]{"TestClass"});
-    CommandResult result = commandRegistries.executeCommand("create class",
-      new String[]{"TestClass"});
+    commandRegistries.executeCommand("create class", new String[] {"TestClass"});
+    CommandResult result =
+        commandRegistries.executeCommand("create class", new String[] {"TestClass"});
     assertFalse(result.isSuccess(), "Duplicate class creation should fail.");
     assertEquals("Error: Class 'TestClass' already exists.", result.getMessage());
   }
@@ -60,4 +61,3 @@ class CommandLogicIntegrationTest {
     // Clean up test environment if needed
   }
 }
-
