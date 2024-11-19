@@ -5,6 +5,10 @@ on:
     branches:
       - Developer
       - main
+  pull_request:
+    branches:
+      - Developer
+      - main
   workflow_dispatch:
 
 jobs:
@@ -12,9 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
-    name: Build and Deploy on ${{ matrix.os }}
+    name: Build, Lint, and Deploy on ${{ matrix.os }}
 
     steps:
       - name: Get Code
@@ -26,6 +30,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      - name: Verify Code Style with Spotless
+        run: |
+          mvn spotless:check
+
+      - name: Apply Code Style with Spotless (if check fails)
+        run: |
+          mvn spotless:apply
+        if: failure()
 
       - name: Run Tests
         shell: bash
