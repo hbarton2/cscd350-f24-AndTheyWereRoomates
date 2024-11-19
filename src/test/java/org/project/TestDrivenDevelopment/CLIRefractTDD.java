@@ -3,9 +3,7 @@ package org.project.TestDrivenDevelopment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-/**
- * Test Driven Development and Refactor CLI
- */
+/** Test Driven Development and Refactor CLI */
 public class CLIRefractTDD {
 
   @Test
@@ -14,5 +12,4 @@ public class CLIRefractTDD {
     // all commands are going into JSON format
     //
   }
-
 }

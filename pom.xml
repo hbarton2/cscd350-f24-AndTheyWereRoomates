@@ -129,17 +129,6 @@
           <java>
             <googleJavaFormat/>
           </java>
-
-          <!-- JSON Formatting -->
-          <json>
-            <indent>2</indent>
-          </json>
-
-          <!-- YAML Formatting -->
-          <yaml>
-            <indent>2</indent>
-            <endWithNewline>true</endWithNewline>
-          </yaml>
         </configuration>
       </plugin>
 

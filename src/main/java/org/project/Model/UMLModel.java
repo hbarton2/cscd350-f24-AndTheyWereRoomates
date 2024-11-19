@@ -19,21 +19,16 @@ public class UMLModel {
 
   public static class Class {
 
-    /**
-     * Name of the class.
-     */
+    /** Name of the class. */
     private String name;
-    /**
-     * A list of methods.
-     */
+
+    /** A list of methods. */
     public ArrayList<Method> methodlist;
-    /**
-     * A list of fields.
-     */
+
+    /** A list of fields. */
     public ArrayList<Field> fields;
-    /**
-     * A list of relationships.
-     */
+
+    /** A list of relationships. */
     public ArrayList<Relationship> relation;
 
     /**
@@ -55,8 +50,6 @@ public class UMLModel {
      * @return - True if the method was added successfully, otherwise returns false.
      * @throws IllegalArgumentException if the methodName is null or empty.
      */
-
-
     public boolean addMethod(final String methodName) {
       if (methodName == null || methodName.isEmpty()) {
         throw new IllegalArgumentException("Invalid method name, try again");
@@ -154,27 +147,31 @@ public class UMLModel {
      * Removes a relationship between the source and destination classes.
      *
      * @param sourceName - The name of the source class.
-     * @param dest       - The name of the destination class.
+     * @param dest - The name of the destination class.
      * @return - True if the relationship was removed successfully, otherwise returns false.
      * @throws IllegalArgumentException if the sourceName or destination is null or empty.
      */
     public boolean removeRelation(final String sourceName, final String dest, final String type) {
-      if (sourceName == null || sourceName.isEmpty() || dest == null || dest.isEmpty()
-        || type == null || type.isEmpty()) {
+      if (sourceName == null
+          || sourceName.isEmpty()
+          || dest == null
+          || dest.isEmpty()
+          || type == null
+          || type.isEmpty()) {
         throw new IllegalArgumentException("Invalid sourceName or destName, try again");
       }
       Iterator<Relationship> iterator = relation.iterator();
       while (iterator.hasNext()) {
         Relationship relationship = iterator.next();
-        if (relationship.getSource().equals(sourceName) && relationship.getDestination()
-          .equals(dest) && relationship.getType().equals(type)) {
+        if (relationship.getSource().equals(sourceName)
+            && relationship.getDestination().equals(dest)
+            && relationship.getType().equals(type)) {
           iterator.remove();
           return true;
         }
       }
       return false;
     }
-
 
     /**
      * Gets the name of the class.
@@ -233,9 +230,7 @@ public class UMLModel {
       Field field = findField(name);
 
       return fields.remove(field);
-
     }
-
 
     /**
      * Renames a field
@@ -264,7 +259,6 @@ public class UMLModel {
     public ArrayList<Field> getFields() {
       return fields;
     }
-
 
     /**
      * Finds a field by its name
@@ -331,7 +325,7 @@ public class UMLModel {
      * Adds a relationship between the source and destination classes.
      *
      * @param source - The source class
-     * @param dest   - The destination class.
+     * @param dest - The destination class.
      * @return true if the relationships was added successfully, otherwise returns false.
      * @throws IllegalArgumentException if the source or destination is null or empty.
      */
@@ -347,8 +341,6 @@ public class UMLModel {
       }
 
       return relation.add(new Relationship(source, dest, type));
-
-
     }
 
     public ArrayList<Relationship> getRelationships() {
@@ -358,13 +350,10 @@ public class UMLModel {
 
   public static class Field {
 
-    /**
-     * The name of the field.
-     */
+    /** The name of the field. */
     private String name;
-    /**
-     * The type of the field.
-     */
+
+    /** The type of the field. */
     private String type;
 
     /**
@@ -413,18 +402,14 @@ public class UMLModel {
     public void setType(final String type) {
       this.type = type;
     }
-
   }
 
   public static class Method {
 
-    /**
-     * The name of the method.
-     */
+    /** The name of the method. */
     private String name;
-    /**
-     * A list of parameters.
-     */
+
+    /** A list of parameters. */
     public ArrayList<Parameter> parameters;
 
     /**
@@ -446,8 +431,10 @@ public class UMLModel {
      */
     public boolean addParameter(final String parameterName, final String parameterType) {
 
-      if (parameterName.isBlank() || parameterName == null || parameterType.isBlank()
-        || parameterType == null) {
+      if (parameterName.isBlank()
+          || parameterName == null
+          || parameterType.isBlank()
+          || parameterType == null) {
         System.out.println("Inputs were Null/Blank");
         return false;
       }
@@ -469,11 +456,15 @@ public class UMLModel {
      * @param newParamType - The new type of the parameter.
      * @return true if the parameter was successfully changed, otherwise returns false.
      */
-    public boolean changeParameter(final String oldParamName, final String newParamName,
-      final String newParamType) {
+    public boolean changeParameter(
+        final String oldParamName, final String newParamName, final String newParamType) {
 
-      if (newParamName.isBlank() || newParamName == null || newParamType.isBlank()
-        || newParamType == null || oldParamName.isBlank() || oldParamName == null) {
+      if (newParamName.isBlank()
+          || newParamName == null
+          || newParamType.isBlank()
+          || newParamType == null
+          || oldParamName.isBlank()
+          || oldParamName == null) {
         System.out.println("Inputs were Null/Blank");
         return false;
       }
@@ -488,8 +479,10 @@ public class UMLModel {
           param.setName(newParamName);
           param.setType(newParamType);
           System.out.println(
-            "The parameter has been changed to " + newParamName + ", param of type: "
-              + newParamType);
+              "The parameter has been changed to "
+                  + newParamName
+                  + ", param of type: "
+                  + newParamType);
           return true;
         }
       }
@@ -522,9 +515,7 @@ public class UMLModel {
       return false;
     }
 
-    /**
-     * Deletes all the parameters from the method.
-     */
+    /** Deletes all the parameters from the method. */
     public void deleteAllParameter() {
       this.parameters.clear();
       System.out.println("All parameters in method has been deleted");
@@ -581,13 +572,10 @@ public class UMLModel {
 
   public static class Parameter {
 
-    /**
-     * The name of the parameter.
-     */
+    /** The name of the parameter. */
     private String name;
-    /**
-     * The type of the parameter.
-     */
+
+    /** The type of the parameter. */
     private String type;
 
     /**
@@ -640,20 +628,18 @@ public class UMLModel {
 
   public static class Relationship {
 
-    /**
-     * The source of the relationship.
-     */
+    /** The source of the relationship. */
     private String source;
-    /**
-     * The destination of the relationship.
-     */
+
+    /** The destination of the relationship. */
     private String destination;
+
     private String type;
 
     /**
      * Constructs a new Relationship.
      *
-     * @param source      - The source of the relationship.
+     * @param source - The source of the relationship.
      * @param destination - The destination of the relatioship.
      */
     public Relationship(final String source, final String destination, final String type) {
@@ -707,73 +693,70 @@ public class UMLModel {
     }
   }
 
-//  public static class Load {
-//
-//    private Storage storage;
-//
-//
-//    public Load(final Storage storage) {
-//      this.storage = storage;
-//    }
-//
-//    public boolean Load(final String fileName) {
-//      if (fileName == null) {
-//        System.out.println("The class: " + fileName + " does not exist");
-//      }
-//
-//      try {
-//        FileReader reader = new FileReader(fileName);
-//        Gson gson = new Gson();
-//        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {
-//        }.getType();
-//        storage.list = gson.fromJson(reader, type);
-//        return true;
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//      return false;
-//    }
-//  }
-//
-//  public static class Save {
-//
-//    private Storage storage;
-//
-//
-//    public Save(final Storage storage) {
-//      this.storage = storage;
-//    }
-//
-//
-//    public boolean save(final String fileName) {
-//
-//      try {
-//        FileWriter writer = new FileWriter(fileName);
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        gson.toJson(storage.getClasses(), writer);
-//
-//        writer.close();
-//
-//        return true;
-//
-//
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//
-//      return false;
-//
-//
-//    }
-//  }
+  //  public static class Load {
+  //
+  //    private Storage storage;
+  //
+  //
+  //    public Load(final Storage storage) {
+  //      this.storage = storage;
+  //    }
+  //
+  //    public boolean Load(final String fileName) {
+  //      if (fileName == null) {
+  //        System.out.println("The class: " + fileName + " does not exist");
+  //      }
+  //
+  //      try {
+  //        FileReader reader = new FileReader(fileName);
+  //        Gson gson = new Gson();
+  //        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {
+  //        }.getType();
+  //        storage.list = gson.fromJson(reader, type);
+  //        return true;
+  //      } catch (IOException e) {
+  //        e.printStackTrace();
+  //      }
+  //      return false;
+  //    }
+  //  }
+  //
+  //  public static class Save {
+  //
+  //    private Storage storage;
+  //
+  //
+  //    public Save(final Storage storage) {
+  //      this.storage = storage;
+  //    }
+  //
+  //
+  //    public boolean save(final String fileName) {
+  //
+  //      try {
+  //        FileWriter writer = new FileWriter(fileName);
+  //        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+  //        gson.toJson(storage.getClasses(), writer);
+  //
+  //        writer.close();
+  //
+  //        return true;
+  //
+  //
+  //      } catch (IOException e) {
+  //        e.printStackTrace();
+  //      }
+  //
+  //      return false;
+  //
+  //
+  //    }
+  //  }
 
   public static class Storage {
 
-    /**
-     * A map to store the classes.
-     */
+    /** A map to store the classes. */
     public TreeMap<String, UMLModel.Class> list = new TreeMap<>();
-
 
     /**
      * addClass adds a class to the stored list.
@@ -815,7 +798,6 @@ public class UMLModel {
       }
       list.remove(name);
       return true;
-
     }
 
     /**
@@ -826,7 +808,7 @@ public class UMLModel {
      * @throws IllegalArgumentException If either oldName or newName are null or empty.
      */
     public boolean renameClass(final String oldName, final String newName)
-      throws IllegalArgumentException {
+        throws IllegalArgumentException {
       if (oldName == null || oldName.isEmpty()) {
         throw new IllegalArgumentException("Invalid old name, try again");
       }
@@ -841,8 +823,6 @@ public class UMLModel {
       placeholder.setName(newName);
       list.put(newName, placeholder);
       return true;
-
-
     }
 
     public Map<String, UMLModel.Class> getClasses() {
@@ -876,8 +856,7 @@ public class UMLModel {
       try {
         FileReader reader = new FileReader(filePath);
         Gson gson = new Gson();
-        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {
-        }.getType();
+        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {}.getType();
         storage.list = gson.fromJson(reader, type);
         reader.close();
         return true;

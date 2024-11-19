@@ -5,9 +5,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import org.project.Controller.DraggableMaker;
 
-/**
- * This represents a draggable class box that displays the name, fields, and methods.
- */
+/** This represents a draggable class box that displays the name, fields, and methods. */
 public class ClassBox extends VBox {
 
   private Label classNameLabel;

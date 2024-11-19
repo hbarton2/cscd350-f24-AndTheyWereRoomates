@@ -11,8 +11,11 @@ public class UMLClassNode {
   private List<Relationship> relationships;
 
   // Constructor
-  public UMLClassNode(String className, List<Field> fields, List<Method> methods,
-    List<Relationship> relationships) {
+  public UMLClassNode(
+      String className,
+      List<Field> fields,
+      List<Method> methods,
+      List<Relationship> relationships) {
     this.className = className;
     this.fields = fields;
     this.methods = methods;
@@ -60,19 +63,24 @@ public class UMLClassNode {
     return relationships;
   }
 
-  //Setters
+  // Setters
   public void setClassName(String className) {
     this.className = className;
   }
 
   @Override
   public String toString() {
-    return "UMLClassNode{" +
-      "className='" + className + '\'' +
-      ", fields=" + fields +
-      ", methods=" + methods +
-      ", relationships=" + relationships +
-      '}';
+    return "UMLClassNode{"
+        + "className='"
+        + className
+        + '\''
+        + ", fields="
+        + fields
+        + ", methods="
+        + methods
+        + ", relationships="
+        + relationships
+        + '}';
   }
 
   // Inner classes for Field, Method, and Relationship
@@ -109,10 +117,7 @@ public class UMLClassNode {
 
     @Override
     public String toString() {
-      return "Field{" +
-        "type='" + type + '\'' +
-        ", name='" + name + '\'' +
-        '}';
+      return "Field{" + "type='" + type + '\'' + ", name='" + name + '\'' + '}';
     }
   }
 
@@ -160,8 +165,7 @@ public class UMLClassNode {
       return parameters;
     }
 
-    public void setParameters(List<Parameter> parameters) {
-    }
+    public void setParameters(List<Parameter> parameters) {}
 
     public boolean isOverloaded() {
       return isOverloaded;
@@ -169,12 +173,18 @@ public class UMLClassNode {
 
     @Override
     public String toString() {
-      return "Method{" +
-        "type='" + type + '\'' +
-        ", name='" + name + '\'' +
-        ", parameters=" + parameters +
-        ", isOverloaded=" + isOverloaded +
-        '}';
+      return "Method{"
+          + "type='"
+          + type
+          + '\''
+          + ", name='"
+          + name
+          + '\''
+          + ", parameters="
+          + parameters
+          + ", isOverloaded="
+          + isOverloaded
+          + '}';
     }
 
     public static class Parameter {
@@ -197,10 +207,7 @@ public class UMLClassNode {
 
       @Override
       public String toString() {
-        return "Parameter{" +
-          "type='" + type + '\'' +
-          ", name='" + name + '\'' +
-          '}';
+        return "Parameter{" + "type='" + type + '\'' + ", name='" + name + '\'' + '}';
       }
     }
   }
@@ -230,10 +237,7 @@ public class UMLClassNode {
 
     @Override
     public String toString() {
-      return "Relationship{" +
-        "type='" + type + '\'' +
-        ", target='" + target + '\'' +
-        '}';
+      return "Relationship{" + "type='" + type + '\'' + ", target='" + target + '\'' + '}';
     }
   }
 }

@@ -35,11 +35,14 @@ public class CommandResult {
 
   @Override
   public String toString() {
-    return "CommandResult{" +
-      "success=" + success +
-      ", message='" + message + '\'' +
-      (commandName != null ? ", commandName='" + commandName + '\'' : "") +
-      '}';
+    return "CommandResult{"
+        + "success="
+        + success
+        + ", message='"
+        + message
+        + '\''
+        + (commandName != null ? ", commandName='" + commandName + '\'' : "")
+        + '}';
   }
 
   // Static factory methods

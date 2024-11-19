@@ -15,11 +15,9 @@ import org.project.Model.UMLClassNode;
 
 public class MockClassNodeTDD {
 
-  @Mock
-  private UMLClassNode classNode; // Keep this as @Mock
+  @Mock private UMLClassNode classNode; // Keep this as @Mock
 
-  @InjectMocks
-  private ClassNodeService classNodeService; // Use @InjectMocks here only
+  @InjectMocks private ClassNodeService classNodeService; // Use @InjectMocks here only
 
   @BeforeEach
   public void setUp() {
@@ -31,7 +29,9 @@ public class MockClassNodeTDD {
   public void testCreateClassNode() {
     // Create JSON data as input for the service (you can replace {...} with actual values)
     Gson gson = new Gson();
-    JsonObject jsonData = gson.fromJson("""
+    JsonObject jsonData =
+        gson.fromJson(
+            """
       {
           "className": "ExampleClass",
           "fields": [
@@ -48,7 +48,8 @@ public class MockClassNodeTDD {
               {"type": "inheritance", "target": "ParentClass"}
           ]
       }
-      """, JsonObject.class);
+      """,
+            JsonObject.class);
 
     // Create a real instance of UMLClassNode with expected values for verification
     UMLClassNode expectedNode = classNodeService.createClassNodeFromJson(jsonData);
@@ -81,7 +82,9 @@ public class MockClassNodeTDD {
   public void visually_see_class_node() {
     // Set up JSON data to create an example UMLClassNode
     Gson gson = new Gson();
-    JsonObject jsonData = gson.fromJson("""
+    JsonObject jsonData =
+        gson.fromJson(
+            """
       {
           "className": "ExampleClass",
           "fields": [
@@ -98,7 +101,8 @@ public class MockClassNodeTDD {
               {"type": "inheritance", "target": "ParentClass"}
           ]
       }
-      """, JsonObject.class);
+      """,
+            JsonObject.class);
 
     // Create a UMLClassNode from JSON
     UMLClassNode node = classNodeService.createClassNodeFromJson(jsonData);

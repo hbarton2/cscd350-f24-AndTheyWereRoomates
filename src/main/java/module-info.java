@@ -1,6 +1,4 @@
-/**
- * minimum requirements for v3.0.56+
- */
+/** minimum requirements for v3.0.56+ */
 module org.project {
   requires javafx.controls;
   requires javafx.fxml;
@@ -17,8 +15,16 @@ module org.project {
   exports org.project.View;
   exports org.project.Memento;
 
-  opens org.project.Controller to javafx.fxml, com.google.gson;
-  opens org.project.Model to javafx.fxml, com.google.gson;
-  opens org.project.View to javafx.fxml, com.google.gson;
-  opens org.project.Memento to javafx.fxml, com.google.gson;
+  opens org.project.Controller to
+      javafx.fxml,
+      com.google.gson;
+  opens org.project.Model to
+      javafx.fxml,
+      com.google.gson;
+  opens org.project.View to
+      javafx.fxml,
+      com.google.gson;
+  opens org.project.Memento to
+      javafx.fxml,
+      com.google.gson;
 }
