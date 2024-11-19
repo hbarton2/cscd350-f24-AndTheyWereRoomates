@@ -1,6 +1,6 @@
 # UML Editor
 
-v3.3.72
+v4.3.72
 * How to read version # Version main branch_demo release_pull_request changes
 * What's New:
   * NEW CLI (Beta) Note to Grader <- grade this version
@@ -216,6 +216,9 @@ You can find tests under the src/test directory.
 
 - **[Maven Shade Plugin (3.6.0)](https://maven.apache.org/plugins/maven-shade-plugin/)**  
   Packages the project as an executable JAR with all dependencies included.
+
+- **[Spotless Maven Plugin (2.37.0)](https://github.com/diffplug/spotless/tree/main/plugin-maven)**
+  Ensures consistent code formatting for Java, JSON, and YAML files, adhering to Google Java Style.
 
 - **[JavaFX Maven Plugin (0.0.8)](https://github.com/openjfx/javafx-maven-plugin)**  
   Helps integrate JavaFX applications with Maven.
