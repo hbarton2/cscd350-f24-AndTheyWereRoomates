@@ -32,57 +32,45 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
+import org.project.Model.UMLClassNode;
 import org.project.View.ClassBox;
+import org.project.View.ClassBoxFactory;
 
 public class GUIViewController implements Initializable {
-
-  public Menu menubar;
-  public MenuItem loadButton;
-  public Button deleteClassButton;
-  public Button addClass;
-  public Button setClassName;
-  public Button renameFieldButton;
-  public Button addField;
-  public Button deleteField;
-  public Button addMethod;
-  public Button deleteMethod;
-  public Button renameMethodButton;
-  public Button addParameter;
-  public Button addRelationButton;
-  public Button deleteRelationButton;
+/*TODO: Add rename/delete button. Add return type for method creation(button). Fix drag bug for classBox.
+        When you create a class it should highlight the box and should clear textbox inputs
+ */
+  @FXML public Menu menubar;
+  @FXML public MenuItem loadButton;
+  @FXML public Button deleteClassButton;
+  @FXML public Button addClass;
+  @FXML public Button setClassName;
+  @FXML public Button renameFieldButton;
+  @FXML public Button addField;
+  @FXML public Button deleteField;
+  @FXML public Button deleteMethod;
+  @FXML public Button renameMethodButton;
+  @FXML public Button addParameter;
+  @FXML public Button addRelationButton;
+  @FXML public Button deleteRelationButton;
   @FXML private Pane canvas;
-
   @FXML private VBox inspectorPane;
-
   @FXML private Button toggleInspectorButton;
-
   @FXML private TextField classNameInput;
-
   @FXML private TextField fieldNameInput;
-
   @FXML private ComboBox<String> dataTypeComboBox;
-
   @FXML private TextField methodNameInput;
-
   @FXML private TextField parameterNameInput;
-
   @FXML private ComboBox<String> parameterTypeComboBox;
-
   @FXML private ComboBox<String> fromComboBox;
-
   @FXML private ComboBox<String> toComboBox;
-
   @FXML private ComboBox<String> relationshipTypeComboBox;
-
   @FXML private MenuBar menuBar;
-
   @FXML private MenuItem saveButton;
-
   @FXML private MenuItem openButton;
 
   private ClassBox selectedClassBox = null;
   private final CommandBridge commandBridge;
-  private final ClassNodeService classNodeService = new ClassNodeService();
   public UMLController umlController;
 
   FileChooser fileChooser = new FileChooser();
@@ -127,6 +115,7 @@ public class GUIViewController implements Initializable {
         inspectorValues[0].isEmpty()
             ? "New_Class_" + (canvas.getChildren().size() + 1)
             : inspectorValues[0];
+
     String fieldName = inspectorValues[1];
     String fieldType = inspectorValues[2];
     String methodName = inspectorValues[3];
@@ -134,10 +123,15 @@ public class GUIViewController implements Initializable {
     String parameterType = inspectorValues[5];
 
     CommandResult result = commandBridge.createClass(new String[] {className});
+
     if (result.isSuccess()) {
-      ClassBox classBox = new ClassBox(className);
+      result = commandBridge.addField(new String[]{fieldType, fieldName});
+      UMLClassNode umlClassNode = new UMLClassNode(className);
+
+      ClassBox classBox = ClassBoxFactory.createClassBox(umlClassNode);
       classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
+      // Create a method for canvas TODO
       // Calculate the center of the canvas
       double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
       double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
@@ -151,27 +145,6 @@ public class GUIViewController implements Initializable {
       dataTypeComboBox.getItems().add(classBox.getName());
       parameterTypeComboBox.getItems().add(classBox.getName());
       canvas.getChildren().add(classBox);
-
-      if (!fieldName.isEmpty() && fieldType != null) {
-        ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
-        fieldList.getItems().add(fieldType + " " + fieldName);
-        commandBridge.addField(
-            new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
-      }
-
-      if (!methodName.isEmpty()) {
-        ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
-        String formattedMethod = methodName + "()";
-        if (!parameterName.isEmpty() && parameterType != null) {
-          formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
-        }
-        methodList.getItems().add(formattedMethod);
-        commandBridge.addMethod(new String[] {"add", "method", classBox.getName(), methodName});
-      }
-
-      System.out.println("Class created: " + className);
-    } else {
-      showAlert("Class Creation Error", result.getMessage());
     }
   }
 
