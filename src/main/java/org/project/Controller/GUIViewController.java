@@ -32,14 +32,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
+import org.project.Model.Storage;
 import org.project.Model.UMLClassNode;
 import org.project.View.ClassBox;
 import org.project.View.ClassBoxFactory;
 
 public class GUIViewController implements Initializable {
-/*TODO: Add rename/delete button. Add return type for method creation(button). Fix drag bug for classBox.
-        When you create a class it should highlight the box and should clear textbox inputs
- */
+  /*TODO: Add rename/delete button. Add return type for method creation(button). Fix drag bug for classBox.
+         When you create a class it should highlight the box and should clear textbox inputs
+  */
   @FXML public Menu menubar;
   @FXML public MenuItem loadButton;
   @FXML public Button deleteClassButton;
@@ -53,6 +54,9 @@ public class GUIViewController implements Initializable {
   @FXML public Button addParameter;
   @FXML public Button addRelationButton;
   @FXML public Button deleteRelationButton;
+  @FXML public ComboBox<String> methodTypeComboBox;
+  @FXML public Button deleteParameter;
+  @FXML public Button renameParameter;
   @FXML private Pane canvas;
   @FXML private VBox inspectorPane;
   @FXML private Button toggleInspectorButton;
@@ -69,11 +73,15 @@ public class GUIViewController implements Initializable {
   @FXML private MenuItem saveButton;
   @FXML private MenuItem openButton;
 
+
   private ClassBox selectedClassBox = null;
   private final CommandBridge commandBridge;
   public UMLController umlController;
-
+  public  static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
+  private final static double CENTERX = 0.0;
+
+
 
   /**
    * This sets the default path to be the user's home directory.
@@ -99,9 +107,10 @@ public class GUIViewController implements Initializable {
     String fieldName = fieldNameInput.getText();
     String fieldType = dataTypeComboBox.getValue();
     String methodName = methodNameInput.getText();
+    String methodType = methodTypeComboBox.getValue();
     String parameterName = parameterNameInput.getText();
     String parameterType = parameterTypeComboBox.getValue();
-    return new String[] {className, fieldName, fieldType, methodName, parameterName, parameterType};
+    return new String[] {className, fieldName, fieldType, methodType,methodName, parameterName, parameterType};
   }
 
   /**
@@ -116,35 +125,36 @@ public class GUIViewController implements Initializable {
             ? "New_Class_" + (canvas.getChildren().size() + 1)
             : inspectorValues[0];
 
-    String fieldName = inspectorValues[1];
-    String fieldType = inspectorValues[2];
-    String methodName = inspectorValues[3];
-    String parameterName = inspectorValues[4];
-    String parameterType = inspectorValues[5];
 
-    CommandResult result = commandBridge.createClass(new String[] {className});
+    CommandResult result = commandBridge.createClass(new String[] {className});//Updates storage
 
     if (result.isSuccess()) {
-      result = commandBridge.addField(new String[]{fieldType, fieldName});
-      UMLClassNode umlClassNode = new UMLClassNode(className);
+       result = commandBridge.switchClass(new String[] {className});
 
-      ClassBox classBox = ClassBoxFactory.createClassBox(umlClassNode);
-      classBox.setOnMouseClicked(e -> selectClassBox(classBox));
+      if (result.isSuccess()) {
 
-      // Create a method for canvas TODO
-      // Calculate the center of the canvas
-      double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
-      double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+        ClassBox classBox =
+            ClassBoxFactory.createClassBox(
+                    CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
 
-      // Set the position of the classBox to the center of the canvas
-      classBox.setLayoutX(centerX);
-      classBox.setLayoutY(centerY);
+        classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-      fromComboBox.getItems().add(classBox.getName());
-      toComboBox.getItems().add(classBox.getName());
-      dataTypeComboBox.getItems().add(classBox.getName());
-      parameterTypeComboBox.getItems().add(classBox.getName());
-      canvas.getChildren().add(classBox);
+        // Calculate the center of the canvas
+        double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
+        double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+
+        // Set the position of the classBox to the center of the canvas
+        classBox.setLayoutX(centerX);
+        classBox.setLayoutY(centerY);
+
+        fromComboBox.getItems().add(classBox.getName());
+        toComboBox.getItems().add(classBox.getName());
+        dataTypeComboBox.getItems().add(classBox.getName());
+        parameterTypeComboBox.getItems().add(classBox.getName());
+        canvas.getChildren().add(classBox);
+      }
+      else{
+      showAlert("Error", result.getMessage());}
     }
   }
 
@@ -393,7 +403,7 @@ public class GUIViewController implements Initializable {
    * @param event - Representing the action that the button is clicked
    */
   @FXML
-  public void addParameter(ActionEvent event) {
+  public void handleAddParameter(ActionEvent event) {
     if (selectedClassBox != null) {
       ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
 
@@ -548,49 +558,24 @@ public class GUIViewController implements Initializable {
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
-    arrowHead
-        .getPoints()
-        .addAll(
-            -40.0, 0.0,
-            -20.0, -10.0,
-            0.0, 0.0,
-            -20.0, 10.0,
-            -40.0, 0.0);
-
+    ArrowStrategy arrows;
     switch (relationType) {
       case "Aggregation":
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.GRAY);
+        arrows = new AggregationArrow();
         break;
       case "Composition":
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.RED);
+        arrows = new CompositionArrow();
         break;
       case "Generalization":
-        arrowHead.getPoints().clear();
-        arrowHead
-            .getPoints()
-            .addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0);
-        arrowHead.setFill(Color.GRAY);
+        arrows = new GeneralizationArrow();
         break;
       case "Realization":
-        arrowHead.getPoints().clear();
-        arrowHead
-            .getPoints()
-            .addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0);
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.RED);
-        line.getStrokeDashArray().addAll(10.0, 10.0);
+        arrows = new RealizationArrow();
         break;
       default:
         return;
     }
+    arrows.drawArrow(arrowHead, line);
 
     arrowHead.layoutXProperty().bind(line.endXProperty());
     arrowHead.layoutYProperty().bind(line.endYProperty());
@@ -861,5 +846,17 @@ public class GUIViewController implements Initializable {
   }
 
   @FXML
-  public void onUndo(ActionEvent event) {}
+  public void onUndo(ActionEvent event) {
+
+  }
+
+  @FXML
+  public void handleDeleteParam(ActionEvent event) {
+
+  }
+
+  @FXML
+  public void handleRenameParam(ActionEvent event) {
+
+  }
 }

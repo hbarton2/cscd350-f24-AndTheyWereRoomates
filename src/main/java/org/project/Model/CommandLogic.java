@@ -18,7 +18,7 @@ import org.project.Memento.Memento;
 
 public class CommandLogic {
 
-  private final Storage storage = new Storage();
+  private static final Storage storage = Storage.getInstance();
 
   private UMLClassNode currentClass;
   private String loadedfileName = "";
@@ -47,7 +47,9 @@ public class CommandLogic {
   //  }
 
   // Store class names
-
+public static Storage getStorage() {
+    return storage;
+}
   public boolean classExists(String className) {
     return storage.containsNode(className);
   }
