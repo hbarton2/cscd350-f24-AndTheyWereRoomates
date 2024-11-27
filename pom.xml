@@ -65,6 +65,11 @@
       <artifactId>javafx-fxml</artifactId>
       <version>21.0.5</version>
     </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>21.0.5</version>
+    </dependency>
     <!-- JSON Parsing -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
