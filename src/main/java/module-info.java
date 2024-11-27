@@ -11,7 +11,7 @@ module org.project {
   requires org.jline;
   requires javafx.swing;
 
-    exports org.project.Controller;
+  exports org.project.Controller;
   exports org.project.Model;
   exports org.project.View;
   exports org.project.Memento;
@@ -21,7 +21,8 @@ module org.project {
       com.google.gson;
   opens org.project.Model to
       javafx.fxml,
-      com.google.gson;
+      com.google.gson,
+      javafx.swing;
   opens org.project.View to
       javafx.fxml,
       com.google.gson;
