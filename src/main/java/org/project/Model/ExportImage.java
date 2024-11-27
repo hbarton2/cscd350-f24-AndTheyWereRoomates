@@ -9,26 +9,21 @@ import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
-
-/** This is a temp file basically explaining how this works.
- * Unsure where to put this and considering GUI refactoring is happening soon.
- * This is to establish some semblance of starting image exporting
- * Gut this, rework this should you need to, and include this into the GUI code
- * And put this in recycling bin
- * Link to where I got this from: <a href="https://www.tutorialspoint.com/how-to-create-save-the-image-of-a-javafx-pie-chart-without-actually-showing-the-window">...</a>
- * */
-
-/** These Imports need to be brought over:
- * import javafx.embed.swing.SwingFXUtils;
- * import javafx.scene.Group;
- * import javafx.scene.Scene;
- * import javafx.scene.image.WritableImage;
+/**
+ * This is a temp file basically explaining how this works. Unsure where to put this and considering
+ * GUI refactoring is happening soon. This is to establish some semblance of starting image
+ * exporting Gut this, rework this should you need to, and include this into the GUI code And put
+ * this in recycling bin Link to where I got this from: <a
+ * href="https://www.tutorialspoint.com/how-to-create-save-the-image-of-a-javafx-pie-chart-without-actually-showing-the-window">...</a>
  */
 
+/**
+ * These Imports need to be brought over: import javafx.embed.swing.SwingFXUtils; import
+ * javafx.scene.Group; import javafx.scene.Scene; import javafx.scene.image.WritableImage;
+ */
 public class ExportImage {
 
   public void start(Stage stage) throws IOException {
-
 
     /*Sets the stage being made. Parent Root, and the size of the canvas (Length, Width) */
     Scene scene = new Scene(new Group(), 595, 400);

@@ -21,8 +21,7 @@ module org.project {
       com.google.gson;
   opens org.project.Model to
       javafx.fxml,
-      com.google.gson,
-      javafx.swing;
+      com.google.gson;
   opens org.project.View to
       javafx.fxml,
       com.google.gson;
