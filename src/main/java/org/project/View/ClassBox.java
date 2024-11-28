@@ -69,4 +69,12 @@ public class ClassBox extends VBox {
   public void setyCoordinate(double ycoor) {
     this.yCoordinate = ycoor;
   }
+
+  public double getxCoordinate() {
+    return this.xCoordinate;
+  }
+
+  public double getyCoordinate() {
+    return this.yCoordinate;
+  }
 }

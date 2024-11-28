@@ -3,8 +3,7 @@ package org.project.Controller;
 import com.google.gson.Gson;
 import java.io.File;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
@@ -32,60 +31,53 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
+import org.project.Model.Storage;
+import org.project.Model.UMLClassNode;
 import org.project.View.ClassBox;
+import org.project.View.ClassBoxFactory;
 
 public class GUIViewController implements Initializable {
-
-  public Menu menubar;
-  public MenuItem loadButton;
-  public Button deleteClassButton;
-  public Button addClass;
-  public Button setClassName;
-  public Button renameFieldButton;
-  public Button addField;
-  public Button deleteField;
-  public Button addMethod;
-  public Button deleteMethod;
-  public Button renameMethodButton;
-  public Button addParameter;
-  public Button addRelationButton;
-  public Button deleteRelationButton;
+  @FXML public Menu menubar;
+  @FXML public MenuItem loadButton;
+  @FXML public Button deleteClassButton;
+  @FXML public Button addClass;
+  @FXML public Button setClassName;
+  @FXML public Button renameFieldButton;
+  @FXML public Button addField;
+  @FXML public Button deleteField;
+  @FXML public Button deleteMethod;
+  @FXML public Button renameMethodButton;
+  @FXML public Button addParameter;
+  @FXML public Button addRelationButton;
+  @FXML public Button deleteRelationButton;
+  @FXML public ComboBox<String> methodTypeComboBox;
+  @FXML public Button deleteParameter;
+  @FXML public Button renameParameter;
   @FXML private Pane canvas;
-
   @FXML private VBox inspectorPane;
-
   @FXML private Button toggleInspectorButton;
-
   @FXML private TextField classNameInput;
-
   @FXML private TextField fieldNameInput;
-
   @FXML private ComboBox<String> dataTypeComboBox;
-
   @FXML private TextField methodNameInput;
-
   @FXML private TextField parameterNameInput;
-
   @FXML private ComboBox<String> parameterTypeComboBox;
-
   @FXML private ComboBox<String> fromComboBox;
-
   @FXML private ComboBox<String> toComboBox;
-
   @FXML private ComboBox<String> relationshipTypeComboBox;
-
   @FXML private MenuBar menuBar;
-
   @FXML private MenuItem saveButton;
-
   @FXML private MenuItem openButton;
+  private final ObservableClass observableClass = new ObservableClass();
+  private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
+  private final TreeMap<String, double[]> classBoxPositions = new TreeMap<>();
 
   private ClassBox selectedClassBox = null;
   private final CommandBridge commandBridge;
-  private final ClassNodeService classNodeService = new ClassNodeService();
   public UMLController umlController;
-
+  public static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
+  ;
 
   /**
    * This sets the default path to be the user's home directory.
@@ -99,6 +91,18 @@ public class GUIViewController implements Initializable {
     fileChooser.setInitialDirectory(new File(home));
 
     canvas.setStyle("-fx-background-color: black;");
+    List<ComboBox<String>> comboBoxList =
+        Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
+    List<ComboBox<String>> classOnlyBoxes = Arrays.asList(fromComboBox, toComboBox);
+    ComboBoxObserver comboBoxObserver =
+        new ComboBoxObserver(comboBoxList, observableClass, defaultTypes);
+    ComboBoxObserver classOnlyObserver =
+        new ComboBoxObserver(classOnlyBoxes, observableClass, null);
+    observableClass.addObserver(comboBoxObserver);
+    observableClass.addObserver(classOnlyObserver);
+    for (ComboBox<String> comboBox : comboBoxList) {
+      comboBox.getItems().addAll(defaultTypes);
+    }
   }
 
   public GUIViewController() {
@@ -111,9 +115,12 @@ public class GUIViewController implements Initializable {
     String fieldName = fieldNameInput.getText();
     String fieldType = dataTypeComboBox.getValue();
     String methodName = methodNameInput.getText();
+    String methodType = methodTypeComboBox.getValue();
     String parameterName = parameterNameInput.getText();
     String parameterType = parameterTypeComboBox.getValue();
-    return new String[] {className, fieldName, fieldType, methodName, parameterName, parameterType};
+    return new String[] {
+      className, fieldName, fieldType, methodType, methodName, parameterName, parameterType
+    };
   }
 
   /**
@@ -127,51 +134,39 @@ public class GUIViewController implements Initializable {
         inspectorValues[0].isEmpty()
             ? "New_Class_" + (canvas.getChildren().size() + 1)
             : inspectorValues[0];
-    String fieldName = inspectorValues[1];
-    String fieldType = inspectorValues[2];
-    String methodName = inspectorValues[3];
-    String parameterName = inspectorValues[4];
-    String parameterType = inspectorValues[5];
 
-    CommandResult result = commandBridge.createClass(new String[] {className});
+    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+
     if (result.isSuccess()) {
-      ClassBox classBox = new ClassBox(className);
-      classBox.setOnMouseClicked(e -> selectClassBox(classBox));
+      result = commandBridge.switchClass(new String[] {className});
 
-      // Calculate the center of the canvas
-      double centerX = (canvas.getWidth() - classBox.getPrefWidth()) / 2;
-      double centerY = (canvas.getHeight() - classBox.getPrefHeight()) / 2;
+      if (result.isSuccess()) {
 
-      // Set the position of the classBox to the center of the canvas
-      classBox.setLayoutX(centerX);
-      classBox.setLayoutY(centerY);
+        ClassBox classBox =
+            ClassBoxFactory.createClassBox(
+                CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
 
-      fromComboBox.getItems().add(classBox.getName());
-      toComboBox.getItems().add(classBox.getName());
-      dataTypeComboBox.getItems().add(classBox.getName());
-      parameterTypeComboBox.getItems().add(classBox.getName());
-      canvas.getChildren().add(classBox);
+        classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
-      if (!fieldName.isEmpty() && fieldType != null) {
-        ListView<String> fieldList = (ListView<String>) classBox.getChildren().get(1);
-        fieldList.getItems().add(fieldType + " " + fieldName);
-        commandBridge.addField(
-            new String[] {"add", "field", classBox.getName(), fieldName, fieldType});
+        int numberOfClasses =
+            (int) canvas.getChildren().stream().filter(node -> node instanceof ClassBox).count();
+        double spacing = 20.0;
+        double offsetX = (numberOfClasses % 5) * (classBox.getPrefWidth() + spacing);
+        double offsetY = (numberOfClasses / 5) * (classBox.getPrefHeight() + spacing);
+        double startX = 50.0; // Starting X position
+        double startY = 50.0; // Starting Y position
+        classBox.setLayoutX(startX + offsetX);
+        classBox.setLayoutY(startY + offsetY);
+
+        classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
+        DraggableMaker draggableMaker = new DraggableMaker();
+        draggableMaker.makeDraggable(classBox, classBoxPositions, className);
+
+        canvas.getChildren().add(classBox);
+        observableClass.addClassBox(classBox);
+      } else {
+        showAlert("Error", result.getMessage());
       }
-
-      if (!methodName.isEmpty()) {
-        ListView<String> methodList = (ListView<String>) classBox.getChildren().get(2);
-        String formattedMethod = methodName + "()";
-        if (!parameterName.isEmpty() && parameterType != null) {
-          formattedMethod = methodName + "(" + parameterType + " " + parameterName + ")";
-        }
-        methodList.getItems().add(formattedMethod);
-        commandBridge.addMethod(new String[] {"add", "method", classBox.getName(), methodName});
-      }
-
-      System.out.println("Class created: " + className);
-    } else {
-      showAlert("Class Creation Error", result.getMessage());
     }
   }
 
@@ -202,14 +197,10 @@ public class GUIViewController implements Initializable {
 
         // GUI update
         canvas.getChildren().remove(selectedClassBox);
+        observableClass.removeClasBox(selectedClassBox);
         selectedClassBox = null;
-
-        fromComboBox.getItems().remove(classNameRemove);
-        toComboBox.getItems().remove(classNameRemove);
-        dataTypeComboBox.getItems().remove(classNameRemove);
-        parameterTypeComboBox.getItems().remove(classNameRemove);
-
         classNameInput.clear();
+
       } else {
         showAlert("Class Deletion Error", result.getMessage());
       }
@@ -420,7 +411,7 @@ public class GUIViewController implements Initializable {
    * @param event - Representing the action that the button is clicked
    */
   @FXML
-  public void addParameter(ActionEvent event) {
+  public void handleAddParameter(ActionEvent event) {
     if (selectedClassBox != null) {
       ListView<String> methodList = (ListView<String>) selectedClassBox.getChildren().get(2);
 
@@ -575,49 +566,24 @@ public class GUIViewController implements Initializable {
     Polygon arrowHead = new Polygon();
     arrowHead.setId(relationshipId);
 
-    arrowHead
-        .getPoints()
-        .addAll(
-            -40.0, 0.0,
-            -20.0, -10.0,
-            0.0, 0.0,
-            -20.0, 10.0,
-            -40.0, 0.0);
-
+    ArrowStrategy arrows;
     switch (relationType) {
       case "Aggregation":
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.GRAY);
+        arrows = new AggregationArrow();
         break;
       case "Composition":
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.RED);
+        arrows = new CompositionArrow();
         break;
       case "Generalization":
-        arrowHead.getPoints().clear();
-        arrowHead
-            .getPoints()
-            .addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0);
-        arrowHead.setFill(Color.GRAY);
+        arrows = new GeneralizationArrow();
         break;
       case "Realization":
-        arrowHead.getPoints().clear();
-        arrowHead
-            .getPoints()
-            .addAll(
-                -20.0, 10.0,
-                0.0, 0.0,
-                -20.0, -10.0);
-        arrowHead.setStroke(Color.WHITE);
-        arrowHead.setFill(Color.RED);
-        line.getStrokeDashArray().addAll(10.0, 10.0);
+        arrows = new RealizationArrow();
         break;
       default:
         return;
     }
+    arrows.drawArrow(arrowHead, line);
 
     arrowHead.layoutXProperty().bind(line.endXProperty());
     arrowHead.layoutYProperty().bind(line.endYProperty());
@@ -876,17 +842,49 @@ public class GUIViewController implements Initializable {
 
   @FXML
   public void onRedo(ActionEvent event) {
-    /*CommandResult result = commandBridge.undo(new String[0]);
+    CommandResult result = commandBridge.redo();
     if (result.isSuccess()) {
-      //refreshCanvas();
-      showAlert("Undo", "Action successfully undone.");
+      refreshCanvas();
     } else {
-      showAlert("Undo Failed", result.getMessage());
+      showAlert("Redo Failed", result.getMessage());
     }
-    */
-
   }
 
   @FXML
-  public void onUndo(ActionEvent event) {}
+  public void onUndo(ActionEvent event) {
+    CommandResult result = commandBridge.undo();
+    if (result.isSuccess()) {
+      refreshCanvas(); // Refresh the UI to reflect the restored state
+    } else {
+      showAlert("Redo Failed", result.getMessage());
+    }
+  }
+
+  private void refreshCanvas() {
+    canvas.getChildren().clear();
+
+    for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
+      String className = classNode.getClassName();
+      ClassBox classBox = ClassBoxFactory.createClassBox(classNode, commandBridge);
+      classBox.setOnMouseClicked(e -> selectClassBox(classBox));
+      double[] position = classBoxPositions.getOrDefault(className, new double[] {50.0, 50.0});
+      classBox.setLayoutX(position[0]);
+      classBox.setLayoutY(position[1]);
+      DraggableMaker draggableMaker = new DraggableMaker();
+      draggableMaker.makeDraggable(classBox, classBoxPositions, className);
+      observableClass.addClassBox(classBox);
+      canvas.getChildren().add(classBox);
+      observableClass.removeClasBox(classBox);
+    }
+  }
+
+  @FXML
+  public void handleDeleteParam(ActionEvent event) {}
+
+  @FXML
+  public void handleRenameParam(ActionEvent event) {}
+
+  public void newProjectHandler(ActionEvent event) {
+    canvas.getChildren().clear();
+  }
 }

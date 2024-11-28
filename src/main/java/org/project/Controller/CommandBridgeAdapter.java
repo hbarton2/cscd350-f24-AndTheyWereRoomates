@@ -2,6 +2,7 @@ package org.project.Controller;
 
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
+import org.project.Model.Storage;
 
 public class CommandBridgeAdapter implements CommandBridge {
 
@@ -143,5 +144,9 @@ public class CommandBridgeAdapter implements CommandBridge {
   @Override
   public CommandResult exit(String[] args) {
     return commandRegistries.exit(args);
+  }
+
+  public Storage getStorage() {
+    return CommandLogic.getStorage();
   }
 }

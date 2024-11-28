@@ -18,7 +18,7 @@ import org.project.Memento.Memento;
 
 public class CommandLogic {
 
-  private final Storage storage = new Storage();
+  private static final Storage storage = Storage.getInstance();
 
   private UMLClassNode currentClass;
   private String loadedfileName = "";
@@ -47,6 +47,9 @@ public class CommandLogic {
   //  }
 
   // Store class names
+  public static Storage getStorage() {
+    return storage;
+  }
 
   public boolean classExists(String className) {
     return storage.containsNode(className);
@@ -175,8 +178,6 @@ public class CommandLogic {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
     currentClass = storage.getNode(args[0]);
-    saveState(new String[] {});
-
     return CommandResult.success("Class Switched to: " + args[0]);
   }
 
