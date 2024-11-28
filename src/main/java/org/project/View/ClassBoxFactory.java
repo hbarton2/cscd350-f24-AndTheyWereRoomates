@@ -58,6 +58,4 @@ public class ClassBoxFactory {
 
     return classBox;
   }
-
-
 }

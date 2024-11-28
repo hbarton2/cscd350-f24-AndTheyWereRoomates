@@ -46,7 +46,6 @@ public class CommandLogic {
   //    return CommandResult.success("Class created: " + className);
   //  }
 
-
   // Store class names
   public static Storage getStorage() {
     return storage;

@@ -4,5 +4,5 @@ import org.project.View.ClassBox;
 
 public interface ObserverInterface {
 
-    void update(ClassBox selectedClassBox);
+  void update(ClassBox selectedClassBox);
 }

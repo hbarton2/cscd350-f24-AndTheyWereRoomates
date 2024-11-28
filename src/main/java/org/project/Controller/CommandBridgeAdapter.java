@@ -149,6 +149,4 @@ public class CommandBridgeAdapter implements CommandBridge {
   public Storage getStorage() {
     return CommandLogic.getStorage();
   }
-  
-
 }

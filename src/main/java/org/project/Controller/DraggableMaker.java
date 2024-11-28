@@ -1,8 +1,7 @@
 package org.project.Controller;
 
-import javafx.scene.Node;
-
 import java.util.TreeMap;
+import javafx.scene.Node;
 
 /** This provides functionality to make a JavaFx Node draggable. */
 public class DraggableMaker {
@@ -28,20 +27,21 @@ public class DraggableMaker {
           node.setLayoutY(mouseEvent.getSceneY() - mouseAnchorY);
         });
   }
-    public void makeDraggable(Node node, TreeMap<String, double[]> nodePositions, String nodeName) {
-        node.setOnMousePressed(
-                e -> {
-                    mouseAnchorX = e.getX();
-                    mouseAnchorY = e.getY();
-                });
-        node.setOnMouseDragged(
-                mouseEvent -> {
-                    double newX = mouseEvent.getSceneX() - mouseAnchorX;
-                    double newY = mouseEvent.getSceneY() - mouseAnchorY;
-                    node.setLayoutX(newX);
-                    node.setLayoutY(newY);
-                    // Update the position in the TreeMap
-                    nodePositions.put(nodeName, new double[] {newX, newY});
-                });
-    }
+
+  public void makeDraggable(Node node, TreeMap<String, double[]> nodePositions, String nodeName) {
+    node.setOnMousePressed(
+        e -> {
+          mouseAnchorX = e.getX();
+          mouseAnchorY = e.getY();
+        });
+    node.setOnMouseDragged(
+        mouseEvent -> {
+          double newX = mouseEvent.getSceneX() - mouseAnchorX;
+          double newY = mouseEvent.getSceneY() - mouseAnchorY;
+          node.setLayoutX(newX);
+          node.setLayoutY(newY);
+          // Update the position in the TreeMap
+          nodePositions.put(nodeName, new double[] {newX, newY});
+        });
+  }
 }

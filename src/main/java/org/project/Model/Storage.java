@@ -74,5 +74,4 @@ public class Storage {
   public void clearStorage() {
     storage.clear();
   }
-
 }

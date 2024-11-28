@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
@@ -37,7 +36,7 @@ import org.project.Model.UMLClassNode;
 import org.project.View.ClassBox;
 import org.project.View.ClassBoxFactory;
 
-public class GUIViewController implements Initializable{
+public class GUIViewController implements Initializable {
   @FXML public Menu menubar;
   @FXML public MenuItem loadButton;
   @FXML public Button deleteClassButton;
@@ -77,7 +76,8 @@ public class GUIViewController implements Initializable{
   private final CommandBridge commandBridge;
   public UMLController umlController;
   public static final Storage storage = Storage.getInstance();
-  FileChooser fileChooser = new FileChooser();;
+  FileChooser fileChooser = new FileChooser();
+  ;
 
   /**
    * This sets the default path to be the user's home directory.
@@ -87,17 +87,17 @@ public class GUIViewController implements Initializable{
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    String home = System.getProperty("user.home");// This could be changed later
+    String home = System.getProperty("user.home"); // This could be changed later
     fileChooser.setInitialDirectory(new File(home));
 
     canvas.setStyle("-fx-background-color: black;");
     List<ComboBox<String>> comboBoxList =
-            Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
+        Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
     List<ComboBox<String>> classOnlyBoxes = Arrays.asList(fromComboBox, toComboBox);
     ComboBoxObserver comboBoxObserver =
-            new ComboBoxObserver(comboBoxList, observableClass, defaultTypes);
+        new ComboBoxObserver(comboBoxList, observableClass, defaultTypes);
     ComboBoxObserver classOnlyObserver =
-            new ComboBoxObserver(classOnlyBoxes, observableClass, null);
+        new ComboBoxObserver(classOnlyBoxes, observableClass, null);
     observableClass.addObserver(comboBoxObserver);
     observableClass.addObserver(classOnlyObserver);
     for (ComboBox<String> comboBox : comboBoxList) {
@@ -149,7 +149,7 @@ public class GUIViewController implements Initializable{
         classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
         int numberOfClasses =
-                (int) canvas.getChildren().stream().filter(node -> node instanceof ClassBox).count();
+            (int) canvas.getChildren().stream().filter(node -> node instanceof ClassBox).count();
         double spacing = 20.0;
         double offsetX = (numberOfClasses % 5) * (classBox.getPrefWidth() + spacing);
         double offsetY = (numberOfClasses / 5) * (classBox.getPrefHeight() + spacing);
@@ -158,7 +158,7 @@ public class GUIViewController implements Initializable{
         classBox.setLayoutX(startX + offsetX);
         classBox.setLayoutY(startY + offsetY);
 
-        classBoxPositions.put(className, new double[] {startX + offsetX, startY+ offsetY});
+        classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
         DraggableMaker draggableMaker = new DraggableMaker();
         draggableMaker.makeDraggable(classBox, classBoxPositions, className);
 
@@ -848,7 +848,6 @@ public class GUIViewController implements Initializable{
     } else {
       showAlert("Redo Failed", result.getMessage());
     }
-
   }
 
   @FXML
@@ -860,6 +859,7 @@ public class GUIViewController implements Initializable{
       showAlert("Redo Failed", result.getMessage());
     }
   }
+
   private void refreshCanvas() {
     canvas.getChildren().clear();
 
