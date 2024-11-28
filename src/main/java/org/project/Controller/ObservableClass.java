@@ -27,7 +27,6 @@ public class ObservableClass {
         notifyObservers();
     }
 
-
     public void setSelectedClassBox(ClassBox classBox) {
         this.selectedClassBox = classBox;
         notifyObservers();

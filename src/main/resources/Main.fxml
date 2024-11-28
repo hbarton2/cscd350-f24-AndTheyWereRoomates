@@ -21,6 +21,7 @@
   <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <Menu fx:id="menubar" mnemonicParsing="false" text="File">
       <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…" />
+         <MenuItem fx:id="newProjectButton" mnemonicParsing="false" onAction="#newProjectHandler" text="New Project" />
       <SeparatorMenuItem mnemonicParsing="false" />
       <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save" />
       <MenuItem fx:id="loadButton" mnemonicParsing="false" onAction="#onLoad" text="Load" />
@@ -44,7 +45,7 @@
     <Button fx:id="toggleInspectorButton" onAction="#toggleInspector" style="-fx-font-weight: bold;" text="Hide" />
   </HBox>
 
-  <VBox fx:id="inspectorPane" layoutX="567.0" layoutY="76.0" prefWidth="250.0" spacing="8.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="76.0">
+  <VBox fx:id="inspectorPane" layoutX="1120.0" layoutY="92.0" prefWidth="250.0" spacing="8.0" style="-fx-background-color: #f0f0f0; -fx-padding: 10;" AnchorPane.bottomAnchor="-2.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="92.0">
 
     <Label text="Class Name:" />
     <TextField fx:id="classNameInput" promptText="Enter class name" />
@@ -56,10 +57,7 @@
       <ComboBox fx:id="dataTypeComboBox" prefWidth="100" promptText="Type">
         <items>
           <FXCollections fx:factory="observableArrayList">
-            <String fx:value="Int" />
-            <String fx:value="String" />
-            <String fx:value="Double" />
-            <String fx:value="Boolean" />
+
           </FXCollections>
         </items>
       </ComboBox>
@@ -77,10 +75,7 @@
             <ComboBox fx:id="methodTypeComboBox" prefHeight="26.0" prefWidth="91.0" promptText="Type">
             <items>
               <FXCollections fx:factory="observableArrayList">
-              <String fx:value="Int" />
-              <String fx:value="String"/>
-              <String fx:value="Boolean"/>
-              <String fx:value="Double" />
+
               </FXCollections>
             </items>
             </ComboBox>
@@ -119,10 +114,14 @@
 
     <Label text="Relationship:" />
     <HBox spacing="5.0">
-      <ComboBox fx:id="fromComboBox" prefWidth="110" promptText="From" />
-      <ComboBox fx:id="toComboBox" prefWidth="110" promptText="To" />
+      <ComboBox fx:id="fromComboBox" prefHeight="25.0" prefWidth="244.0" promptText="From" />
     </HBox>
-    <ComboBox fx:id="relationshipTypeComboBox" prefWidth="225" promptText="Type">
+      <HBox prefHeight="26.0" prefWidth="230.0">
+         <children>
+         <ComboBox fx:id="toComboBox" prefHeight="25.0" prefWidth="231.0" promptText="To" />
+         </children>
+      </HBox>
+    <ComboBox fx:id="relationshipTypeComboBox" prefHeight="25.0" prefWidth="243.0" promptText="Type">
       <items>
         <FXCollections fx:factory="observableArrayList">
           <String fx:value="Aggregation" />

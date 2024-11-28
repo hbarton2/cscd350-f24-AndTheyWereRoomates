@@ -179,7 +179,6 @@ public class CommandLogic {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
     currentClass = storage.getNode(args[0]);
-
     return CommandResult.success("Class Switched to: " + args[0]);
   }
 
