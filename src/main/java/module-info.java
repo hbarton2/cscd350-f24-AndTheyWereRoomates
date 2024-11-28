@@ -9,6 +9,7 @@ module org.project {
   requires org.apache.lucene.core;
   requires java.logging;
   requires org.jline;
+  requires javafx.swing;
 
   exports org.project.Controller;
   exports org.project.Model;
