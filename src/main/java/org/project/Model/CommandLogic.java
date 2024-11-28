@@ -46,10 +46,12 @@ public class CommandLogic {
   //    return CommandResult.success("Class created: " + className);
   //  }
 
+
   // Store class names
-public static Storage getStorage() {
+  public static Storage getStorage() {
     return storage;
-}
+  }
+
   public boolean classExists(String className) {
     return storage.containsNode(className);
   }
@@ -177,7 +179,6 @@ public static Storage getStorage() {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
     currentClass = storage.getNode(args[0]);
-    saveState(new String[] {});
 
     return CommandResult.success("Class Switched to: " + args[0]);
   }

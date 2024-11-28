@@ -98,10 +98,6 @@
       <ComboBox fx:id="parameterTypeComboBox" prefHeight="26.0" prefWidth="77.0" promptText="Type">
         <items>
           <FXCollections fx:factory="observableArrayList">
-            <String fx:value="Int" />
-            <String fx:value="String" />
-            <String fx:value="Double" />
-            <String fx:value="Boolean" />
           </FXCollections>
         </items>
       </ComboBox>

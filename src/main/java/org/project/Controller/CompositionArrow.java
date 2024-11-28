@@ -6,21 +6,22 @@ import javafx.scene.shape.Polygon;
 
 public class CompositionArrow implements ArrowStrategy {
 
-    @Override
-    public void drawArrow(Polygon arrowHead, Line line) {
-        arrowHead.getPoints().clear();
-        arrowHead.getPoints().addAll(
-                -40.0, 0.0,
-                -20.0, -10.0,
-                0.0, 0.0,
-                -20.0, 10.0,
-                -40.0, 0.0
-        );
+  @Override
+  public void drawArrow(Polygon arrowHead, Line line) {
+    arrowHead.getPoints().clear();
+    arrowHead
+        .getPoints()
+        .addAll(
+            -40.0, 0.0,
+            -20.0, -10.0,
+            0.0, 0.0,
+            -20.0, 10.0,
+            -40.0, 0.0);
 
-        arrowHead.setFill(Color.RED);
-        arrowHead.setStroke(Color.WHITE);
+    arrowHead.setFill(Color.RED);
+    arrowHead.setStroke(Color.WHITE);
 
-        line.setStroke(Color.WHITE);
-        line.setStrokeWidth(2.0);
-    }
+    line.setStroke(Color.WHITE);
+    line.setStrokeWidth(2.0);
+  }
 }

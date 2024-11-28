@@ -3,6 +3,8 @@ package org.project.Controller;
 import com.google.gson.Gson;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -38,9 +40,6 @@ import org.project.View.ClassBox;
 import org.project.View.ClassBoxFactory;
 
 public class GUIViewController implements Initializable {
-  /*TODO: Add rename/delete button. Add return type for method creation(button). Fix drag bug for classBox.
-         When you create a class it should highlight the box and should clear textbox inputs
-  */
   @FXML public Menu menubar;
   @FXML public MenuItem loadButton;
   @FXML public Button deleteClassButton;
@@ -72,16 +71,14 @@ public class GUIViewController implements Initializable {
   @FXML private MenuBar menuBar;
   @FXML private MenuItem saveButton;
   @FXML private MenuItem openButton;
-
+  private final ObservableClass observableClass = new ObservableClass();
+  private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
 
   private ClassBox selectedClassBox = null;
   private final CommandBridge commandBridge;
   public UMLController umlController;
-  public  static final Storage storage = Storage.getInstance();
-  FileChooser fileChooser = new FileChooser();
-  private final static double CENTERX = 0.0;
-
-
+  public static final Storage storage = Storage.getInstance();
+  FileChooser fileChooser = new FileChooser();;
 
   /**
    * This sets the default path to be the user's home directory.
@@ -91,7 +88,7 @@ public class GUIViewController implements Initializable {
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    String home = System.getProperty("user.home"); // This could be changed later
+    String home = System.getProperty("user.home");// This could be changed later
     fileChooser.setInitialDirectory(new File(home));
 
     canvas.setStyle("-fx-background-color: black;");
@@ -110,7 +107,9 @@ public class GUIViewController implements Initializable {
     String methodType = methodTypeComboBox.getValue();
     String parameterName = parameterNameInput.getText();
     String parameterType = parameterTypeComboBox.getValue();
-    return new String[] {className, fieldName, fieldType, methodType,methodName, parameterName, parameterType};
+    return new String[] {
+      className, fieldName, fieldType, methodType, methodName, parameterName, parameterType
+    };
   }
 
   /**
@@ -125,17 +124,16 @@ public class GUIViewController implements Initializable {
             ? "New_Class_" + (canvas.getChildren().size() + 1)
             : inspectorValues[0];
 
-
-    CommandResult result = commandBridge.createClass(new String[] {className});//Updates storage
+    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
 
     if (result.isSuccess()) {
-       result = commandBridge.switchClass(new String[] {className});
+      result = commandBridge.switchClass(new String[] {className});
 
       if (result.isSuccess()) {
 
         ClassBox classBox =
             ClassBoxFactory.createClassBox(
-                    CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
+                CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
 
         classBox.setOnMouseClicked(e -> selectClassBox(classBox));
 
@@ -147,14 +145,11 @@ public class GUIViewController implements Initializable {
         classBox.setLayoutX(centerX);
         classBox.setLayoutY(centerY);
 
-        fromComboBox.getItems().add(classBox.getName());
-        toComboBox.getItems().add(classBox.getName());
-        dataTypeComboBox.getItems().add(classBox.getName());
-        parameterTypeComboBox.getItems().add(classBox.getName());
         canvas.getChildren().add(classBox);
+        observableClass.addClassBox(classBox);
+      } else {
+        showAlert("Error", result.getMessage());
       }
-      else{
-      showAlert("Error", result.getMessage());}
     }
   }
 
@@ -187,12 +182,8 @@ public class GUIViewController implements Initializable {
         canvas.getChildren().remove(selectedClassBox);
         selectedClassBox = null;
 
-        fromComboBox.getItems().remove(classNameRemove);
-        toComboBox.getItems().remove(classNameRemove);
-        dataTypeComboBox.getItems().remove(classNameRemove);
-        parameterTypeComboBox.getItems().remove(classNameRemove);
-
         classNameInput.clear();
+        observableClass.removeClasBox(selectedClassBox);
       } else {
         showAlert("Class Deletion Error", result.getMessage());
       }
@@ -847,16 +838,17 @@ public class GUIViewController implements Initializable {
 
   @FXML
   public void onUndo(ActionEvent event) {
-
+    CommandResult result = commandBridge.undo();
+    if (result.isSuccess()) {
+      refreshCanvas(); // Refresh the UI to reflect the restored state
+    } else {
+      showAlert("Redo Failed", result.getMessage());
+    }
   }
 
   @FXML
-  public void handleDeleteParam(ActionEvent event) {
-
-  }
+  public void handleDeleteParam(ActionEvent event) {}
 
   @FXML
-  public void handleRenameParam(ActionEvent event) {
-
-  }
+  public void handleRenameParam(ActionEvent event) {}
 }

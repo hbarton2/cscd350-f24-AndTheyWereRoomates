@@ -61,12 +61,16 @@ public class ClassBox extends VBox {
   public String getName() {
     return this.classNameLabel.getText();
   }
-
   public void setxCoordinate(double xcoor) {
     this.xCoordinate = xcoor;
   }
-
   public void setyCoordinate(double ycoor) {
     this.yCoordinate = ycoor;
+  }
+  public double getxCoordinate() {
+    return this.xCoordinate;
+  }
+  public double getyCoordinate() {
+    return this.yCoordinate;
   }
 }

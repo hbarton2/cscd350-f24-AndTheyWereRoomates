@@ -146,5 +146,9 @@ public class CommandBridgeAdapter implements CommandBridge {
     return commandRegistries.exit(args);
   }
 
-  public Storage getStorage() {return CommandLogic.getStorage();}
+  public Storage getStorage() {
+    return CommandLogic.getStorage();
+  }
+  
+
 }
