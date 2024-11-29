@@ -2,6 +2,8 @@ package org.project.View;
 
 import java.io.IOException;
 import java.util.List;
+import javafx.application.Platform;
+import javafx.scene.control.TextArea;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -14,11 +16,12 @@ public class CommandLineTerminal {
 
   private final CommandParser commandParser;
   private final LineReader lineReader;
+  private final TextArea terminalArea;
   private boolean running = true;
 
-  public CommandLineTerminal(CommandRegistries commands) throws IOException {
-    // Initialize CommandParser
+  public CommandLineTerminal(CommandRegistries commands, TextArea terminalArea) throws IOException {
     this.commandParser = new CommandParser(commands);
+    this.terminalArea = terminalArea;
 
     // Initialize JLine Terminal
     org.jline.terminal.Terminal terminal = TerminalBuilder.builder().system(true).build();
@@ -35,23 +38,22 @@ public class CommandLineTerminal {
   }
 
   public void launch() {
-    System.out.println("Welcome to the UML Editor CLI.");
-    System.out.println("Type 'help' to see available commands, or 'exit' to quit.");
+    appendToTerminal("Welcome to the UML Editor CLI.\n");
+    appendToTerminal("Type 'help' to see available commands, or 'exit' to quit.\n");
 
     while (running) {
       try {
-        // Read input from JLine with autocomplete
         String rawInput = lineReader.readLine("$ ");
-        String sanitizedInput = sanitizeInput(rawInput); // Sanitize input
+        String sanitizedInput = sanitizeInput(rawInput);
         processCommand(sanitizedInput);
       } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
+        appendToTerminal("Error: " + e.getMessage() + "\n");
       }
     }
   }
 
   private void processCommand(String input) {
-    input = sanitizeInput(input); // Remove escape characters
+    input = sanitizeInput(input);
 
     switch (input.toLowerCase()) {
       case "exit" -> handleExitCommand();
@@ -68,21 +70,21 @@ public class CommandLineTerminal {
   }
 
   private void handleExitCommand() {
-    System.out.println("Terminating Application...");
+    appendToTerminal("Terminating Application...\n");
     running = false;
   }
 
   private void handleHelpCommand() {
-    System.out.println(commandParser.getCommandList());
+    appendToTerminal(commandParser.getCommandList() + "\n");
   }
 
   private void displayResult(CommandResult result) {
     if (result != null) {
-      if (result.isSuccess()) {
-        System.out.println("Success: " + result.getMessage());
-      } else {
-        System.out.println("Error: " + result.getMessage());
-      }
+      appendToTerminal((result.isSuccess() ? "Success: " : "Error: ") + result.getMessage() + "\n");
     }
+  }
+
+  private void appendToTerminal(String message) {
+    Platform.runLater(() -> terminalArea.appendText(message));
   }
 }

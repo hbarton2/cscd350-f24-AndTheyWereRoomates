@@ -9,8 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.project.Model.CommandRegistries;
-import org.project.View.CommandLineTerminal;
 
 public class MainMenuController {
 
@@ -46,14 +44,21 @@ public class MainMenuController {
   private void startCli() {
     try {
       LOGGER.info("Launching CLI application...");
-      CommandRegistries commands = new CommandRegistries("src/main/resources/CLICommands.json");
-      CommandLineTerminal commandLineTerminal = new CommandLineTerminal(commands);
-      commandLineTerminal.launch();
 
-      // TODO: re-enable this feature when done
-      // Close the main menu
-      //      Stage stage = (Stage) startCliButton.getScene().getWindow();
-      //      stage.close();
+      // Load the CLI FXML file
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/CLIGraphics.fxml"));
+      Parent cliRoot = loader.load();
+
+      // Create a new Stage for the CLI
+      Stage cliStage = new Stage();
+      cliStage.setScene(new Scene(cliRoot));
+      cliStage.setTitle("UML Editor - Command Line Interface");
+      cliStage.show();
+
+      // Optionally close the main menu
+      Stage stage = (Stage) startCliButton.getScene().getWindow();
+      stage.close();
+
     } catch (IOException e) {
       LOGGER.severe("Error launching CLI: " + e.getMessage());
     }

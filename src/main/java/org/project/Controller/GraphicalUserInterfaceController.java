@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -41,6 +44,10 @@ import org.project.View.GraphicalClassNode;
 import org.project.View.GraphicalClassNodeFactory;
 
 public class GraphicalUserInterfaceController implements Initializable {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(GraphicalUserInterfaceController.class.getName());
+
   @FXML public Menu menubar;
   @FXML public MenuItem loadButton;
   @FXML public Button deleteClassButton;
@@ -805,13 +812,9 @@ public class GraphicalUserInterfaceController implements Initializable {
     return result.orElse("");
   }
 
-  /**
-   * Exits the program when the exit button is clicked.
-   *
-   * @param event the action event for exiting the program
-   */
+  /** Exits the program when the exit button is clicked. */
   @FXML
-  public void exitProgram(ActionEvent event) {
+  public void exitProgram() {
     System.exit(0);
   }
 
@@ -906,5 +909,43 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   public void newProjectHandler(ActionEvent event) {
     canvas.getChildren().clear();
+  }
+
+  @FXML
+  public void backToMainMenu(ActionEvent actionEvent) {
+    try {
+      // Determine the source of the event
+      Object source = actionEvent.getSource();
+      Stage currentStage;
+
+      if (source instanceof Button) {
+        // If the source is a Button
+        currentStage = (Stage) ((Button) source).getScene().getWindow();
+      } else if (source instanceof MenuItem) {
+        // If the source is a MenuItem
+        currentStage = (Stage) ((MenuItem) source).getParentPopup().getOwnerWindow();
+      } else {
+        // Log and return if the source is not recognized
+        LOGGER.warning("Unrecognized source for backToMainMenu action.");
+        return;
+      }
+
+      // Close the current stage
+      currentStage.close();
+
+      // Load and display the Main Menu
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
+      VBox mainMenuRoot = loader.load();
+
+      // Set up the Stage for MainMenu
+      Stage mainMenuStage = new Stage();
+      mainMenuStage.setScene(new Scene(mainMenuRoot));
+      mainMenuStage.setTitle("UML Editor - Main Menu");
+      mainMenuStage.show();
+
+    } catch (Exception e) {
+      LOGGER.severe("Error occurred while returning to Main Menu: " + e.getMessage());
+      LOGGER.throwing(getClass().getName(), "backToMainMenu", e);
+    }
   }
 }

@@ -1,0 +1,10 @@
+.text-area {
+  -fx-cursor: text; /* Ensures a text cursor */
+  -fx-highlight-fill: #444444; /* Background color for selected text */
+  -fx-highlight-text-fill: white; /* Color of text when highlighted */
+  -fx-text-fill: white; /* Color of normal text */
+  -fx-caret-color: cyan; /* Makes the caret visible in cyan */
+  -fx-font-family: "Consolas"; /* Sets the font to Consolas */
+  -fx-font-size: 18px; /* Font size */
+  -fx-background-color: black; /* Background color */
+}
