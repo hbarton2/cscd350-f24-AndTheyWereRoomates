@@ -1,5 +1,7 @@
 package org.project.Controller;
 
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,19 +9,22 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import org.project.Model.CommandRegistries;
+import org.project.View.CommandLineTerminal;
+import org.project.View.TextAreaOutputStream;
 
 public class CommandLineInterfaceController {
 
   @FXML private TextArea terminalArea;
 
-  private final String prompt = "$ "; // Command prompt
+  private CommandLineTerminal cliTerminal;
   private String currentInput = ""; // Tracks the current user input
   private int promptPosition = 0; // Tracks the position of the latest prompt
   private final List<String> commandHistory = new ArrayList<>(); // Stores command history
   private int historyIndex = -1; // Tracks current position in command history
 
   @FXML
-  public void initialize() {
+  public void initialize() throws IOException {
     // Disable default JavaFX styling
     System.setProperty("javafx.userAgentStylesheetUrl", "none");
 
@@ -28,15 +33,23 @@ public class CommandLineInterfaceController {
         .getStylesheets()
         .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
 
+    // Redirect System.out to the terminalArea
+    System.setOut(new PrintStream(new TextAreaOutputStream(terminalArea)));
+
+    // Optional: Redirect System.err if needed
+    System.setErr(new PrintStream(new TextAreaOutputStream(terminalArea)));
+
+    // Initialize the CLI logic
+    CommandRegistries commandRegistries =
+        new CommandRegistries("src/main/resources/CLICommands.json");
+    cliTerminal = new CommandLineTerminal(commandRegistries, terminalArea);
+
     // Display welcome message and the first prompt
-    appendToTerminal("Welcome to the UML Editor CLI\n");
+    appendToTerminal("Welcome to the UML Editor CLI.\n");
     appendToTerminal("Type 'help' to see available commands, or 'exit' to quit.\n");
-    appendToTerminal(prompt);
+    appendPrompt();
 
-    // Set the prompt position
-    promptPosition = terminalArea.getText().length();
-
-    // Listen for key presses
+    // Listen for user key inputs
     terminalArea.setOnKeyPressed(this::handleInput);
 
     // Allow caret and focus management
@@ -45,20 +58,19 @@ public class CommandLineInterfaceController {
   }
 
   private void handleInput(KeyEvent event) {
-    String text = event.getText();
-
     switch (event.getCode()) {
       case ENTER -> processCommand(currentInput.trim());
       case BACK_SPACE -> handleBackspace(event);
       case UP -> navigateHistory(-1);
       case DOWN -> navigateHistory(1);
-      case LEFT, RIGHT -> event.consume(); // Disable cursor movement
+      case LEFT, RIGHT -> event.consume(); // Prevent cursor movement
       default -> {
+        String text = event.getText();
         if (text != null && !text.isEmpty()) {
           currentInput += text;
           refreshTerminal();
         }
-        event.consume(); // Prevent duplicate input
+        event.consume(); // Prevent default text area behavior
       }
     }
   }
@@ -103,17 +115,18 @@ public class CommandLineInterfaceController {
       historyIndex = commandHistory.size(); // Reset history index
     }
 
-    switch (command.toLowerCase()) {
-      case "help" -> appendToTerminal(
-          "Available commands:\n - help: Show available commands\n - exit: Quit the application\n");
-      case "exit" -> Platform.exit();
-      case "clear" -> clearTerminal();
-      default -> appendToTerminal("Unknown command: " + command + "\n");
-    }
+    // Use the CommandLineTerminal to process the command
+    cliTerminal.handleUserInput(command);
 
     currentInput = ""; // Reset input
-    appendToTerminal(prompt); // Add a new prompt
-    promptPosition = terminalArea.getText().length(); // Update prompt position
+    appendPrompt(); // Add a new prompt
+  }
+
+  private void appendPrompt() {
+    // Command prompt
+    String prompt = "$ ";
+    appendToTerminal(prompt);
+    promptPosition = terminalArea.getText().length();
   }
 
   private void refreshTerminal() {
@@ -132,15 +145,6 @@ public class CommandLineInterfaceController {
           terminalArea.appendText(message);
           promptPosition = terminalArea.getText().length();
           terminalArea.positionCaret(promptPosition);
-        });
-  }
-
-  private void clearTerminal() {
-    Platform.runLater(
-        () -> {
-          terminalArea.clear();
-          appendToTerminal(prompt);
-          promptPosition = terminalArea.getText().length();
         });
   }
 }

@@ -7,4 +7,5 @@
   -fx-font-family: "Consolas";
   -fx-font-size: 18px;
   -fx-background-color: black; /* Background color */
+  -fx-line-spacing: 10px; /* Adds space between lines */
 }

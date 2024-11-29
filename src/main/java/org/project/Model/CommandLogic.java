@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.project.Controller.ClassNodeService;
 import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
@@ -186,8 +187,21 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: list classes");
     }
 
-    storage.printAllNodes();
-    return CommandResult.success("Classes listed!");
+    // Get all nodes from storage
+    Map<String, UMLClassNode> nodes = storage.getAllNodes();
+
+    if (nodes.isEmpty()) {
+      return CommandResult.success("No classes to display.");
+    }
+
+    StringBuilder result = new StringBuilder("Classes:\n");
+
+    // Iterate over all nodes and append their details
+    for (UMLClassNode node : nodes.values()) {
+      result.append(node.toString()).append("\n");
+    }
+
+    return CommandResult.success(result.toString());
   }
 
   public CommandResult removeField(String[] args) {

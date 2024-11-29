@@ -5,73 +5,74 @@ import java.util.TreeMap;
 
 public class Storage {
 
-  // Static variable to hold the single instance
-  private static Storage instance;
+  private static volatile Storage instance; // Volatile for safe double-checked locking
+  private final Map<String, UMLClassNode> storage;
 
-  // The actual TreeMap to store data
-  private TreeMap<String, UMLClassNode> storage;
-
-  // Private constructor to prevent instantiation from outside the class
-  Storage() {
+  private Storage() {
     this.storage = new TreeMap<>();
   }
 
-  // Public method to provide access to the instance Singleton Design pattern
   public static Storage getInstance() {
     if (instance == null) {
-      instance = new Storage(); // Create the instance if it doesn't exist
+      synchronized (Storage.class) {
+        if (instance == null) {
+          instance = new Storage();
+        }
+      }
     }
     return instance;
   }
 
-  // Method to get the storage
-  public TreeMap<String, UMLClassNode> getStorage() {
-    return storage;
-  }
-
-  // Method to add a node
-  public void addNode(String key, UMLClassNode node) {
+  public synchronized void addNode(String key, UMLClassNode node) {
+    if (storage.containsKey(key)) {
+      throw new IllegalArgumentException("Class with the name '" + key + "' already exists.");
+    }
     storage.put(key, node);
   }
 
-  // Method to get a node by key
-  public UMLClassNode getNode(String key) {
+  public synchronized UMLClassNode getNode(String key) {
     return storage.get(key);
   }
 
-  // Method to check if a node exists by key
-  public boolean containsNode(String key) {
-    return storage.containsKey(key);
+  public synchronized void clearStorage() {
+    storage.clear();
   }
 
-  // Method to remove a node by key
-  public void removeNode(String key) {
-    storage.remove(key);
-  }
-
-  // Method to print all nodes
-  public void printAllNodes() {
+  public synchronized void printAllNodes() {
     for (UMLClassNode node : storage.values()) {
       System.out.println(node.toString());
     }
   }
 
-  public Map<String, UMLClassNode> getAllNodes() {
-    return new TreeMap<>(storage);
+  // Check if a node exists by its class name
+  public synchronized boolean containsNode(String className) {
+    return storage.containsKey(className);
   }
 
-  public void setAllNodes(Map<String, UMLClassNode> nodes) {
-    storage.clear();
-    storage.putAll(nodes);
+  // Remove a node by its class name
+  public synchronized void removeNode(String className) {
+    storage.remove(className);
   }
 
-  // Method to get the size of the storage
-  public int getSize() {
-    return storage.size();
+  // Get the total number of stored nodes
+  public synchronized Map<String, UMLClassNode> getAllNodes() {
+    return new TreeMap<>(storage); // Return a copy to prevent external modification
   }
 
-  // Method to clear all nodes
-  public void clearStorage() {
-    storage.clear();
+  public void setAllNodes(Map<String, UMLClassNode> state) {
+    synchronized (this) {
+      // Clear the current storage
+      storage.clear();
+
+      // Add all nodes from the provided state
+      storage.putAll(state);
+    }
+  }
+
+  public Map<Object, Object> getStorage() {
+    synchronized (this) {
+      // Return a copy of the storage as a Map<Object, Object>
+      return new TreeMap<>(storage);
+    }
   }
 }
