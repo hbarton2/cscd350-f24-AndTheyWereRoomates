@@ -15,7 +15,7 @@ class ClassBoxTest extends ApplicationTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize ClassBox with a test class name
+        // Initialize GraphicalClassNode with a test class name
         classBox = new ClassBox("TestClass");
     }
 
@@ -53,14 +53,14 @@ class ClassBoxTest extends ApplicationTest {
         assertEquals("method2", classBox.methodsListView.getItems().get(1), "Expected methodsListView to contain 'method2'");
     }
 
-    // Test that ClassBox inherits from VBox and has a specific style
+    // Test that GraphicalClassNode inherits from VBox and has a specific style
     @Test
     void testClassBoxIsVBoxAndHasStyle() {
-        assertTrue(classBox instanceof VBox, "Expected ClassBox to be an instance of VBox");
-        assertEquals("-fx-border-width: 5; -fx-border-color: black", classBox.getStyle(), "Expected ClassBox to have a specific style applied");
+        assertTrue(classBox instanceof VBox, "Expected GraphicalClassNode to be an instance of VBox");
+        assertEquals("-fx-border-width: 5; -fx-border-color: black", classBox.getStyle(), "Expected GraphicalClassNode to have a specific style applied");
     }
 
-    // Test the initial preferred size of the ClassBox
+    // Test the initial preferred size of the GraphicalClassNode
     @Test
     void testPrefSize() {
         assertEquals(200, classBox.getPrefWidth(), "Expected preferred width to be 200");

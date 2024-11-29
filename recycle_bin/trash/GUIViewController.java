@@ -78,7 +78,7 @@ public class GUIViewController implements Initializable {
     canvas.setStyle("-fx-background-color: black;");
   }
 
-  /** This is the constructor for GUIViewController. Initializes UMLController */
+  /** This is the constructor for GraphicalUserInterfaceController. Initializes UMLController */
   public GUIViewController() {
     this.umlController = new UMLController();
   }

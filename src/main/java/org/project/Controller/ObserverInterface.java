@@ -1,8 +1,8 @@
 package org.project.Controller;
 
-import org.project.View.ClassBox;
+import org.project.View.GraphicalClassNode;
 
 public interface ObserverInterface {
 
-  void update(ClassBox selectedClassBox);
+  void update(GraphicalClassNode selectedGraphicalClassNode);
 }

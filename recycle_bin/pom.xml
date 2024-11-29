@@ -129,7 +129,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-          <mainClass>org.project.View.GraphicUserInterface</mainClass>
+          <mainClass>org.project.View.GraphicalUserInterface</mainClass>
         </configuration>
       </plugin>
     </plugins>

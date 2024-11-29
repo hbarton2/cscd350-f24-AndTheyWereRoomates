@@ -22,14 +22,14 @@ public class GUIViewRefractTDD {
   ComboBox<String> parameterTypeComboBox;
 
   @Mock
-  ClassBox classBox;
+  GraphicalClassNode classBox;
 
-  GUIViewController controller;  // Replace with the actual controller class name
+  GraphicalUserInterfaceController controller;  // Replace with the actual controller class name
 
   @BeforeEach
   void setUp() {
       MockitoAnnotations.openMocks(this);
-      controller = new GUIViewController();
+      controller = new GraphicalUserInterfaceController();
       controller.canvas = canvas;
       controller.fromComboBox = fromComboBox;
       controller.toComboBox = toComboBox;

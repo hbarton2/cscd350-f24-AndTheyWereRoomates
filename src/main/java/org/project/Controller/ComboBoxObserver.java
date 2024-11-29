@@ -2,7 +2,7 @@ package org.project.Controller;
 
 import java.util.List;
 import javafx.scene.control.ComboBox;
-import org.project.View.ClassBox;
+import org.project.View.GraphicalClassNode;
 
 public class ComboBoxObserver implements ObserverInterface {
 
@@ -20,7 +20,7 @@ public class ComboBoxObserver implements ObserverInterface {
   }
 
   @Override
-  public void update(ClassBox selectedClassBox) {
+  public void update(GraphicalClassNode selectedGraphicalClassNode) {
     for (ComboBox<String> comboBox : comboBoxes) {
       comboBox.getItems().clear();
       if (defaultTypes != null) {
@@ -28,9 +28,9 @@ public class ComboBoxObserver implements ObserverInterface {
       }
     }
 
-    for (ClassBox classBox : observableClass.getAllClassBoxes()) {
+    for (GraphicalClassNode graphicalClassNode : observableClass.getAllClassBoxes()) {
       for (ComboBox<String> comboBox : comboBoxes) {
-        comboBox.getItems().add(classBox.getName());
+        comboBox.getItems().add(graphicalClassNode.getName());
       }
     }
   }

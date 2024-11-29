@@ -29,9 +29,9 @@ v4.3.72
 
 Ensure that the following software is installed on the target machine:
 
-- **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 17 or higher.  
-  You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or from [AdoptOpenJDK](https://adoptopenjdk.net/).
-- **JavaFX** version 21.
+- **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 21.0.5 or higher.  
+  You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or **Highly Recommend** [GraalVM for JDK 21.0.5](https://www.oracle.com/java/technologies/downloads/?er=221886#graalvmjava21).
+- **JavaFX** version 21.0.5.
   You can download it from the [JavaFX Download page](https://gluonhq.com/products/javafx/).
   ![JavaFX Download page](doc/images/JavaFX.png)
 ---
@@ -101,7 +101,7 @@ This SDK is intended to streamline the experience of creating class diagrams, mo
 
 Before running the project, ensure you have the following installed:
 
-- **Java JDK 17**
+- **Java JDK 21.0.5**
 - **Maven 3.9.9**
 
 ### Project Dependencies

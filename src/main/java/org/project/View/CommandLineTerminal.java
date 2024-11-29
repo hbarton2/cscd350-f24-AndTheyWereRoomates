@@ -16,9 +16,9 @@ public class CommandLineTerminal {
   private final LineReader lineReader;
   private boolean running = true;
 
-  public CommandLineTerminal(CommandRegistries commandRegistries) throws IOException {
+  public CommandLineTerminal(CommandRegistries commands) throws IOException {
     // Initialize CommandParser
-    this.commandParser = new CommandParser(commandRegistries);
+    this.commandParser = new CommandParser(commands);
 
     // Initialize JLine Terminal
     org.jline.terminal.Terminal terminal = TerminalBuilder.builder().system(true).build();
@@ -27,11 +27,6 @@ public class CommandLineTerminal {
     List<String> commandList = commandParser.getAllCommandNames();
 
     // Initialize JLine LineReader with autocomplete support
-    //    this.lineReader = LineReaderBuilder.builder()
-    //      .terminal(terminal) // Use the JLine Terminal
-    //      .completer(new StringsCompleter(commandList)) // Autocomplete based on available
-    // commands
-    //      .build();
     this.lineReader =
         LineReaderBuilder.builder()
             .terminal(terminal)
@@ -58,31 +53,18 @@ public class CommandLineTerminal {
   private void processCommand(String input) {
     input = sanitizeInput(input); // Remove escape characters
 
-    if (input.isBlank()) {
-      System.out.println("Error: Command cannot be empty.");
-      return;
-    }
-
-    if (input.equalsIgnoreCase("exit")) {
-      handleExitCommand();
-    } else if (input.equalsIgnoreCase("help")) {
-      handleHelpCommand();
-    } else {
-      CommandResult result = commandParser.parseCommand(input);
-      displayResult(result);
+    switch (input.toLowerCase()) {
+      case "exit" -> handleExitCommand();
+      case "help" -> handleHelpCommand();
+      default -> {
+        CommandResult result = commandParser.parseCommand(input);
+        displayResult(result);
+      }
     }
   }
 
   private String sanitizeInput(String input) {
-    // Remove backslashes and redundant spaces introduced by JLine
-    input = input.replace("\\", "").trim();
-    // Split and sanitize each word (prevent duplication from autocomplete)
-    String[] tokens = input.split("\\s+");
-    if (tokens.length > 1) {
-      // Prevent malformed concatenations
-      tokens[tokens.length - 1] = tokens[tokens.length - 1].trim();
-    }
-    return String.join(" ", tokens).trim();
+    return input.replace("\\", "").trim();
   }
 
   private void handleExitCommand() {

@@ -11,15 +11,17 @@ public class CommandLineInjection {
   public static void main(String[] args) throws Exception {
     // Set up terminal and LineReader
     Terminal terminal = TerminalBuilder.builder().system(true).build();
-    LineReader reader = LineReaderBuilder.builder()
-      .terminal(terminal)
-      .build();
+    LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
 
     // Define the inject-word widget
-    reader.getWidgets().put("inject-word", () -> {
-      injectWord(reader, "injected-word");
-      return true;
-    });
+    reader
+        .getWidgets()
+        .put(
+            "inject-word",
+            () -> {
+              injectWord(reader, "injected-word");
+              return true;
+            });
 
     // Bind the Tab key (\t) to the inject-word widget
     reader.getKeyMaps().get(LineReader.MAIN).bind(new Reference("inject-word"), "\t");
@@ -43,14 +45,15 @@ public class CommandLineInjection {
    * Injects a word into the current command line buffer and ensures it's visible.
    *
    * @param reader The LineReader handling user input.
-   * @param word   The word to inject into the buffer.
+   * @param word The word to inject into the buffer.
    */
   private static void injectWord(LineReader reader, String word) {
     String currentBuffer = reader.getBuffer().toString();
     int cursorPos = reader.getBuffer().cursor();
 
     // Inject the word at the cursor position
-    String newLine = currentBuffer.substring(0, cursorPos) + word + currentBuffer.substring(cursorPos);
+    String newLine =
+        currentBuffer.substring(0, cursorPos) + word + currentBuffer.substring(cursorPos);
 
     // Clear the buffer and update the line
     reader.getBuffer().clear();

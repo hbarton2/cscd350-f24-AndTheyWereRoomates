@@ -2,12 +2,12 @@ package org.project.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.project.View.ClassBox;
+import org.project.View.GraphicalClassNode;
 
 public class ObservableClass {
-  private ClassBox selectedClassBox;
+  private GraphicalClassNode selectedGraphicalClassNode;
   private final List<ObserverInterface> observable = new ArrayList<>();
-  private final List<ClassBox> classBoxList = new ArrayList<>();
+  private final List<GraphicalClassNode> graphicalClassNodeList = new ArrayList<>();
 
   public void addObserver(ObserverInterface observer) {
     observable.add(observer);
@@ -17,32 +17,32 @@ public class ObservableClass {
     observable.remove(observer);
   }
 
-  public void addClassBox(ClassBox classBox) {
-    classBoxList.add(classBox);
+  public void addClassBox(GraphicalClassNode graphicalClassNode) {
+    graphicalClassNodeList.add(graphicalClassNode);
     notifyObservers();
   }
 
-  public void removeClasBox(ClassBox classBox) {
-    classBoxList.remove(classBox);
+  public void removeClasBox(GraphicalClassNode graphicalClassNode) {
+    graphicalClassNodeList.remove(graphicalClassNode);
     notifyObservers();
   }
 
-  public void setSelectedClassBox(ClassBox classBox) {
-    this.selectedClassBox = classBox;
+  public void setSelectedClassBox(GraphicalClassNode graphicalClassNode) {
+    this.selectedGraphicalClassNode = graphicalClassNode;
     notifyObservers();
   }
 
-  public ClassBox getSelectedClassBox() {
-    return selectedClassBox;
+  public GraphicalClassNode getSelectedClassBox() {
+    return selectedGraphicalClassNode;
   }
 
-  public List<ClassBox> getAllClassBoxes() {
-    return new ArrayList<>(classBoxList);
+  public List<GraphicalClassNode> getAllClassBoxes() {
+    return new ArrayList<>(graphicalClassNodeList);
   }
 
   public void notifyObservers() {
     for (ObserverInterface observer : observable) {
-      observer.update(selectedClassBox);
+      observer.update(selectedGraphicalClassNode);
     }
   }
 }

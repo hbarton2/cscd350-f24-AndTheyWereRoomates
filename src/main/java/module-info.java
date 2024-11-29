@@ -1,4 +1,4 @@
-/** minimum requirements for v3.0.56+ */
+/** minimum requirements for v4.0.56+ */
 module org.project {
   requires javafx.controls;
   requires javafx.fxml;
