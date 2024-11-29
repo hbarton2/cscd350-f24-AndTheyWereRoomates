@@ -17,11 +17,16 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.fxmisc.richtext</groupId>
+      <artifactId>richtextfx</artifactId>
+      <version>0.10.9</version>
+    </dependency>
     <!-- Autocomplete key detection -->
     <dependency>
       <groupId>org.jline</groupId>
       <artifactId>jline</artifactId>
-      <version>3.21.0</version>
+      <version>3.23.0</version>
     </dependency>
     <dependency>
       <groupId>info.picocli</groupId>

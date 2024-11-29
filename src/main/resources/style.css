@@ -1,10 +1,10 @@
 .text-area {
-  -fx-cursor: text; /* Ensures a text cursor */
-  -fx-highlight-fill: #444444; /* Background color for selected text */
-  -fx-highlight-text-fill: white; /* Color of text when highlighted */
+  -fx-cursor: text;
+  -fx-highlight-fill: #444444; /* Background for selected text */
+  -fx-highlight-text-fill: white; /* Color of selected text */
   -fx-text-fill: white; /* Color of normal text */
-  -fx-caret-color: cyan; /* Makes the caret visible in cyan */
-  -fx-font-family: "Consolas"; /* Sets the font to Consolas */
-  -fx-font-size: 18px; /* Font size */
+  -fx-caret-color: white; /* Makes the caret visible */
+  -fx-font-family: "Consolas";
+  -fx-font-size: 18px;
   -fx-background-color: black; /* Background color */
 }

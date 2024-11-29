@@ -1,5 +1,7 @@
 package org.project.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,10 +15,15 @@ public class CommandLineInterfaceController {
   private final String prompt = "$ "; // Command prompt
   private String currentInput = ""; // Tracks the current user input
   private int promptPosition = 0; // Tracks the position of the latest prompt
+  private final List<String> commandHistory = new ArrayList<>(); // Stores command history
+  private int historyIndex = -1; // Tracks current position in command history
 
   @FXML
   public void initialize() {
+    // Disable default JavaFX styling
     System.setProperty("javafx.userAgentStylesheetUrl", "none");
+
+    // Apply custom CSS styling
     terminalArea
         .getStylesheets()
         .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
@@ -32,48 +39,70 @@ public class CommandLineInterfaceController {
     // Listen for key presses
     terminalArea.setOnKeyPressed(this::handleInput);
 
-    // Disable direct edits to text outside the KeyEvent
-    terminalArea.setEditable(false);
+    // Allow caret and focus management
+    terminalArea.setEditable(true);
+    terminalArea.requestFocus();
   }
 
   private void handleInput(KeyEvent event) {
+    String text = event.getText();
+
     switch (event.getCode()) {
-      case ENTER -> {
-        // Process the command entered by the user
-        processCommand(currentInput);
-        currentInput = ""; // Reset input
-        appendToTerminal(prompt); // Add a new prompt
-        promptPosition = terminalArea.getText().length(); // Update prompt position
-        event.consume(); // Prevent default ENTER behavior
-      }
-      case BACK_SPACE -> {
-        // Handle backspace within the current input
-        if (!currentInput.isEmpty()) {
-          currentInput = currentInput.substring(0, currentInput.length() - 1);
-          refreshTerminal(); // Redraw terminal with updated input
-        }
-        event.consume(); // Prevent default BACKSPACE behavior
-      }
-      case LEFT, UP, DOWN, RIGHT -> {
-        // Disable cursor movement keys
-        event.consume();
-      }
+      case ENTER -> processCommand(currentInput.trim());
+      case BACK_SPACE -> handleBackspace(event);
+      case UP -> navigateHistory(-1);
+      case DOWN -> navigateHistory(1);
+      case LEFT, RIGHT -> event.consume(); // Disable cursor movement
       default -> {
-        // Append valid characters to the current input
-        String text = event.getText();
-        if (text != null && text.length() == 1) {
+        if (text != null && !text.isEmpty()) {
           currentInput += text;
-          refreshTerminal(); // Redraw terminal with updated input
+          refreshTerminal();
         }
+        event.consume(); // Prevent duplicate input
       }
     }
   }
 
+  private void handleBackspace(KeyEvent event) {
+    if (currentInput.isEmpty() || terminalArea.getCaretPosition() <= promptPosition) {
+      event.consume(); // Prevent deletion beyond the prompt
+    } else {
+      currentInput = currentInput.substring(0, currentInput.length() - 1);
+      refreshTerminal();
+    }
+  }
+
+  private void navigateHistory(int direction) {
+    if (commandHistory.isEmpty()) {
+      return; // No history to navigate
+    }
+
+    // Adjust history index
+    historyIndex += direction;
+
+    // Clamp the history index within bounds
+    if (historyIndex < 0) {
+      historyIndex = 0;
+    } else if (historyIndex >= commandHistory.size()) {
+      historyIndex = commandHistory.size();
+      currentInput = ""; // Blank input for beyond the last command
+      refreshTerminal();
+      return;
+    }
+
+    // Update current input with the selected command
+    currentInput = commandHistory.get(historyIndex);
+    refreshTerminal();
+  }
+
   private void processCommand(String command) {
-    // Display the user's command
     appendToTerminal(command + "\n");
 
-    // Handle the command
+    if (!command.isEmpty()) {
+      commandHistory.add(command); // Add to history
+      historyIndex = commandHistory.size(); // Reset history index
+    }
+
     switch (command.toLowerCase()) {
       case "help" -> appendToTerminal(
           "Available commands:\n - help: Show available commands\n - exit: Quit the application\n");
@@ -81,15 +110,19 @@ public class CommandLineInterfaceController {
       case "clear" -> clearTerminal();
       default -> appendToTerminal("Unknown command: " + command + "\n");
     }
+
+    currentInput = ""; // Reset input
+    appendToTerminal(prompt); // Add a new prompt
+    promptPosition = terminalArea.getText().length(); // Update prompt position
   }
 
   private void refreshTerminal() {
-    // Redraw the terminal with the prompt and current input
     String fullText = terminalArea.getText(0, promptPosition) + currentInput;
+
     Platform.runLater(
         () -> {
           terminalArea.setText(fullText);
-          terminalArea.positionCaret(fullText.length()); // Move caret to end
+          terminalArea.positionCaret(terminalArea.getText().length());
         });
   }
 
@@ -97,8 +130,8 @@ public class CommandLineInterfaceController {
     Platform.runLater(
         () -> {
           terminalArea.appendText(message);
-          promptPosition = terminalArea.getText().length(); // Update prompt position
-          terminalArea.positionCaret(promptPosition); // Move caret to end
+          promptPosition = terminalArea.getText().length();
+          terminalArea.positionCaret(promptPosition);
         });
   }
 
@@ -106,7 +139,7 @@ public class CommandLineInterfaceController {
     Platform.runLater(
         () -> {
           terminalArea.clear();
-          appendToTerminal(prompt); // Add the prompt after clearing
+          appendToTerminal(prompt);
           promptPosition = terminalArea.getText().length();
         });
   }
