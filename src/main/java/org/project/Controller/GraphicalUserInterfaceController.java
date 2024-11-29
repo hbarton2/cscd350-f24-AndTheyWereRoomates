@@ -914,35 +914,35 @@ public class GraphicalUserInterfaceController implements Initializable {
   @FXML
   public void backToMainMenu(ActionEvent actionEvent) {
     try {
-      // Determine the source of the event
-      Object source = actionEvent.getSource();
-      Stage currentStage;
+      // Debugging log to verify source and path
+      LOGGER.info("Source of actionEvent: " + actionEvent.getSource());
+      String fxmlPath = "/MainMenu.fxml";
+      LOGGER.info("Attempting to load: " + fxmlPath);
 
-      if (source instanceof Button) {
-        // If the source is a Button
-        currentStage = (Stage) ((Button) source).getScene().getWindow();
-      } else if (source instanceof MenuItem) {
-        // If the source is a MenuItem
-        currentStage = (Stage) ((MenuItem) source).getParentPopup().getOwnerWindow();
-      } else {
-        // Log and return if the source is not recognized
-        LOGGER.warning("Unrecognized source for backToMainMenu action.");
+      // Load FXML for Main Menu
+      FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+      if (loader.getLocation() == null) {
+        LOGGER.severe("MainMenu.fxml not found at path: " + fxmlPath);
         return;
       }
-
-      // Close the current stage
-      currentStage.close();
-
-      // Load and display the Main Menu
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
       VBox mainMenuRoot = loader.load();
 
-      // Set up the Stage for MainMenu
+      // Setup the Scene and Stage
+      Scene mainMenuScene = new Scene(mainMenuRoot);
       Stage mainMenuStage = new Stage();
-      mainMenuStage.setScene(new Scene(mainMenuRoot));
+      mainMenuStage.setScene(mainMenuScene);
       mainMenuStage.setTitle("UML Editor - Main Menu");
       mainMenuStage.show();
 
+      // Close current stage
+      Object source = actionEvent.getSource();
+      if (source instanceof Button) {
+        ((Stage) ((Button) source).getScene().getWindow()).close();
+      } else if (source instanceof MenuItem) {
+        ((Stage) ((MenuItem) source).getParentPopup().getOwnerWindow()).close();
+      } else {
+        LOGGER.warning("Unrecognized source for backToMainMenu action.");
+      }
     } catch (Exception e) {
       LOGGER.severe("Error occurred while returning to Main Menu: " + e.getMessage());
       LOGGER.throwing(getClass().getName(), "backToMainMenu", e);

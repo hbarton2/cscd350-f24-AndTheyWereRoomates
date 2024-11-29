@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.project.Controller.CommandResult;
@@ -51,6 +52,14 @@ public class CommandRegistries extends CommandLogic {
   // Return a map of all commands for listing purposes
   public Map<String, CommandInfo> getAllCommands() {
     return commandMap;
+  }
+
+  public Map<Object, Object> getAllCommandNames() {
+    Map<Object, Object> commandNames = new TreeMap<>();
+    for (String key : commandMap.keySet()) {
+      commandNames.put(key, key); // Use the key both as key and value
+    }
+    return commandNames;
   }
 
   // Functional interface for command handlers
