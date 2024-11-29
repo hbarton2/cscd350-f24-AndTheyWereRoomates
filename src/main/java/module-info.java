@@ -7,9 +7,10 @@ module org.project {
   requires com.google.gson;
   requires org.apache.lucene.suggest;
   requires org.apache.lucene.core;
-  requires java.logging;
   requires org.jline;
   requires javafx.swing;
+  requires info.picocli;
+  requires java.logging;
 
   exports org.project.Controller;
   exports org.project.Model;
@@ -24,7 +25,8 @@ module org.project {
       com.google.gson;
   opens org.project.View to
       javafx.fxml,
-      com.google.gson;
+      com.google.gson,
+      info.picocli;
   opens org.project.Memento to
       javafx.fxml,
       com.google.gson;

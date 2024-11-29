@@ -3,7 +3,11 @@ package org.project.Controller;
 import com.google.gson.Gson;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
@@ -77,7 +81,7 @@ public class GUIViewController implements Initializable {
   public UMLController umlController;
   public static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
-  ;
+  ; // TODO what is this?
 
   /**
    * This sets the default path to be the user's home directory.

@@ -43,12 +43,11 @@ public class AutoComplete {
   public List<String> getSuggestions(String prefix) throws IOException {
     //    System.out.println("Fetching suggestions for prefix: " + prefix); // TODO: Debug log
     List<LookupResult> results = suggester.lookup(prefix, false, 10); // Use String directly
-    List<String> suggestions =
-        results.stream()
-            .map(result -> result.key.toString()) // Convert result to String
-            .collect(Collectors.toList());
+    // Convert result to String
     //    System.out.println("Suggestions found: " + suggestions); // TODO: Debug log
-    return suggestions;
+    return results.stream()
+        .map(result -> result.key.toString()) // Convert result to String
+        .collect(Collectors.toList());
   }
 
   /**

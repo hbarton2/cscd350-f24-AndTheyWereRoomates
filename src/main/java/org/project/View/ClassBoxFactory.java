@@ -53,9 +53,10 @@ public class ClassBoxFactory {
     return classBox;
   }
 
+  // TODO: I fixed your redundant return
   public static ClassBox createClassBox(UMLClassNode umlClassNode, CommandBridge commandBridge) {
-    ClassBox classBox = new ClassBox(umlClassNode.getClassName());
-
-    return classBox;
+//    ClassBox classBox = new ClassBox(umlClassNode.getClassName());
+//    return classBox;
+    return new ClassBox(umlClassNode.getClassName());
   }
 }

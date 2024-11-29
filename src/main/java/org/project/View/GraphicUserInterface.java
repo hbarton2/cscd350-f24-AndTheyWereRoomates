@@ -8,20 +8,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class GUIView extends Application {
+public class GraphicUserInterface extends Application {
 
   private boolean firstTimeShown = true; // Flag to track first-time display
 
   /**
    * Loads the GUI and ensures it opens on top
    *
-   * @param stage - Loads "Main.fxml", represents the GUI
+   * @param stage - Loads "GUIGraphics.fxml", represents the GUI
    */
   @Override
   public void start(Stage stage) throws IOException {
 
     // Load the FXML file
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/GUIGraphics.fxml"));
     Parent root = loader.load();
     Scene scene = new Scene(root);
 
