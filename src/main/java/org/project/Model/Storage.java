@@ -75,4 +75,11 @@ public class Storage {
       return new TreeMap<>(storage);
     }
   }
+
+  public synchronized void updateNode(String className, UMLClassNode currentClass) {
+    if (!storage.containsKey(className)) {
+      throw new IllegalArgumentException("Class with the name '" + className + "' does not exist.");
+    }
+    storage.put(className, currentClass);
+  }
 }

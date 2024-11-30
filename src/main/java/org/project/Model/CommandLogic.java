@@ -17,6 +17,7 @@ import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
 import org.project.Memento.Memento;
 
+// TODO: There is a lot of logic it's not kosure
 public class CommandLogic {
 
   private static final Storage storage = Storage.getInstance();
@@ -34,19 +35,6 @@ public class CommandLogic {
     return CommandResult.success("State saved");
   }
 
-  // Example command handler methods
-  //  private CommandResult createClass(String[] args) {// TODO: should not be able to duplicate
-  // same class
-  //    if (args.length  == 0) {
-  //      return CommandResult.failure("create class <class name>");
-  //    }else if (args.length > 1){
-  //      return CommandResult.failure("create class <class name>");
-  //    }
-  //
-  //    String className = args[0];
-  //    return CommandResult.success("Class created: " + className);
-  //  }
-
   // Store class names
   public static Storage getStorage() {
     return storage;
@@ -57,19 +45,41 @@ public class CommandLogic {
   }
 
   // Add a class to the set
-  public void addClass(String className) {
-    storage.addNode(className, new UMLClassNode(className));
-    currentClass = storage.getNode(className);
-    saveState(new String[] {});
-  }
+  //  public void addClass(String className) {
+  //    storage.addNode(className, new UMLClassNode(className));
+  //    currentClass = storage.getNode(className);
+  //    saveState(new String[] {});
+  //  }
+  //  public CommandResult addClass(String className) {
+  //    if (classExists(className)) {
+  //      return CommandResult.failure("Error: Class '" + className + "' already exists.");
+  //    }
+  //
+  //    // Add the class to storage
+  //    UMLClassNode newClass = new UMLClassNode(className);
+  //    storage.addNode(className, newClass);
+  //    saveState(new String[]{});
+  //    return CommandResult.success("Class added: " + className);
+  //  }
 
+  //  public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
+  //    for (UMLClassNode.Field field : fieldList) {
+  //      if (field.getName().equals(name)) {
+  //        return true;
+  //      }
+  //    }
+  //    return false;
+  //  }
   public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
     for (UMLClassNode.Field field : fieldList) {
+      System.out.println("Checking field: " + field.getName());
       if (field.getName().equals(name)) {
-        return true;
+        System.out.println("Field '" + name + "' exists.");
+        return true; // Field exists
       }
     }
-    return false;
+    System.out.println("Field '" + name + "' does not exist.");
+    return false; // Field does not exist
   }
 
   public boolean methodExists(List<UMLClassNode.Method> methodList, String name) {
@@ -81,7 +91,31 @@ public class CommandLogic {
     return false;
   }
 
-  // Example handler for 'create class' with validation
+  //  public CommandResult createClass(String[] args) {
+  //    if (args.length != 1) {
+  //      return CommandResult.failure("Usage: create class <class name>");
+  //    }
+  //
+  //    String className = args[0];
+  //    if (className.isBlank()) {
+  //      return CommandResult.failure("Error: Class name cannot be empty.");
+  //    }
+  //
+  //    if (!className.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+  //      return CommandResult.failure(
+  //          "Error: Invalid class name. Use letters, numbers, and underscores only.");
+  //    }
+  //
+  //    if (classExists(className)) {
+  //      return CommandResult.failure("Error: Class '" + className + "' already exists.");
+  //    }
+  //
+  //    // Add class to the registry
+  //    addClass(className);
+  //    switchClass(new String[] {className});
+  //    return CommandResult.success("Class created: " + className);
+  //  }
+
   public CommandResult createClass(String[] args) {
     if (args.length != 1) {
       return CommandResult.failure("Usage: create class <class name>");
@@ -97,32 +131,80 @@ public class CommandLogic {
           "Error: Invalid class name. Use letters, numbers, and underscores only.");
     }
 
+    // Add the class to storage and set it as the current class
+    CommandResult result = addClass(className);
+    if (result.isSuccess()) {
+      currentClass = storage.getNode(className); // Set the newly added class as the current class
+    }
+
+    return result;
+  }
+
+  // Private helper function to add a class to storage
+  private CommandResult addClass(String className) {
     if (classExists(className)) {
       return CommandResult.failure("Error: Class '" + className + "' already exists.");
     }
 
-    // Add class to the registry
-    addClass(className);
-    switchClass(new String[] {className});
-    return CommandResult.success("Class created: " + className);
+    // Add the class to storage
+    UMLClassNode newClass = new UMLClassNode(className);
+    storage.addNode(className, newClass);
+    saveState(new String[] {}); // Save state after adding
+    return CommandResult.success("Class added: " + className);
   }
 
-  // TODO: Need a class where the logic and storage device
-
+  //  public CommandResult addField(String[] args) {
+  //    if (args.length < 2) {
+  //      return CommandResult.failure("add field <field type> <field name>");
+  //    }
+  //    if (fieldExists(currentClass.getFields(), args[1])) {
+  //      return CommandResult.failure("Error: Field '" + args[1] + "' already exists.");
+  //    }
+  //
+  //    UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
+  //    currentClass.getFields().add(field);
+  //    storage.addNode(currentClass.getClassName(), currentClass);
+  //    saveState(new String[] {});
+  //
+  //    return CommandResult.success("Field added: " + args[0] + " " + args[1]);
+  //  }
   public CommandResult addField(String[] args) {
-    if (args.length < 2) {
-      return CommandResult.failure("add field <field type> <field name>");
-    }
-    if (fieldExists(currentClass.getFields(), args[1])) {
-      return CommandResult.failure("Error: Field '" + args[1] + "' already exists.");
+    if (args.length != 2) {
+      return CommandResult.failure("Usage: add field <field type> <field name>");
     }
 
+    if (currentClass == null) {
+      return CommandResult.failure(
+          "Error: No class selected. Use 'switch class <class name>' first.");
+    }
+
+    if (fieldExists(currentClass.getFields(), args[1])) {
+      return CommandResult.failure(
+          "Error: Field '"
+              + args[1]
+              + "' already exists in class '"
+              + currentClass.getClassName()
+              + "'.");
+    }
+
+    // Create and add the field
     UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
     currentClass.getFields().add(field);
-    storage.addNode(currentClass.getClassName(), currentClass);
+
+    // Update storage with current class
+    storage.updateNode(currentClass.getClassName(), currentClass); // Use an update method, not add
+
+    // Save the current state
     saveState(new String[] {});
 
-    return CommandResult.success("Field added: " + args[0] + " " + args[1]);
+    return CommandResult.success(
+        "Field added: Type='"
+            + args[0]
+            + "', Name='"
+            + args[1]
+            + "' to class '"
+            + currentClass.getClassName()
+            + "'.");
   }
 
   public CommandResult removeClass(String[] args) {
@@ -543,11 +625,27 @@ public class CommandLogic {
   }
 
   public CommandResult exit(String[] args) {
+    // Validate that no arguments are provided
     if (args.length != 0) {
-      return CommandResult.failure("No arguments needed");
+      return CommandResult.failure("No arguments needed for the 'exit' command.");
     }
-    return CommandResult.success("Exiting Program");
-  }
 
-  // TODO: Additional command handler methods as needed...
+    try {
+      // Perform any necessary cleanup tasks here
+      // For example: saving the current state, closing resources, etc.
+      saveState(new String[] {}); // Save the current application state
+      System.out.println("Saving current state...");
+
+      // Notify the user about the program termination
+      System.out.println("Exiting the UML Editor...");
+
+      // Gracefully shut down the application
+      System.exit(0);
+
+      return CommandResult.success("Program exited successfully.");
+    } catch (Exception e) {
+      // Handle any errors that occur during the shutdown process
+      return CommandResult.failure("Error occurred while exiting: " + e.getMessage());
+    }
+  }
 }

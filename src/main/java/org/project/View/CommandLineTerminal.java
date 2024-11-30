@@ -18,23 +18,23 @@ public class CommandLineTerminal {
     this.terminalArea = terminalArea;
   }
 
-  public void handleUserInput(String input) {
+  //  public CommandResult handleUserInput(String input) {
+  //    if (input.isBlank()) {
+  //      return CommandResult.failure("Input is blank."); // Handle blank input case
+  //    }
+  //
+  //    // Parse and execute the command
+  //    return commandParser.parseCommand(input);
+  //  }
+  public CommandResult handleUserInput(String input) {
     if (input.isBlank()) {
-      return; // Ignore blank inputs
+      return CommandResult.failure("Command is blank.");
     }
 
-    switch (input.toLowerCase()) {
-      case "help" -> appendToTerminal(commandParser.getCommandList() + "\n");
-      case "exit" -> {
-        appendToTerminal("Exiting application...\n");
-        Platform.exit();
-      }
-      case "clear" -> clearTerminal();
-      default -> {
-        CommandResult result = commandParser.parseCommand(input);
-        displayResult(result);
-      }
-    }
+    // Parse and execute the command
+    CommandResult result = commandParser.parseCommand(input);
+
+    return result; // Return only the CommandResult, no additional logs
   }
 
   private void appendToTerminal(String message) {
@@ -47,16 +47,5 @@ public class CommandLineTerminal {
           terminalArea.clear();
           appendToTerminal(prompt);
         });
-  }
-
-  private void displayResult(CommandResult result) {
-    if (result != null) {
-      String message = result.isSuccess() ? "Success: " : "Error: ";
-      appendToTerminal(message + result.getMessage() + "\n");
-    }
-  }
-
-  public int getPromptPosition() {
-    return terminalArea.getText().length();
   }
 }

@@ -112,7 +112,26 @@ public class CommandLineInterfaceController {
     }
   }
 
+  //  private void processCommand(String command) {
+  //    appendToTerminal(command + "\n");
+  //
+  //    if (!command.isEmpty()) {
+  //      commandHistory.add(command); // Add command to history
+  //      historyIndex = commandHistory.size(); // Reset history index
+  //    }
+  //
+  //    try {
+  //      cliTerminal.handleUserInput(command); // Process the command
+  //    } catch (Exception e) {
+  //      LOGGER.log(Level.WARNING, "Error processing command: " + command, e);
+  //      appendToTerminal("\nError processing command: " + e.getMessage() + "\n");
+  //    }
+  //
+  //    currentInput = ""; // Reset input
+  //    appendPrompt(); // Add a new prompt
+  //  }
   private void processCommand(String command) {
+    // Append the command itself
     appendToTerminal(command + "\n");
 
     if (!command.isEmpty()) {
@@ -121,10 +140,18 @@ public class CommandLineInterfaceController {
     }
 
     try {
-      cliTerminal.handleUserInput(command); // Process the command
+      // Retrieve the CommandResult from handleUserInput
+      CommandResult result = cliTerminal.handleUserInput(command);
+
+      // Display the result based on success or failure
+      if (result.isSuccess()) {
+        appendToTerminal("Success: " + result.getMessage() + "\n");
+      } else {
+        appendToTerminal("Error: " + result.getMessage() + "\n");
+      }
     } catch (Exception e) {
       LOGGER.log(Level.WARNING, "Error processing command: " + command, e);
-      appendToTerminal("\nError processing command: " + e.getMessage() + "\n");
+      appendToTerminal("Unexpected error: " + e.getMessage() + "\n");
     }
 
     currentInput = ""; // Reset input
@@ -132,9 +159,15 @@ public class CommandLineInterfaceController {
   }
 
   private void handleBackspace(KeyEvent event) {
-    if (currentInput.isEmpty() || terminalArea.getCaretPosition() <= promptPosition) {
-      event.consume(); // Prevent deletion beyond the prompt
+    // Determine the position of the caret
+    int caretPosition = terminalArea.getCaretPosition();
+
+    // Allow backspace only if the caret is after the prompt "$ "
+    // and currentInput is not empty
+    if (currentInput.isEmpty() || caretPosition <= promptPosition) {
+      event.consume(); // Prevent deletion before or inside the prompt
     } else {
+      // Safely remove the last character from currentInput
       currentInput = currentInput.substring(0, currentInput.length() - 1);
       refreshTerminal();
     }
@@ -146,22 +179,23 @@ public class CommandLineInterfaceController {
 
       if (suggestions.isEmpty()) {
         return; // No suggestions
-      } else if (suggestions.size() == 1) {
-        // Single match: Autofill the input
-        currentInput = suggestions.get(0); // Use the first suggestion
-        refreshTerminal();
-      } else {
-        // Multiple matches: Display suggestions without overwriting terminal
-        Platform.runLater(
-            () -> {
-              appendToTerminal("\nSuggestions:\n");
-              for (String suggestion : suggestions) {
-                appendToTerminal("- " + suggestion + "\n");
-              }
-              appendPrompt(); // Re-add the prompt for continued input
-              refreshTerminal(); // Update the terminal
-            });
       }
+
+      if (suggestions.size() == 1) {
+        // Single match: Autofill the input
+        currentInput = suggestions.getFirst(); // Use the first suggestion
+        refreshTerminal();
+        return;
+      }
+
+      // Multiple matches: Display suggestions without overwriting terminal
+      Platform.runLater(
+          () -> {
+            appendToTerminal("\nSuggestions:\n");
+            suggestions.forEach(suggestion -> appendToTerminal("- " + suggestion + "\n"));
+            appendPrompt(); // Re-add the prompt for continued input
+            refreshTerminal(); // Update the terminal
+          });
     } catch (IOException e) {
       LOGGER.log(Level.WARNING, "Error fetching autocomplete suggestions", e);
       appendToTerminal("\nError fetching autocomplete suggestions: " + e.getMessage() + "\n");
