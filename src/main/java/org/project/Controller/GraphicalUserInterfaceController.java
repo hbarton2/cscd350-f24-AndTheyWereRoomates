@@ -862,9 +862,6 @@ public class GraphicalUserInterfaceController implements Initializable {
   }
 
   @FXML
-  public void onLoad(ActionEvent event) {}
-
-  @FXML
   public void onRedo(ActionEvent event) {
     CommandResult result = commandBridge.redo();
     if (result.isSuccess()) {
@@ -901,6 +898,20 @@ public class GraphicalUserInterfaceController implements Initializable {
       observableClass.addClassBox(graphicalClassNode);
       canvas.getChildren().add(graphicalClassNode);
       observableClass.removeClasBox(graphicalClassNode);
+    }
+    drawAllRelationships();
+  }
+
+  private void drawAllRelationships() {
+    for (UMLClassNode fromNode : commandBridge.getStorage().getAllNodes().values()) {
+      for (UMLClassNode.Relationship relationship : fromNode.getRelationships()) {
+        UMLClassNode toNode = commandBridge.getStorage().getNode(relationship.getTarget());
+        VBox fromBox = findClassName(fromNode.getClassName());
+        VBox toBox = findClassName(toNode.getClassName());
+        if (fromBox != null && toBox != null) {
+          drawRelationLine(fromBox, toBox, relationship.getType());
+        }
+      }
     }
   }
 
