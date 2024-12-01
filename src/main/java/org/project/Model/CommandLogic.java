@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.project.Controller.ClassNodeService;
-import org.project.Controller.CommandLineInterfaceController;
 import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
 import org.project.Memento.Memento;
@@ -45,41 +44,14 @@ public class CommandLogic {
     return storage.containsNode(className);
   }
 
-  // Add a class to the set
-  //  public void addClass(String className) {
-  //    storage.addNode(className, new UMLClassNode(className));
-  //    currentClass = storage.getNode(className);
-  //    saveState(new String[] {});
-  //  }
-  //  public CommandResult addClass(String className) {
-  //    if (classExists(className)) {
-  //      return CommandResult.failure("Error: Class '" + className + "' already exists.");
-  //    }
-  //
-  //    // Add the class to storage
-  //    UMLClassNode newClass = new UMLClassNode(className);
-  //    storage.addNode(className, newClass);
-  //    saveState(new String[]{});
-  //    return CommandResult.success("Class added: " + className);
-  //  }
-
-  //  public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
-  //    for (UMLClassNode.Field field : fieldList) {
-  //      if (field.getName().equals(name)) {
-  //        return true;
-  //      }
-  //    }
-  //    return false;
-  //  }
   public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
     for (UMLClassNode.Field field : fieldList) {
       System.out.println("Checking field: " + field.getName());
       if (field.getName().equals(name)) {
-        System.out.println("Field '" + name + "' exists.");
         return true; // Field exists
       }
     }
-    System.out.println("Field '" + name + "' does not exist.");
+
     return false; // Field does not exist
   }
 
@@ -91,31 +63,6 @@ public class CommandLogic {
     }
     return false;
   }
-
-  //  public CommandResult createClass(String[] args) {
-  //    if (args.length != 1) {
-  //      return CommandResult.failure("Usage: create class <class name>");
-  //    }
-  //
-  //    String className = args[0];
-  //    if (className.isBlank()) {
-  //      return CommandResult.failure("Error: Class name cannot be empty.");
-  //    }
-  //
-  //    if (!className.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
-  //      return CommandResult.failure(
-  //          "Error: Invalid class name. Use letters, numbers, and underscores only.");
-  //    }
-  //
-  //    if (classExists(className)) {
-  //      return CommandResult.failure("Error: Class '" + className + "' already exists.");
-  //    }
-  //
-  //    // Add class to the registry
-  //    addClass(className);
-  //    switchClass(new String[] {className});
-  //    return CommandResult.success("Class created: " + className);
-  //  }
 
   public CommandResult createClass(String[] args) {
     if (args.length != 1) {
@@ -154,21 +101,6 @@ public class CommandLogic {
     return CommandResult.success("Class added: " + className);
   }
 
-  //  public CommandResult addField(String[] args) {
-  //    if (args.length < 2) {
-  //      return CommandResult.failure("add field <field type> <field name>");
-  //    }
-  //    if (fieldExists(currentClass.getFields(), args[1])) {
-  //      return CommandResult.failure("Error: Field '" + args[1] + "' already exists.");
-  //    }
-  //
-  //    UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
-  //    currentClass.getFields().add(field);
-  //    storage.addNode(currentClass.getClassName(), currentClass);
-  //    saveState(new String[] {});
-  //
-  //    return CommandResult.success("Field added: " + args[0] + " " + args[1]);
-  //  }
   public CommandResult addField(String[] args) {
     if (args.length != 2) {
       return CommandResult.failure("Usage: add field <field type> <field name>");
@@ -193,11 +125,12 @@ public class CommandLogic {
     currentClass.getFields().add(field);
 
     // Update storage with current class
-    storage.updateNode(currentClass.getClassName(), currentClass); // Use an update method, not add
+    storage.updateNode(currentClass.getClassName(), currentClass);
 
     // Save the current state
     saveState(new String[] {});
 
+    // Only return the success message without any additional logging
     return CommandResult.success(
         "Field added: Type='"
             + args[0]
@@ -625,7 +558,8 @@ public class CommandLogic {
     }
 
     // Ensure CommandRegistries is initialized with the correct file path
-    CommandRegistries commandRegistries = CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+    CommandRegistries commandRegistries =
+        CommandRegistries.getInstance("src/main/resources/CLICommands.json");
 
     // Get all available commands and their syntax
     StringBuilder helpMessage = new StringBuilder("Available Commands:\n\n");
@@ -634,13 +568,14 @@ public class CommandLogic {
     for (Map.Entry<String, CommandInfo> entry : commands.entrySet()) {
       String commandName = entry.getKey();
       CommandInfo commandInfo = entry.getValue();
-      helpMessage.append("- ")
-        .append(commandName)
-        .append(": ")
-        .append(commandInfo.description())
-        .append("\n  Syntax: ")
-        .append(commandInfo.syntax())
-        .append("\n\n");
+      helpMessage
+          .append("- ")
+          .append(commandName)
+          .append(": ")
+          .append(commandInfo.description())
+          .append("\n  Syntax: ")
+          .append(commandInfo.syntax())
+          .append("\n\n");
     }
 
     // Return the formatted help message

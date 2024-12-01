@@ -54,10 +54,11 @@ public class CommandRegistries extends CommandLogic {
         for (String commandName : commands.keySet()) {
           JsonObject commandDetails = commands.getAsJsonObject(commandName);
           String syntax =
-            commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
+              commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
           String description =
-            commandDetails.has("description") ? commandDetails.get("description").getAsString()
-              : "";
+              commandDetails.has("description")
+                  ? commandDetails.get("description").getAsString()
+                  : "";
           commandMap.put(commandName, new CommandInfo(syntax, description));
         }
       }

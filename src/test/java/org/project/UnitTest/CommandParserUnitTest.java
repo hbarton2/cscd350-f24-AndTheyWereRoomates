@@ -22,7 +22,7 @@ class CommandParserUnitTest {
     try {
       // Mock or create a valid instance of CommandRegistries
       CommandRegistries commandRegistries =
-        CommandRegistries.getInstance("src/main/resources/CLICommands.json"); // Use singleton
+          CommandRegistries.getInstance("src/main/resources/CLICommands.json"); // Use singleton
       parser = new CommandParser(commandRegistries);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -42,16 +42,16 @@ class CommandParserUnitTest {
     parser.parseCommand("create class Car");
     CommandResult result = parser.parseCommand("create class Car");
     assertTrue(
-      result.getMessage().contains("Error: Class 'Car' already exists."),
-      "Error message should indicate duplicate class.");
+        result.getMessage().contains("Error: Class 'Car' already exists."),
+        "Error message should indicate duplicate class.");
   }
 
   @Test
   void testCreateClassInvalidName() {
     CommandResult result = parser.parseCommand("create class 123Car");
     assertTrue(
-      result.getMessage().contains("Error: Invalid class name."),
-      "Error message should indicate invalid class name.");
+        result.getMessage().contains("Error: Invalid class name."),
+        "Error message should indicate invalid class name.");
   }
 
   @Test
@@ -66,8 +66,8 @@ class CommandParserUnitTest {
   void testRemoveClassNotExists() {
     CommandResult result = parser.parseCommand("remove class NonExistentClass");
     assertTrue(
-      result.getMessage().contains("Error: Class 'NonExistentClass' does not exist."),
-      "Error message should indicate non-existent class.");
+        result.getMessage().contains("Error: Class 'NonExistentClass' does not exist."),
+        "Error message should indicate non-existent class.");
   }
 
   @Test
@@ -75,8 +75,8 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("help");
     assertTrue(result.isSuccess(), "Help command should succeed.");
     assertTrue(
-      result.getMessage().contains("Available Commands:"),
-      "Help message should list available commands.");
+        result.getMessage().contains("Available Commands:"),
+        "Help message should list available commands.");
   }
 
   @AfterEach

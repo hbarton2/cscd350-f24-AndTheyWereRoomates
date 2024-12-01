@@ -72,27 +72,27 @@ public class CommandLineInterfaceController {
   private void initializeComponents() {
     try {
       CommandRegistries commandRegistries =
-        CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+          CommandRegistries.getInstance("src/main/resources/CLICommands.json");
       cliTerminal = new CommandLineTerminal(commandRegistries, terminalArea);
       autoComplete = new AutoComplete();
 
       // Populate autocomplete suggestions
       commandRegistries
-        .getAllCommandNames()
-        .forEach(
-          (key, value) -> {
-            try {
-              String command = (String) key;
-              autoComplete.addCommand(command);
-            } catch (IOException e) {
-              LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
-            }
-          });
+          .getAllCommandNames()
+          .forEach(
+              (key, value) -> {
+                try {
+                  String command = (String) key;
+                  autoComplete.addCommand(command);
+                } catch (IOException e) {
+                  LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
+                }
+              });
     } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, "Error initializing components in CommandLineInterfaceController", e);
+      LOGGER.log(
+          Level.SEVERE, "Error initializing components in CommandLineInterfaceController", e);
     }
   }
-
 
   private void handleInput(KeyEvent event) {
     switch (event.getCode()) {
@@ -112,27 +112,7 @@ public class CommandLineInterfaceController {
     }
   }
 
-  //  private void processCommand(String command) {
-  //    appendToTerminal(command + "\n");
-  //
-  //    if (!command.isEmpty()) {
-  //      commandHistory.add(command); // Add command to history
-  //      historyIndex = commandHistory.size(); // Reset history index
-  //    }
-  //
-  //    try {
-  //      cliTerminal.handleUserInput(command); // Process the command
-  //    } catch (Exception e) {
-  //      LOGGER.log(Level.WARNING, "Error processing command: " + command, e);
-  //      appendToTerminal("\nError processing command: " + e.getMessage() + "\n");
-  //    }
-  //
-  //    currentInput = ""; // Reset input
-  //    appendPrompt(); // Add a new prompt
-  //  }
   private void processCommand(String command) {
-    // Append the command itself
-    appendToTerminal(command + "\n");
 
     if (!command.isEmpty()) {
       commandHistory.add(command); // Add command to history

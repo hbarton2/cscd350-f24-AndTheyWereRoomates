@@ -23,9 +23,6 @@ public class Storage {
     return instance;
   }
 
-  public static void resetInstance() {
-  }
-
   public synchronized void addNode(String key, UMLClassNode node) {
     if (storage.containsKey(key)) {
       throw new IllegalArgumentException("Class with the name '" + key + "' already exists.");
@@ -84,5 +81,14 @@ public class Storage {
       throw new IllegalArgumentException("Class with the name '" + className + "' does not exist.");
     }
     storage.put(className, currentClass);
+  }
+
+  public static void resetInstance() {
+    synchronized (Storage.class) {
+      if (instance != null) {
+        instance.clearStorage(); // Clear the current storage map
+        instance = null; // Reset the instance to null
+      }
+    }
   }
 }
