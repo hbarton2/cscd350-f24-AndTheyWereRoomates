@@ -72,15 +72,13 @@ jobs:
           path: target/*.jar
 
       - name: Create Release
-        id: create_release
         if: github.ref == 'refs/heads/main'
-        uses: actions/create-release@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
-          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with JDK ${{ matrix.java-version }}"
-          draft: false
-          prerelease: false
+        run: |
+          gh release create v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }} \
+            -t "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with JDK ${{ matrix.java-version }}" \
+            -n "Release notes or details here"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Shaded JAR to Release
         if: success() && github.ref == 'refs/heads/main'
