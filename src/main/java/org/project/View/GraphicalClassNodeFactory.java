@@ -54,7 +54,7 @@ public class GraphicalClassNodeFactory {
   }
 
   public static GraphicalClassNode createClassBox(
-          UMLClassNode umlClassNode, CommandBridge commandBridge) {
+      UMLClassNode umlClassNode, CommandBridge commandBridge) {
 
     GraphicalClassNode graphicalClassNode = new GraphicalClassNode(umlClassNode.getClassName());
 
