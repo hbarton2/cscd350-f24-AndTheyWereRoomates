@@ -85,7 +85,6 @@ public class GraphicalUserInterfaceController implements Initializable {
   public UMLController umlController;
   public static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
-  ; // TODO what is this?
 
   /**
    * This sets the default path to be the user's home directory.

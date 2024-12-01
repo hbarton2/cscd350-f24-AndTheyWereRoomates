@@ -96,18 +96,33 @@ public class CommandLineInterfaceController {
 
   private void handleInput(KeyEvent event) {
     switch (event.getCode()) {
-      case ENTER -> processCommand(currentInput.trim());
-      case BACK_SPACE -> handleBackspace(event);
-      case TAB -> handleAutocomplete();
-      case UP -> navigateHistory(-1);
-      case DOWN -> navigateHistory(1);
+      case ENTER -> {
+        processCommand(currentInput.trim());
+        event.consume(); // Prevent default behavior of ENTER
+      }
+      case BACK_SPACE -> {
+        handleBackspace();
+        event.consume(); // Prevent default backspace behavior
+      }
+      case TAB -> {
+        handleAutocomplete();
+        event.consume(); // Prevent default tab behavior
+      }
+      case UP -> {
+        navigateHistory(-1);
+        event.consume(); // Prevent scrolling with the UP arrow
+      }
+      case DOWN -> {
+        navigateHistory(1);
+        event.consume(); // Prevent scrolling with the DOWN arrow
+      }
       default -> {
         String text = event.getText();
         if (text != null && !text.isEmpty()) {
-          currentInput += text; // Update only the current input
-          refreshTerminal(); // Refresh without appending the prompt again
+          currentInput += text;
+          refreshTerminal();
         }
-        event.consume(); // Prevent default text area behavior
+        event.consume(); // Prevent default behavior for other keys
       }
     }
   }
@@ -138,19 +153,43 @@ public class CommandLineInterfaceController {
     appendPrompt(); // Add a new prompt
   }
 
-  private void handleBackspace(KeyEvent event) {
-    // Determine the position of the caret
+  // TODO: THIS LOGIC HAS ISSUES
+  private void handleBackspace() {
     int caretPosition = terminalArea.getCaretPosition();
+    String textBeforeCaret = terminalArea.getText(caretPosition - 2, caretPosition);
 
-    // Allow backspace only if the caret is after the prompt "$ "
-    // and currentInput is not empty
-    if (currentInput.isEmpty() || caretPosition <= promptPosition) {
-      event.consume(); // Prevent deletion before or inside the prompt
-    } else {
-      // Safely remove the last character from currentInput
-      currentInput = currentInput.substring(0, currentInput.length() - 1);
-      refreshTerminal();
+    if (!textBeforeCaret.equals("$")) {
+      appendToTerminal(textBeforeCaret); // give back that character that got deleted
+      moveCaretToEnd();
     }
+
+    if (textBeforeCaret.equals("$")) {
+      //      appendToTerminal(textBeforeCaret);
+      moveCaretToEnd();
+    }
+
+    //    if(caretPosition == terminalArea.getCaretPosition() ){
+    //      //moveCaretToLastpostion
+    //      // append last
+    //      moveCaretToEnd();
+    //    } else
+    // if (textBeforeCaret.equals("$")) {
+    //      appendToTerminal(" ");
+    //      moveCaretToEnd();
+    //    }
+  }
+
+  private void moveCaretToEnd() {
+    Platform.runLater(
+        () -> {
+          int caretPosition = terminalArea.getCaretPosition();
+          int expectedCaretPosition = promptPosition + currentInput.length();
+
+          if (caretPosition < expectedCaretPosition) {
+            terminalArea.positionCaret(
+                expectedCaretPosition); // Move caret to the end of `currentInput`
+          }
+        });
   }
 
   private void handleAutocomplete() {
@@ -187,10 +226,9 @@ public class CommandLineInterfaceController {
         () -> {
           try {
             String fullText = terminalArea.getText(0, promptPosition) + currentInput;
-
-            // Safely update the TextArea
             terminalArea.setText(fullText);
-            terminalArea.positionCaret(fullText.length()); // Move caret to the end
+            terminalArea.positionCaret(
+                fullText.length()); // Ensure caret is at the end of the input
           } catch (IndexOutOfBoundsException e) {
             LOGGER.log(Level.WARNING, "Error refreshing terminal", e);
           }
@@ -224,11 +262,17 @@ public class CommandLineInterfaceController {
       historyIndex = commandHistory.size();
       currentInput = ""; // Clear input if beyond the last command
       refreshTerminal();
+      scrollToBottom();
       return;
     }
 
     // Update current input with the selected command
     currentInput = commandHistory.get(historyIndex);
     refreshTerminal();
+    scrollToBottom();
+  }
+
+  private void scrollToBottom() {
+    Platform.runLater(() -> terminalArea.setScrollTop(Double.MAX_VALUE));
   }
 }

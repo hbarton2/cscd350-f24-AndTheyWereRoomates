@@ -52,9 +52,15 @@ jobs:
 
       - name: Run Tests and Package
         run: |
-          mvn spotless:check clean test package -B \
-          -Dstyle.color=always \
-          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            mvn spotless:check clean test package -B ^
+            -Dstyle.color=always ^
+            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          else
+            mvn spotless:check clean test package -B \
+            -Dstyle.color=always \
+            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          fi
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
