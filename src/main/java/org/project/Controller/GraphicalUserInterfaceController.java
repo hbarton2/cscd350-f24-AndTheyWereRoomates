@@ -948,4 +948,9 @@ public class GraphicalUserInterfaceController implements Initializable {
       LOGGER.throwing(getClass().getName(), "backToMainMenu", e);
     }
   }
+
+  @FXML
+  public void onExportImage(ActionEvent event) {
+
+  }
 }
