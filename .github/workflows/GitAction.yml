@@ -59,6 +59,7 @@ jobs:
 
       - name: Run Tests and Package (Windows)
         if: runner.os == 'Windows'
+        shell: cmd
         run: |
           mvn spotless:check clean test package -B ^
           -Dstyle.color=always ^
