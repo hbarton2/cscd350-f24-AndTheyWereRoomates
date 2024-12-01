@@ -978,7 +978,5 @@ public class GraphicalUserInterfaceController implements Initializable {
      * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
 
-    /*Confirmation text*/
-    System.out.println("Image Saved");
   }
 }
