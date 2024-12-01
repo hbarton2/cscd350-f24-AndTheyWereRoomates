@@ -173,6 +173,7 @@ You can find tests under the src/test directory.
 # Dependencies
 
 ## Runtime Dependencies
+
 - **[JLine (3.21.0)](https://github.com/jline/jline3)**  
   Used for handling command-line input and key detection for autocomplete.
 
@@ -198,6 +199,7 @@ You can find tests under the src/test directory.
   Provides reflection utilities for Java applications.
 
 ## Testing Dependencies
+
 - **[JUnit (4.13.2)](https://junit.org/junit4/)**  
   JUnit 4 for basic unit testing.
 
@@ -211,13 +213,14 @@ You can find tests under the src/test directory.
   Provides integration between Mockito and JUnit 5.
 
 ## Build Tool Plugins
+
 - **[Maven Compiler Plugin (3.13.0)](https://maven.apache.org/plugins/maven-compiler-plugin/)**  
   Ensures the project compiles with Java 17.
 
 - **[Maven Shade Plugin (3.6.0)](https://maven.apache.org/plugins/maven-shade-plugin/)**  
   Packages the project as an executable JAR with all dependencies included.
 
-- **[Spotless Maven Plugin (2.37.0)](https://github.com/diffplug/spotless/tree/main/plugin-maven)**
+- **[Spotless Maven Plugin (2.37.0)](https://github.com/diffplug/spotless/tree/main/plugin-maven)**  
   Ensures consistent code formatting for Java, JSON, and YAML files, adhering to Google Java Style.
 
 - **[JavaFX Maven Plugin (0.0.8)](https://github.com/openjfx/javafx-maven-plugin)**  
@@ -225,11 +228,7 @@ You can find tests under the src/test directory.
 
 ---
 ### Additional Notes
-Ensure you have the correct Java version (Java 17) and Maven installed to use these dependencies effectively.
-
-
-
-
+Ensure you have the correct Java version (Java 21.0.5) and Maven installed to use these dependencies effectively.
 
 ## Contributing
 

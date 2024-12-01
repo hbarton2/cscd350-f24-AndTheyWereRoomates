@@ -1,0 +1,84 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches:
+      - Developer
+      - main
+  pull_request:
+    branches:
+      - Developer
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        java-version: ['21']
+
+    name: Build, Lint, and Deploy on ${{ matrix.os }} with JDK ${{ matrix.java-version }}
+
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Verify Code Style with Spotless
+        run: |
+          mvn spotless:check
+
+      - name: Apply Code Style with Spotless (if check fails)
+        run: |
+          mvn spotless:apply
+        if: failure()
+
+      - name: Commit and Push Spotless Changes
+        if: failure()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Apply Spotless formatting"
+          git push
+
+      - name: Run Tests and Package
+        run: |
+          mvn spotless:check clean test package -B \
+          -Dstyle.color=always \
+          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
+          path: target/*.jar
+
+      - name: Create Release
+        id: create_release
+        if: github.ref == 'refs/heads/main'
+        uses: actions/create-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
+          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with JDK ${{ matrix.java-version }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload Shaded JAR to Release
+        if: success() && github.ref == 'refs/heads/main'
+        uses: actions/upload-release-asset@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/uml-editor-shaded.jar
+          asset_name: uml-editor-shaded-${{ matrix.os }}-${{ matrix.java-version }}.jar
+          asset_content_type: application/java-archive

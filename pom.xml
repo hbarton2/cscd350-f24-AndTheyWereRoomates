@@ -20,71 +20,71 @@
     <dependency>
       <groupId>org.fxmisc.richtext</groupId>
       <artifactId>richtextfx</artifactId>
-      <version>0.10.9</version>
+      <version>0.11.4</version>
     </dependency>
     <!-- Autocomplete key detection -->
     <dependency>
       <groupId>org.jline</groupId>
       <artifactId>jline</artifactId>
-      <version>3.23.0</version>
+      <version>3.26.1</version>
     </dependency>
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
-      <version>4.7.3</version>
+      <version>4.7.6</version>
     </dependency>
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli-shell-jline3</artifactId>
-      <version>4.7.3</version>
+      <version>4.7.6</version>
     </dependency>
 
     <!-- Autocomplete -->
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>9.7.0</version>
+      <version>10.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-suggest</artifactId>
-      <version>9.7.0</version>
+      <version>10.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-codecs</artifactId>
-      <version>9.7.0</version>
+      <version>10.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-analysis-common</artifactId>
-      <version>9.7.0</version>
+      <version>10.0.0</version>
     </dependency>
     <!-- JavaFX Dependencies -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
-      <version>21.0.5</version>
+      <version>23.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>21.0.5</version>
+      <version>23.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>21.0.5</version>
+      <version>23.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>21.0.5</version>
+      <version>23.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-swing</artifactId>
-      <version>21.0.5</version>
+      <version>23.0.1</version>
     </dependency>
     <!-- JSON Parsing -->
     <dependency>
@@ -118,15 +118,15 @@
       <version>5.5.0</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.gluonhq</groupId>
-      <artifactId>glisten</artifactId>
-      <version>0.1.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.gluonhq</groupId>-->
+<!--      <artifactId>glisten</artifactId>-->
+<!--      <version>0.1.0</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.apache.xbean</groupId>
       <artifactId>xbean-reflect</artifactId>
-      <version>3.7</version>
+      <version>4.26</version>
     </dependency>
   </dependencies>
 

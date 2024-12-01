@@ -8,17 +8,19 @@ module org.project {
 
   // Other required modules
   requires java.desktop;
+  requires java.logging;
   requires com.google.gson;
   requires org.jline;
   requires info.picocli;
-  requires org.fxmisc.richtext;
-  requires org.fxmisc.flowless;
   requires org.apache.lucene.suggest;
   requires org.apache.lucene.core;
-  requires java.logging;
+  requires org.apache.lucene.codecs;
+  requires org.apache.lucene.analysis.common;
+  requires org.apache.xbean.reflect; // Added xbean dependency
+  requires org.fxmisc.richtext;
 
   // Exported packages for public access
-  exports org.project; // <-- Ensure this is exported for your Application class
+  exports org.project;
   exports org.project.Controller;
   exports org.project.Model;
   exports org.project.View;
