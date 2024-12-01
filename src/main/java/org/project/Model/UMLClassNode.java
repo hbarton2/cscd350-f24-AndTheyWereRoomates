@@ -9,17 +9,20 @@ public class UMLClassNode {
   private List<Field> fields;
   private List<Method> methods;
   private List<Relationship> relationships;
+  private double[] position;
 
   // Constructor
   public UMLClassNode(
       String className,
       List<Field> fields,
       List<Method> methods,
-      List<Relationship> relationships) {
+      List<Relationship> relationships,
+      double[] position) {
     this.className = className;
     this.fields = fields;
     this.methods = methods;
     this.relationships = relationships;
+    this.position = position;
   }
 
   // Constructor with only className
@@ -28,6 +31,7 @@ public class UMLClassNode {
     this.fields = new ArrayList<>();
     this.methods = new ArrayList<>();
     this.relationships = new ArrayList<>();
+    this.position = new double[] {0.0, 0.0};
   }
 
   public UMLClassNode(UMLClassNode other) {
@@ -44,6 +48,7 @@ public class UMLClassNode {
     for (Relationship relationship : other.relationships) {
       this.relationships.add(new Relationship(relationship));
     }
+    this.position = other.position;
   }
 
   // Getters
@@ -63,9 +68,18 @@ public class UMLClassNode {
     return relationships;
   }
 
+  public double[] getPosition() {
+    return position;
+  }
+
   // Setters
   public void setClassName(String className) {
     this.className = className;
+  }
+
+  public void setPosition(double x, double y) {
+    this.position[0] = x;
+    this.position[1] = y;
   }
 
   @Override

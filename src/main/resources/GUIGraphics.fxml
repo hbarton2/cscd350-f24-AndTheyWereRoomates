@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GraphicalUserInterfaceController">
+<AnchorPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GraphicalUserInterfaceController">
   <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <Menu fx:id="menubar" mnemonicParsing="false" text="File">
       <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…" />

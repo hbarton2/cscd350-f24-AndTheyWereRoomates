@@ -79,3 +79,32 @@ This converts everything from the CLI commands into GUI functionality
 
 #### CommandBridge.java
 An interface class that allows quick access for the GUI to preform commands.
+
+An interface class that allows quick access for the GUI to preform commands.
+# Strategy
+We implemented Strategy pattern to isolate the logic to draw the arrows.
+### ArrowInterface
+ArrowStrategy interface to isolate drawing logic
+### Where it was implemented
+* AggregationArrow.java
+* RealizationArrow.java
+* GeneralizationArrow.java
+* CompositionArrow.java <br>
+  These classes contain the logic to draw the different types of arrows
+### Where these classes are being used
+In the GUIController.java in lines 540-593.
+It calls the appropriate logic depending on what the user has selected.
+# Observer
+The Observer Pattern is implemented in the project to ensure that all ComboBoxes(UI elements that hold data types for fields, method, and etc) are updated whenever a class is created or removed.
+### Classes created to implement Observer pattern
+#### ObserverInterface.java
+#### ObservableClass.java
+#### ComboBoxObserver.java
+### Where it was implemented
+#### GUIViewController.java in lines 71, 94-104, 166, 200, 875, and 877.
+# Factory
+We used this pattern to isolate the creation logic of the class box for the GUI.
+### Classes created to implement Factory pattern
+#### ClassBoxFactory.java
+### Where it was implemented
+#### GUIViewController.java in lines 146 and 868

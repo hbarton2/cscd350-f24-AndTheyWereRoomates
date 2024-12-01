@@ -66,8 +66,14 @@ public class ClassNodeService {
       relationships.add(new Relationship(relType, target));
     }
 
+    JsonArray positionArray = jsonData.get("position").getAsJsonArray();
+    double[] position = new double[positionArray.size()];
+    for (int i = 0; i < positionArray.size(); i++) {
+      position[i] = positionArray.get(i).getAsDouble();
+    }
+
     // Create and return the UMLClassNode instance
-    return new UMLClassNode(className, fields, methods, relationships);
+    return new UMLClassNode(className, fields, methods, relationships, position);
   }
 
   //  public void StorageSaveToJsonArray(Storage storage, String fileName) {
