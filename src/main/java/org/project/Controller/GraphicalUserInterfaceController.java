@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -40,14 +39,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
 import org.project.Model.Storage;
 import org.project.Model.UMLClassNode;
 import org.project.View.GraphicalClassNode;
 import org.project.View.GraphicalClassNodeFactory;
-
-import javax.imageio.ImageIO;
 
 public class GraphicalUserInterfaceController implements Initializable {
 
@@ -971,12 +969,11 @@ public class GraphicalUserInterfaceController implements Initializable {
     WritableImage image = canvas.snapshot(null, null);
 
     /*The path for the image, where the image will go*/
-    File file = new File("src/main/resources/exports/" + fileName +".PNG");
+    File file = new File("src/main/resources/exports/" + fileName + ".PNG");
 
     /*Writes to the image.
      * Write - the image (what SwingFXUtils.fromFXImage is doing), the file format, the path name
      * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
-
   }
 }
