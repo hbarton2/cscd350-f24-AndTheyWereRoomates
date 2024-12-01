@@ -1,7 +1,7 @@
 package org.project.Controller;
 
-import java.util.TreeMap;
 import javafx.scene.Node;
+import org.project.Model.UMLClassNode;
 
 /** This provides functionality to make a JavaFx Node draggable. */
 public class DraggableMaker {
@@ -28,7 +28,7 @@ public class DraggableMaker {
         });
   }
 
-  public void makeDraggable(Node node, TreeMap<String, double[]> nodePositions, String nodeName) {
+  public void makeDraggable(Node node, UMLClassNode classNode) {
     node.setOnMousePressed(
         e -> {
           mouseAnchorX = e.getX();
@@ -40,8 +40,9 @@ public class DraggableMaker {
           double newY = mouseEvent.getSceneY() - mouseAnchorY;
           node.setLayoutX(newX);
           node.setLayoutY(newY);
-          // Update the position in the TreeMap
-          nodePositions.put(nodeName, new double[] {newX, newY});
+          classNode.setPosition(newX, newY);
+          /* Update the position in the TreeMap */
+
         });
   }
 }

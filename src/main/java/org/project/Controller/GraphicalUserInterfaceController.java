@@ -1,6 +1,5 @@
 package org.project.Controller;
 
-import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -8,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -26,7 +24,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -80,12 +77,8 @@ public class GraphicalUserInterfaceController implements Initializable {
   @FXML private ComboBox<String> fromComboBox;
   @FXML private ComboBox<String> toComboBox;
   @FXML private ComboBox<String> relationshipTypeComboBox;
-  @FXML private MenuBar menuBar;
-  @FXML private MenuItem saveButton;
-  @FXML private MenuItem openButton;
   private final ObservableClass observableClass = new ObservableClass();
   private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
-  private final TreeMap<String, double[]> classBoxPositions = new TreeMap<>();
 
   private GraphicalClassNode selectedGraphicalClassNode = null;
   private final CommandBridge commandBridge;
@@ -151,6 +144,7 @@ public class GraphicalUserInterfaceController implements Initializable {
             : inspectorValues[0];
 
     CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+    UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
     if (result.isSuccess()) {
       result = commandBridge.switchClass(new String[] {className});
@@ -173,12 +167,13 @@ public class GraphicalUserInterfaceController implements Initializable {
         double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
         double startX = 50.0; // Starting X position
         double startY = 50.0; // Starting Y position
+        // classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
+        node1.setPosition(startX + offsetX, startY + offsetY);
         graphicalClassNode.setLayoutX(startX + offsetX);
         graphicalClassNode.setLayoutY(startY + offsetY);
 
-        classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
         DraggableMaker draggableMaker = new DraggableMaker();
-        draggableMaker.makeDraggable(graphicalClassNode, classBoxPositions, className);
+        draggableMaker.makeDraggable(graphicalClassNode, node1);
 
         canvas.getChildren().add(graphicalClassNode);
         observableClass.addClassBox(graphicalClassNode);
@@ -473,7 +468,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
     if (selectedGraphicalClassNode != null) {
       String methodName = methodNameInput.getText();
-      String returnType = parameterTypeComboBox.getValue();
+      String returnType = methodTypeComboBox.getValue();
 
       if (!methodName.isEmpty()) {
 
@@ -843,23 +838,26 @@ public class GraphicalUserInterfaceController implements Initializable {
    */
   @FXML
   public void onOpen(ActionEvent event) {
-    FileChooser.ExtensionFilter jsonFilter =
-        new FileChooser.ExtensionFilter("Json Files", "*.json");
-    fileChooser.getExtensionFilters().add(jsonFilter);
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
-    // Set the initial directory to src/main/resources/saves
     File initialDirectory = new File("src/main/resources/saves");
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
     File file = fileChooser.showOpenDialog(new Stage());
-    String name = file.getName();
-
-    CommandResult result = commandBridge.load(new String[] {name});
-
-    if (result.isSuccess()) {
-      Gson gson = new Gson();
+    if (file != null) {
+      String fileName = file.getName();
+      if (fileName.endsWith(".json")) {
+        fileName = fileName.substring(0, fileName.length() - 5);
+      }
+      CommandResult result = commandBridge.load(new String[] {fileName});
+      if (result.isSuccess()) {
+        refreshCanvas();
+      } else {
+        showAlert("Load Error", result.getMessage());
+      }
     }
   }
 
@@ -894,11 +892,12 @@ public class GraphicalUserInterfaceController implements Initializable {
       GraphicalClassNode graphicalClassNode =
           GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
-      double[] position = classBoxPositions.getOrDefault(className, new double[] {50.0, 50.0});
+      // double[] position = classBoxPositions.getOrDefault(className, new double[] {50.0, 50.0});
+      double[] position = classNode.getPosition();
       graphicalClassNode.setLayoutX(position[0]);
       graphicalClassNode.setLayoutY(position[1]);
       DraggableMaker draggableMaker = new DraggableMaker();
-      draggableMaker.makeDraggable(graphicalClassNode, classBoxPositions, className);
+      draggableMaker.makeDraggable(graphicalClassNode, classNode);
       observableClass.addClassBox(graphicalClassNode);
       canvas.getChildren().add(graphicalClassNode);
       observableClass.removeClasBox(graphicalClassNode);
