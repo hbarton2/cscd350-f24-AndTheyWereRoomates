@@ -50,17 +50,19 @@ jobs:
           git commit -m "Apply Spotless formatting"
           git push
 
-      - name: Run Tests and Package
+      - name: Run Tests and Package (Linux/macOS)
+        if: runner.os != 'Windows'
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            mvn spotless:check clean test package -B ^
-            -Dstyle.color=always ^
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-          else
-            mvn spotless:check clean test package -B \
-            -Dstyle.color=always \
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-          fi
+          mvn spotless:check clean test package -B \
+          -Dstyle.color=always \
+          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+      - name: Run Tests and Package (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mvn spotless:check clean test package -B ^
+          -Dstyle.color=always ^
+          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
