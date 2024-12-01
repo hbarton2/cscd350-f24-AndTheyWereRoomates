@@ -1,74 +1,219 @@
 package org.project.Controller;
 
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import org.project.Model.AutoComplete;
+import org.project.Model.CommandRegistries;
+import org.project.View.CommandLineTerminal;
+import org.project.View.TextAreaOutputStream;
 
 public class CommandLineInterfaceController {
 
   @FXML private TextArea terminalArea;
 
-  private final String prompt = "$ "; // Command prompt
-  private String currentInput = "";   // Tracks the current user input
-  private int promptPosition = 0;     // Tracks the position of the latest prompt
   private final List<String> commandHistory = new ArrayList<>(); // Stores command history
   private int historyIndex = -1; // Tracks current position in command history
+  private CommandLineTerminal cliTerminal;
+  private AutoComplete autoComplete; // For autocomplete functionality
+  private String currentInput = ""; // Tracks the current user input
+  private int promptPosition = 0; // Tracks the position of the latest prompt
+
+  private static final Logger LOGGER =
+      Logger.getLogger(CommandLineInterfaceController.class.getName());
 
   @FXML
   public void initialize() {
-    // Disable default JavaFX styling
-    System.setProperty("javafx.userAgentStylesheetUrl", "none");
+    try {
+      // Apply custom CSS
+      System.setProperty("javafx.userAgentStylesheetUrl", "none");
+      terminalArea
+          .getStylesheets()
+          .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
 
-    // Apply custom CSS styling
-    terminalArea.getStylesheets()
-      .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+      // Redirect System.out to the terminalArea
+      System.setOut(
+          new PrintStream(new TextAreaOutputStream(terminalArea)) {
+            @Override
+            public void println(String x) {
+              if (!x.startsWith("at java.base") && !x.contains("lambda$")) {
+                super.println(x);
+              }
+            }
+          });
 
-    // Display welcome message and the first prompt
-    appendToTerminal("Welcome to the UML Editor CLI\n");
-    appendToTerminal("Type 'help' to see available commands, or 'exit' to quit.\n");
-    appendToTerminal(prompt);
+      // Initialize components
+      initializeComponents();
 
-    // Set the prompt position
-    promptPosition = terminalArea.getText().length();
+      // Display welcome message and the first prompt
+      appendToTerminal("Welcome to the UML Editor CLI.\n");
+      appendToTerminal("Type 'help' to see available commands, or 'exit' to quit.\n");
+      appendPrompt();
 
-    // Listen for key presses
-    terminalArea.setOnKeyPressed(this::handleInput);
+      // Listen for user key inputs
+      terminalArea.setOnKeyPressed(this::handleInput);
 
-    // Allow caret and focus management
-    terminalArea.setEditable(true);
-    terminalArea.requestFocus();
+      // Allow caret and focus management
+      terminalArea.setEditable(true);
+      terminalArea.requestFocus();
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, "Error initializing CommandLineInterfaceController", e);
+    }
+  }
+
+  private void initializeComponents() {
+    try {
+      CommandRegistries commandRegistries =
+          CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+      cliTerminal = new CommandLineTerminal(commandRegistries, terminalArea);
+      autoComplete = new AutoComplete();
+
+      // Populate autocomplete suggestions
+      commandRegistries
+          .getAllCommandNames()
+          .forEach(
+              (key, value) -> {
+                try {
+                  String command = (String) key;
+                  autoComplete.addCommand(command);
+                } catch (IOException e) {
+                  LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
+                }
+              });
+    } catch (IOException e) {
+      LOGGER.log(
+          Level.SEVERE, "Error initializing components in CommandLineInterfaceController", e);
+    }
   }
 
   private void handleInput(KeyEvent event) {
-    String text = event.getText();
-
     switch (event.getCode()) {
       case ENTER -> processCommand(currentInput.trim());
       case BACK_SPACE -> handleBackspace(event);
+      case TAB -> handleAutocomplete();
       case UP -> navigateHistory(-1);
       case DOWN -> navigateHistory(1);
-      case LEFT, RIGHT -> event.consume(); // Disable cursor movement
       default -> {
+        String text = event.getText();
         if (text != null && !text.isEmpty()) {
-          currentInput += text;
-          refreshTerminal();
+          currentInput += text; // Update only the current input
+          refreshTerminal(); // Refresh without appending the prompt again
         }
-        event.consume(); // Prevent duplicate input
+        event.consume(); // Prevent default text area behavior
       }
     }
   }
 
-  private void handleBackspace(KeyEvent event) {
-    if (currentInput.isEmpty() || terminalArea.getCaretPosition() <= promptPosition) {
-      event.consume(); // Prevent deletion beyond the prompt
-    } else {
-      currentInput = currentInput.substring(0, currentInput.length() - 1);
-      refreshTerminal();
+  private void processCommand(String command) {
+
+    if (!command.isEmpty()) {
+      commandHistory.add(command); // Add command to history
+      historyIndex = commandHistory.size(); // Reset history index
     }
+
+    try {
+      // Retrieve the CommandResult from handleUserInput
+      CommandResult result = cliTerminal.handleUserInput(command);
+
+      // Display the result based on success or failure
+      if (result.isSuccess()) {
+        appendToTerminal("Success: " + result.getMessage() + "\n");
+      } else {
+        appendToTerminal("Error: " + result.getMessage() + "\n");
+      }
+    } catch (Exception e) {
+      LOGGER.log(Level.WARNING, "Error processing command: " + command, e);
+      appendToTerminal("Unexpected error: " + e.getMessage() + "\n");
+    }
+
+    currentInput = ""; // Reset input
+    appendPrompt(); // Add a new prompt
+  }
+
+  private void handleBackspace(KeyEvent event) {
+    // Get the caret position
+    int caretPosition = terminalArea.getCaretPosition();
+
+    // Allow backspace only if the caret is after the prompt
+    if (caretPosition > promptPosition) {
+      // Remove the last character from `currentInput` based on caret position
+      int removeIndex = caretPosition - promptPosition - 1; // Position in currentInput
+      if (removeIndex >= 0 && removeIndex < currentInput.length()) {
+        // Safely remove the character from `currentInput`
+        currentInput = new StringBuilder(currentInput).deleteCharAt(removeIndex).toString();
+
+        // Update the terminal area
+        refreshTerminal();
+        terminalArea.positionCaret(caretPosition - 1); // Move caret back
+      }
+    } else {
+      // Block backspace action if the caret is at or before the prompt
+      event.consume();
+    }
+  }
+
+  private void handleAutocomplete() {
+    try {
+      List<String> suggestions = autoComplete.getSuggestions(currentInput);
+
+      if (suggestions.isEmpty()) {
+        return; // No suggestions
+      }
+
+      if (suggestions.size() == 1) {
+        // Single match: Autofill the input
+        currentInput = suggestions.getFirst(); // Use the first suggestion
+        refreshTerminal();
+        return;
+      }
+
+      // Multiple matches: Display suggestions without overwriting terminal
+      Platform.runLater(
+          () -> {
+            appendToTerminal("\nSuggestions:\n");
+            suggestions.forEach(suggestion -> appendToTerminal("- " + suggestion + "\n"));
+            appendPrompt(); // Re-add the prompt for continued input
+            refreshTerminal(); // Update the terminal
+          });
+    } catch (IOException e) {
+      LOGGER.log(Level.WARNING, "Error fetching autocomplete suggestions", e);
+      appendToTerminal("\nError fetching autocomplete suggestions: " + e.getMessage() + "\n");
+    }
+  }
+
+  private void refreshTerminal() {
+    Platform.runLater(
+        () -> {
+          try {
+            String fullText = terminalArea.getText(0, promptPosition) + currentInput;
+
+            // Safely update the TextArea
+            terminalArea.setText(fullText);
+            terminalArea.positionCaret(fullText.length()); // Move caret to the end
+          } catch (IndexOutOfBoundsException e) {
+            LOGGER.log(Level.WARNING, "Error refreshing terminal", e);
+          }
+        });
+  }
+
+  private void appendToTerminal(String message) {
+    Platform.runLater(() -> terminalArea.appendText(message));
+  }
+
+  private void appendPrompt() {
+    Platform.runLater(
+        () -> {
+          terminalArea.appendText("$ ");
+          promptPosition = terminalArea.getText().length(); // Update the prompt position
+        });
   }
 
   private void navigateHistory(int direction) {
@@ -84,7 +229,7 @@ public class CommandLineInterfaceController {
       historyIndex = 0;
     } else if (historyIndex >= commandHistory.size()) {
       historyIndex = commandHistory.size();
-      currentInput = ""; // Blank input for beyond the last command
+      currentInput = ""; // Clear input if beyond the last command
       refreshTerminal();
       return;
     }
@@ -92,51 +237,5 @@ public class CommandLineInterfaceController {
     // Update current input with the selected command
     currentInput = commandHistory.get(historyIndex);
     refreshTerminal();
-  }
-
-  private void processCommand(String command) {
-    appendToTerminal(command + "\n");
-
-    if (!command.isEmpty()) {
-      commandHistory.add(command); // Add to history
-      historyIndex = commandHistory.size(); // Reset history index
-    }
-
-    switch (command.toLowerCase()) {
-      case "help" -> appendToTerminal(
-        "Available commands:\n - help: Show available commands\n - exit: Quit the application\n");
-      case "exit" -> Platform.exit();
-      case "clear" -> clearTerminal();
-      default -> appendToTerminal("Unknown command: " + command + "\n");
-    }
-
-    currentInput = ""; // Reset input
-    appendToTerminal(prompt); // Add a new prompt
-    promptPosition = terminalArea.getText().length(); // Update prompt position
-  }
-
-  private void refreshTerminal() {
-    String fullText = terminalArea.getText(0, promptPosition) + currentInput;
-
-    Platform.runLater(() -> {
-      terminalArea.setText(fullText);
-      terminalArea.positionCaret(terminalArea.getText().length());
-    });
-  }
-
-  private void appendToTerminal(String message) {
-    Platform.runLater(() -> {
-      terminalArea.appendText(message);
-      promptPosition = terminalArea.getText().length();
-      terminalArea.positionCaret(promptPosition);
-    });
-  }
-
-  private void clearTerminal() {
-    Platform.runLater(() -> {
-      terminalArea.clear();
-      appendToTerminal(prompt);
-      promptPosition = terminalArea.getText().length();
-    });
   }
 }

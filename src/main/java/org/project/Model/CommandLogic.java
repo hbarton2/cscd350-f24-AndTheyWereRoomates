@@ -46,7 +46,6 @@ public class CommandLogic {
 
   public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
     for (UMLClassNode.Field field : fieldList) {
-      System.out.println("Checking field: " + field.getName());
       if (field.getName().equals(name)) {
         return true; // Field exists
       }
@@ -627,6 +626,7 @@ public class CommandLogic {
       return CommandResult.failure("No arguments needed for the 'clear' command.");
     }
 
+    System.clearProperty("cleared");
     return CommandResult.success("Terminal cleared.");
   }
 }

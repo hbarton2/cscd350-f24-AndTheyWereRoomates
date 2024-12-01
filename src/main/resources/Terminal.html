@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UML Editor CLI</title>
+  <style>
+    body {
+      background-color: #1e1e1e; /* Dark terminal background */
+      color: #d4d4d4; /* Light text */
+      font-family: Consolas, "Courier New", Courier, monospace; /* Monospace font */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #terminal {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    #input-line {
+      display: inline-flex; /* Align prompt, input, and caret in a single line */
+      align-items: center; /* Ensure proper vertical alignment */
+    }
+    #prompt {
+      color: #ffff00; /* Yellow for prompt */
+      margin-right: 5px;
+    }
+    #user-input {
+      color: #ffff00; /* Yellow for user input */
+      flex: 1; /* Allow it to grow */
+    }
+    #input-caret {
+      width: 10px;
+      height: 20px;
+      background-color: #d4d4d4;
+      margin-left: 2px; /* Small gap for clarity */
+      display: inline-block;
+      animation: blink 0.7s steps(1) infinite;
+    }
+    @keyframes blink {
+      50% {
+        background-color: transparent;
+      }
+    }
+    .success {
+      color: #00ff00; /* Green for success */
+    }
+    .error {
+      color: #ff5555; /* Red for errors */
+    }
+    .command {
+      color: #ffff00; /* Yellow for commands */
+    }
+    /* Increase font size */
+    body, #terminal, #input-line {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+<div id="terminal">
+  <div>Welcome to the UML Editor CLI.</div>
+  <div>Type 'help' to see available commands, or 'exit' to quit.</div>
+  <div id="input-line">
+    <span id="prompt">$</span>
+    <span id="user-input"></span>
+    <span id="input-caret"></span>
+  </div>
+</div>
+<script>
+  const terminal = document.getElementById('terminal');
+  const userInputSpan = document.getElementById('user-input');
+  const inputCaret = document.getElementById('input-caret');
+  const commandHistory = [];
+  let historyIndex = -1;
+  let userInput = "";
+
+  // Function to append content to the terminal
+  function appendToTerminal(content, className = "") {
+    const line = document.createElement("div");
+    if (className) line.className = className;
+    line.textContent = content;
+    terminal.insertBefore(line, document.getElementById('input-line'));
+    terminal.scrollTop = terminal.scrollHeight; // Scroll to the bottom
+  }
+
+  // Process commands
+  function processCommand(command) {
+    command = command.trim();
+    if (command) {
+      appendToTerminal(`${document.getElementById('prompt').textContent} ${command}`, "command");
+      commandHistory.push(command);
+      historyIndex = commandHistory.length;
+
+      // Simulate command execution
+      switch (command.toLowerCase()) {
+        case "help":
+          appendToTerminal("Available commands:\nhelp\nclear\nexit", "success");
+          break;
+        case "clear":
+          // Remove all child nodes except the input line
+          while (terminal.firstChild && terminal.firstChild.id !== "input-line") {
+            terminal.removeChild(terminal.firstChild);
+          }
+          break;
+        case "exit":
+          appendToTerminal("Exiting the CLI. Goodbye!", "success");
+          break;
+        default:
+          appendToTerminal(`Unknown command: ${command}`, "error");
+          break;
+      }
+    }
+    userInput = "";
+    userInputSpan.textContent = ""; // Clear user input
+  }
+
+  // Handle key presses
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      processCommand(userInput);
+    } else if (e.key === "Backspace") {
+      userInput = userInput.slice(0, -1);
+      userInputSpan.textContent = userInput;
+    } else if (e.key === "ArrowUp") {
+      if (historyIndex > 0) {
+        historyIndex--;
+        userInput = commandHistory[historyIndex];
+        userInputSpan.textContent = userInput;
+      }
+      e.preventDefault();
+    } else if (e.key === "ArrowDown") {
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        userInput = commandHistory[historyIndex];
+      } else {
+        historyIndex = commandHistory.length;
+        userInput = "";
+      }
+      userInputSpan.textContent = userInput;
+      e.preventDefault();
+    } else if (e.key === "Tab") {
+      e.preventDefault(); // Prevent default tab behavior
+    } else if (e.key.length === 1) {
+      userInput += e.key;
+      userInputSpan.textContent = userInput;
+    }
+  });
+
+</script>
+</body>
+</html>

@@ -5,6 +5,7 @@ module org.project {
   requires javafx.fxml;
   requires javafx.graphics;
   requires javafx.swing;
+  requires javafx.web;
 
   // Other required modules
   requires java.desktop;
@@ -16,8 +17,9 @@ module org.project {
   requires org.apache.lucene.core;
   requires org.apache.lucene.codecs;
   requires org.apache.lucene.analysis.common;
-  requires org.apache.xbean.reflect; // Added xbean dependency
+  requires org.apache.xbean.reflect;
   requires org.fxmisc.richtext;
+  requires jdk.jsobject;
 
   // Exported packages for public access
   exports org.project;

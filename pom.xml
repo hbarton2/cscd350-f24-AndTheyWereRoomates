@@ -63,6 +63,11 @@
     <!-- JavaFX Dependencies -->
     <dependency>
       <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>23.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
       <version>23.0.1</version>
     </dependency>
