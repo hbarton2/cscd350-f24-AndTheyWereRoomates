@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GraphicalUserInterfaceController">
+<AnchorPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GraphicalUserInterfaceController">
   <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <Menu fx:id="menubar" mnemonicParsing="false" text="File">
       <MenuItem fx:id="openButton" mnemonicParsing="false" onAction="#onOpen" text="Open…" />
@@ -25,6 +25,7 @@
       <SeparatorMenuItem mnemonicParsing="false" />
       <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save" />
       <MenuItem fx:id="loadButton" mnemonicParsing="false" onAction="#onLoad" text="Load" />
+         <MenuItem mnemonicParsing="false" onAction="#onExportImage" text="Export Image" />
       <SeparatorMenuItem mnemonicParsing="false" />
          <MenuItem mnemonicParsing="false" onAction="#backToMainMenu" text="Back to Main Menu" />
       <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Quit" />

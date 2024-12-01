@@ -2,6 +2,7 @@ package org.project.Controller;
 
 import com.google.gson.Gson;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +14,12 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -29,6 +32,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -42,6 +46,8 @@ import org.project.Model.Storage;
 import org.project.Model.UMLClassNode;
 import org.project.View.GraphicalClassNode;
 import org.project.View.GraphicalClassNodeFactory;
+
+import javax.imageio.ImageIO;
 
 public class GraphicalUserInterfaceController implements Initializable {
 
@@ -947,5 +953,30 @@ public class GraphicalUserInterfaceController implements Initializable {
       LOGGER.severe("Error occurred while returning to Main Menu: " + e.getMessage());
       LOGGER.throwing(getClass().getName(), "backToMainMenu", e);
     }
+  }
+
+  @FXML
+  public void onExportImage(ActionEvent event) throws IOException {
+
+    /*This will print the project WITH the UI. If we need this, keep it here
+    *Creates the scene from the canvas
+    Scene scene = canvas.getScene();
+
+    *Saving the current scene as an image.
+    WritableImage image = scene.snapshot(null);
+    */
+    String fileName = getFileName();
+
+    /*Saving the current scene as an image.*/
+    WritableImage image = canvas.snapshot(null, null);
+
+    /*The path for the image, where the image will go*/
+    File file = new File("src/main/resources/exports/" + fileName +".PNG");
+
+    /*Writes to the image.
+     * Write - the image (what SwingFXUtils.fromFXImage is doing), the file format, the path name
+     * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
+
   }
 }
