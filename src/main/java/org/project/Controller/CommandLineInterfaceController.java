@@ -72,27 +72,27 @@ public class CommandLineInterfaceController {
   private void initializeComponents() {
     try {
       CommandRegistries commandRegistries =
-          new CommandRegistries("src/main/resources/CLICommands.json");
+        CommandRegistries.getInstance("src/main/resources/CLICommands.json");
       cliTerminal = new CommandLineTerminal(commandRegistries, terminalArea);
       autoComplete = new AutoComplete();
 
       // Populate autocomplete suggestions
       commandRegistries
-          .getAllCommandNames()
-          .forEach(
-              (key, value) -> {
-                try {
-                  String command = (String) key;
-                  autoComplete.addCommand(command);
-                } catch (IOException e) {
-                  LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
-                }
-              });
+        .getAllCommandNames()
+        .forEach(
+          (key, value) -> {
+            try {
+              String command = (String) key;
+              autoComplete.addCommand(command);
+            } catch (IOException e) {
+              LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
+            }
+          });
     } catch (IOException e) {
-      LOGGER.log(
-          Level.SEVERE, "Error initializing components in CommandLineInterfaceController", e);
+      LOGGER.log(Level.SEVERE, "Error initializing components in CommandLineInterfaceController", e);
     }
   }
+
 
   private void handleInput(KeyEvent event) {
     switch (event.getCode()) {

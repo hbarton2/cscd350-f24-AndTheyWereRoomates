@@ -23,6 +23,9 @@ public class Storage {
     return instance;
   }
 
+  public static void resetInstance() {
+  }
+
   public synchronized void addNode(String key, UMLClassNode node) {
     if (storage.containsKey(key)) {
       throw new IllegalArgumentException("Class with the name '" + key + "' already exists.");

@@ -303,6 +303,28 @@
         "description": "Terminates the application.",
         "example": "exit",
         "errors": {}
+      },
+      "clear": {
+        "syntax": "clear",
+        "description": "Clears the terminal screen.",
+        "example": "clear",
+        "errors": {
+          "invalidArguments": [
+            "Error: 'clear' does not take any arguments.",
+            "Suggestion: Use the command without any arguments."
+          ]
+        }
+      },
+      "new project": {
+        "syntax": "new project",
+        "description": "Resets the application to a fresh state, clearing all existing data.",
+        "example": "new project",
+        "errors": {
+          "invalidArguments": [
+            "Error: 'new project' does not take any arguments.",
+            "Suggestion: Use the command without any arguments."
+          ]
+        }
       }
     }
   }

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.project.Controller.ClassNodeService;
+import org.project.Controller.CommandLineInterfaceController;
 import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
 import org.project.Memento.Memento;
@@ -618,10 +619,32 @@ public class CommandLogic {
   }
 
   public CommandResult help(String[] args) {
+    // Check if extra arguments are passed
     if (args.length != 0) {
-      return CommandResult.failure("No arguments needed");
+      return CommandResult.failure("Usage: help");
     }
-    return CommandResult.success("Help Menu: ");
+
+    // Ensure CommandRegistries is initialized with the correct file path
+    CommandRegistries commandRegistries = CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+
+    // Get all available commands and their syntax
+    StringBuilder helpMessage = new StringBuilder("Available Commands:\n\n");
+    Map<String, CommandInfo> commands = commandRegistries.getAllCommands();
+
+    for (Map.Entry<String, CommandInfo> entry : commands.entrySet()) {
+      String commandName = entry.getKey();
+      CommandInfo commandInfo = entry.getValue();
+      helpMessage.append("- ")
+        .append(commandName)
+        .append(": ")
+        .append(commandInfo.description())
+        .append("\n  Syntax: ")
+        .append(commandInfo.syntax())
+        .append("\n\n");
+    }
+
+    // Return the formatted help message
+    return CommandResult.success(helpMessage.toString());
   }
 
   public CommandResult exit(String[] args) {
@@ -647,5 +670,28 @@ public class CommandLogic {
       // Handle any errors that occur during the shutdown process
       return CommandResult.failure("Error occurred while exiting: " + e.getMessage());
     }
+  }
+
+  public CommandResult newProject(String[] args) {
+    if (args.length != 0) {
+      return CommandResult.failure("Error: 'new project' does not take any arguments.");
+    }
+
+    // Reset the application to its initial state
+    Storage.resetInstance(); // Clear the storage
+    saveState(new String[] {}); // Save the cleared state
+
+    currentClass = null; // Reset the current class
+    loadedfileName = ""; // Clear the loaded file name
+
+    return CommandResult.success("New project initialized. All previous data has been cleared.");
+  }
+
+  public CommandResult clear(String[] args) {
+    if (args.length != 0) {
+      return CommandResult.failure("No arguments needed for the 'clear' command.");
+    }
+
+    return CommandResult.success("Terminal cleared.");
   }
 }

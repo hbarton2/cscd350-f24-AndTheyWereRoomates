@@ -14,37 +14,18 @@ import org.project.Controller.CommandResult;
 public class CommandRegistries extends CommandLogic {
 
   private static final Logger logger = Logger.getLogger(CommandRegistries.class.getName());
-
-  // Singleton instance
-  private static CommandRegistries instance;
-
   // A map to store command information including syntax and description
   private final Map<String, CommandInfo> commandMap = new HashMap<>();
 
-  // Command handlers map
-  private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
-
-  public static synchronized CommandRegistries getInstance(String jsonFilePath) {
-    if (instance == null) {
-      instance = new CommandRegistries(jsonFilePath);
-    }
-    return instance;
-  }
-
-  private CommandRegistries(String jsonFilePath) {
-    loadCommands(jsonFilePath);
-    initializeCommandHandlers();
-  }
-
-  public static void resetInstance() {
-    synchronized (CommandRegistries.class) {
-      // Set the instance to null to allow reinitialization
-      instance = null;
-    }
+  // Constructor with optional custom file path for flexibility
+  public CommandRegistries(String jsonFilePath) {
+    loadCommands(jsonFilePath); // Load commands from JSON file
+    initializeCommandHandlers(); // Initialize command handler methods
+    CommandLogic commandLogic = new CommandLogic();
   }
 
   // Method to load commands from a specified JSON file
-  public void loadCommands(String jsonFilePath) {
+  private void loadCommands(String jsonFilePath) {
     try (FileReader reader = new FileReader(jsonFilePath)) {
       JsonObject commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
       JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
@@ -54,10 +35,11 @@ public class CommandRegistries extends CommandLogic {
         for (String commandName : commands.keySet()) {
           JsonObject commandDetails = commands.getAsJsonObject(commandName);
           String syntax =
-            commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
+              commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
           String description =
-            commandDetails.has("description") ? commandDetails.get("description").getAsString()
-              : "";
+              commandDetails.has("description")
+                  ? commandDetails.get("description").getAsString()
+                  : "";
           commandMap.put(commandName, new CommandInfo(syntax, description));
         }
       }
@@ -80,12 +62,22 @@ public class CommandRegistries extends CommandLogic {
     return commandNames;
   }
 
+  // Functional interface for command handlers
+  @FunctionalInterface
+  interface CommandHandler {
+
+    CommandResult handle(String[] args);
+  }
+
+  /** Future nested keys ie quit and exit does same job */
+  private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
+
   // Initialize command handlers with specific implementations
   private void initializeCommandHandlers() {
     commandHandlers.put("switch class", super::switchClass);
     commandHandlers.put("list classes", this::listClasses);
     commandHandlers.put("list detail", this::listDetail);
-    commandHandlers.put("create class", this::createClass);
+    commandHandlers.put("create class", this::createClass); // TODO: Logic
     commandHandlers.put("remove class", this::removeClass);
     commandHandlers.put("rename class", this::renameClass);
     commandHandlers.put("add field", this::addField);
@@ -107,30 +99,15 @@ public class CommandRegistries extends CommandLogic {
     commandHandlers.put("redo", this::redo);
     commandHandlers.put("help", this::help);
     commandHandlers.put("exit", this::exit);
-    commandHandlers.put("clear", this::clear);
-    commandHandlers.put("new project", this::newProject);
+    // TODO: Add more command handlers as needed...
   }
 
   // Execute a command by finding and running the appropriate handler
   public CommandResult executeCommand(String command, String[] args) {
     CommandHandler handler = commandHandlers.get(command);
     if (handler == null) {
-      logger.warning("Unknown command: " + command);
       return CommandResult.failure("Command not found: " + command);
     }
-
-    try {
-      return handler.handle(args);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "Error executing command: " + command, e);
-      return CommandResult.failure("Error executing command: " + e.getMessage());
-    }
-  }
-
-  // Functional interface for command handlers
-  @FunctionalInterface
-  interface CommandHandler {
-
-    CommandResult handle(String[] args);
+    return handler.handle(args);
   }
 }

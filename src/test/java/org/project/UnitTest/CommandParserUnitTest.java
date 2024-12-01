@@ -1,10 +1,14 @@
 package org.project.UnitTest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.project.Controller.CommandParser;
+import org.project.Controller.CommandResult;
 import org.project.Model.CommandRegistries;
 
 class CommandParserUnitTest {
@@ -18,7 +22,7 @@ class CommandParserUnitTest {
     try {
       // Mock or create a valid instance of CommandRegistries
       CommandRegistries commandRegistries =
-          new CommandRegistries("src/main/resources/CLICommands.json");
+        CommandRegistries.getInstance("src/main/resources/CLICommands.json"); // Use singleton
       parser = new CommandParser(commandRegistries);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -26,42 +30,59 @@ class CommandParserUnitTest {
     System.setOut(new PrintStream(outContent)); // Capture output for assertions
   }
 
-  // TODO: ALL this test failed check logic
-  //  @Test
-  //  void testCreateClassSuccess() {
-  //    parser.parseCommand("create class Car");
-  //    assertTrue(outContent.toString().contains("Class Car created and set as current."));
-  //  }
-  //
-  //  @Test
-  //  void testCreateClassAlreadyExists() {
-  //    parser.parseCommand("create class Car");
-  //    parser.parseCommand("create class Car");
-  //    assertTrue(outContent.toString().contains("Error: Class Car already exists."));
-  //  }
-  //
-  //  @Test
-  //  void testCreateClassInvalidName() {
-  //    parser.parseCommand("create class 123Car");
-  //    assertTrue(outContent.toString().contains("Error: 123Car is an invalid class name."));
-  //  }
-  //
-  //  @Test
-  //  void testRemoveClassSuccess() {
-  //    parser.parseCommand("create class Car");
-  //    parser.parseCommand("remove class Car");
-  //    assertTrue(outContent.toString().contains("Class Car removed."));
-  //  }
-  //
-  //  @Test
-  //  void testRemoveClassNotExists() {
-  //    parser.parseCommand("remove class NonExistentClass");
-  //    assertTrue(outContent.toString().contains("Error: Class NonExistentClass does not exist."));
-  //  }
+  @Test
+  void testCreateClassSuccess() {
+    CommandResult result = parser.parseCommand("create class Car");
+    assertTrue(result.isSuccess(), "Command should succeed for valid class creation.");
+    assertTrue(result.getMessage().contains("Class added: Car"), "Success message should match.");
+  }
+
+  @Test
+  void testCreateClassAlreadyExists() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("create class Car");
+    assertTrue(
+      result.getMessage().contains("Error: Class 'Car' already exists."),
+      "Error message should indicate duplicate class.");
+  }
+
+  @Test
+  void testCreateClassInvalidName() {
+    CommandResult result = parser.parseCommand("create class 123Car");
+    assertTrue(
+      result.getMessage().contains("Error: Invalid class name."),
+      "Error message should indicate invalid class name.");
+  }
+
+  @Test
+  void testRemoveClassSuccess() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("remove class Car");
+    assertTrue(result.isSuccess(), "Command should succeed for valid class removal.");
+    assertTrue(result.getMessage().contains("Class removed: Car"), "Success message should match.");
+  }
+
+  @Test
+  void testRemoveClassNotExists() {
+    CommandResult result = parser.parseCommand("remove class NonExistentClass");
+    assertTrue(
+      result.getMessage().contains("Error: Class 'NonExistentClass' does not exist."),
+      "Error message should indicate non-existent class.");
+  }
+
+  @Test
+  void testHelpCommand() {
+    CommandResult result = parser.parseCommand("help");
+    assertTrue(result.isSuccess(), "Help command should succeed.");
+    assertTrue(
+      result.getMessage().contains("Available Commands:"),
+      "Help message should list available commands.");
+  }
 
   @AfterEach
   void tearDown() {
     System.setOut(originalOut); // Reset System.out
     outContent.reset();
+    CommandRegistries.resetInstance(); // Reset CommandRegistries for isolation
   }
 }
