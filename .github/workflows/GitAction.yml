@@ -1,18 +1,20 @@
-name: Java CI with Maven
+name: Java Continuous Integration with Maven (GraalVM)
 
 on:
   push:
     branches:
-      - Developer
-      - main
+      - "*"
   pull_request:
     branches:
-      - Developer
-      - main
+      - "*"
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
+  issues: write
+  pull-requests: write
+  deployments: write
 
 jobs:
   build:
@@ -20,24 +22,25 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        java-version: ['21']
+        java-version: ['21.0.5']
 
     steps:
-      - name: Get Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set Up GraalVM JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
-          distribution: 'temurin'
+          distribution: 'graalvm'
+          graalvm-version: '21.0.5'
           cache: maven
 
       - name: Verify Code Style with Spotless
         run: |
           mvn spotless:check
 
-      - name: Apply Code Style with Spotless (if check fails)
+      - name: Apply Code Style if Needed
         run: |
           mvn spotless:apply
         if: failure()
@@ -51,7 +54,7 @@ jobs:
           git commit -m "Apply Spotless formatting"
           git push
 
-      - name: Run Tests and Package
+      - name: Run Tests and Build Package
         run: |
           mvn spotless:check clean test package -B \
           -Dstyle.color=always \
@@ -70,7 +73,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
-          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with JDK ${{ matrix.java-version }}"
+          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}"
           draft: false
           prerelease: false
 
