@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: write
+  actions: write
+  packages: write
 
 jobs:
   build:
@@ -33,13 +35,11 @@ jobs:
           cache: maven
 
       - name: Verify Code Style with Spotless
-        run: |
-          mvn spotless:check
+        run: mvn spotless:check
 
       - name: Apply Code Style if Needed
-        run: |
-          mvn spotless:apply
         if: failure()
+        run: mvn spotless:apply
 
       - name: Commit and Push Spotless Changes
         if: failure()
@@ -52,15 +52,7 @@ jobs:
 
       - name: Run Tests and Package
         run: |
-          if ($Env:RUNNER_OS -eq "Windows") {
-            mvn spotless:check clean test package -B ^
-            -Dstyle.color=always ^
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-          } else {
-            mvn spotless:check clean test package -B \
-            -Dstyle.color=always \
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-          }
+          mvn clean test package -B
         shell: pwsh
 
       - name: Upload Build Artifacts
