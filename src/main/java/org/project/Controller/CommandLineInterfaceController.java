@@ -157,26 +157,16 @@ public class CommandLineInterfaceController {
   private void handleBackspace() {
     int caretPosition = terminalArea.getCaretPosition();
     String textBeforeCaret = terminalArea.getText(caretPosition - 2, caretPosition);
+    moveCaretToEnd();
+//    if (!textBeforeCaret.equals("$ ") || textBeforeCaret.equals("$ ")) {
+//      //appendToTerminal(textBeforeCaret); // give back that character that got deleted
+//      moveCaretToEnd();
+//    }
 
-    if (!textBeforeCaret.equals("$")) {
-      appendToTerminal(textBeforeCaret); // give back that character that got deleted
-      moveCaretToEnd();
-    }
-
-    if (textBeforeCaret.equals("$")) {
-      //      appendToTerminal(textBeforeCaret);
-      moveCaretToEnd();
-    }
-
-    //    if(caretPosition == terminalArea.getCaretPosition() ){
-    //      //moveCaretToLastpostion
-    //      // append last
-    //      moveCaretToEnd();
-    //    } else
-    // if (textBeforeCaret.equals("$")) {
-    //      appendToTerminal(" ");
-    //      moveCaretToEnd();
-    //    }
+//    if (textBeforeCaret.equals("$ ")) {
+//      //      appendToTerminal(textBeforeCaret);
+//      moveCaretToEnd();
+//    }
   }
 
   private void moveCaretToEnd() {
