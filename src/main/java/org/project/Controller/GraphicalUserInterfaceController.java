@@ -941,7 +941,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       }
       VBox mainMenuRoot = loader.load();
 
-      // Setup the Scene and Stage
+      // Set up the Scene and Stage
       Scene mainMenuScene = new Scene(mainMenuRoot);
       Stage mainMenuStage = new Stage();
       mainMenuStage.setScene(mainMenuScene);

@@ -76,27 +76,6 @@ public class ClassNodeService {
     return new UMLClassNode(className, fields, methods, relationships, position);
   }
 
-  //  public void StorageSaveToJsonArray(Storage storage, String fileName) {
-  //    try {
-  //      // Get the values from the TreeMap as a collection
-  //      Collection<UMLClassNode> classNodes = storage.getStorage().values();
-  //
-  //      // Create a Gson instance
-  //
-  //      // Serialize the collection of UMLClassNodes to a JSON string
-  //      String json = this.json.toJson(classNodes);
-  //
-  //      // Write the JSON string to a file
-  //      try (FileWriter writer = new FileWriter(fileName)) {
-  //        writer.write(json);
-  //      }
-  //
-  //      System.out.println("TreeMap saved to " + fileName);
-  //    } catch (IOException e) {
-  //      System.err.println("Error saving TreeMap to JSON: " + e.getMessage());
-  //    }
-  //  }
-
   public void StorageSaveToJsonArray(Storage storage, String fileName) {
     try {
       // Get the values from the TreeMap as a collection
@@ -113,9 +92,9 @@ public class ClassNodeService {
         writer.write(json);
       }
 
-      System.out.println("TreeMap saved to " + fileName);
+      System.out.println("Saved to " + fileName);
     } catch (IOException e) {
-      System.err.println("Error saving TreeMap to JSON: " + e.getMessage());
+      System.err.println("Error saving to JSON: " + e.getMessage());
     }
   }
 

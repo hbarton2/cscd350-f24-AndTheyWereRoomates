@@ -241,20 +241,20 @@ public class CommandLineInterfaceController {
   }
 
   private void clearAutocompleteDisplay() {
-    Platform.runLater(() -> {
-      // Get the current text in the terminal up to the prompt
-      String terminalText = terminalArea.getText(0, promptPosition) + currentInput;
+    Platform.runLater(
+        () -> {
+          // Get the current text in the terminal up to the prompt
+          String terminalText = terminalArea.getText(0, promptPosition) + currentInput;
 
-      // Set the terminal's text to this base content
-      terminalArea.setText(terminalText);
-      scrollToBottom();
-      // Move the caret to the correct position after clearing suggestions
-      moveCaretToEnd();
-    });
+          // Set the terminal's text to this base content
+          terminalArea.setText(terminalText);
+          scrollToBottom();
+          // Move the caret to the correct position after clearing suggestions
+          moveCaretToEnd();
+        });
   }
 
   private void scrollToBottom() {
     Platform.runLater(() -> terminalArea.setScrollTop(Double.MAX_VALUE));
   }
-
 }

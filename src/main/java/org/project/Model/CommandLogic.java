@@ -453,30 +453,59 @@ public class CommandLogic {
     return CommandResult.success("Listing Detail...");
   }
 
+  // TODO: remove this after refactor GUI save and load dependencies
+  //  public CommandResult saveAs(String[] args) {
+  //    if (args.length != 1) {
+  //      return CommandResult.failure("Syntax : save as <fileName>");
+  //    }
+  //    String filename = args[0];
+  //    if (!filename.endsWith(".json")) {
+  //      filename += ".json";
+  //    }
+  //    String filePath = "src/main/resources/saves/" + filename;
+  //
+  //    ClassNodeService classNodeService = new ClassNodeService();
+  //    classNodeService.StorageSaveToJsonArray(storage, filePath);
+  //    return CommandResult.success("Saved");
+  //  }
+
+  //  public CommandResult save(String[] args) {
+  //    if (args.length != 0) {
+  //      return CommandResult.failure("syntax: save");
+  //    }
+  //
+  //    String filePath = "src/main/resources/saves/temp_save.json";
+  //    ClassNodeService classNodeService = new ClassNodeService();
+  //    classNodeService.StorageSaveToJsonArray(storage, filePath);
+  //    return CommandResult.success("Saved");
+  //  }
+  public CommandResult save(String[] args) {
+    if (args.length != 0) {
+      return CommandResult.failure("Syntax: save");
+    }
+
+    String filePath = "src/main/resources/saves/temp_save.json";
+    ClassNodeService classNodeService = new ClassNodeService();
+    classNodeService.StorageSaveToJsonArray(storage, filePath);
+    return CommandResult.success("Saved to " + filePath);
+  }
+
   public CommandResult saveAs(String[] args) {
     if (args.length != 1) {
-      return CommandResult.failure("Syntax : save as <fileName>");
+      return CommandResult.failure("Syntax: save as <fileName>");
     }
+
     String filename = args[0];
+    // Ensure the filename ends with .json
     if (!filename.endsWith(".json")) {
       filename += ".json";
     }
-    String filePath = "src/main/resources/saves/" + filename;
 
+    // Use the user-defined path
+    Path filePath = Path.of(filename);
     ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(storage, filePath);
-    return CommandResult.success("Saved");
-  }
-
-  public CommandResult save(String[] args) {
-    if (args.length != 0) {
-      return CommandResult.failure("syntax: save");
-    }
-
-    String filePath = "src/main/resources/saves/" + loadedfileName;
-    ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(storage, filePath);
-    return CommandResult.success("Saved");
+    classNodeService.StorageSaveToJsonArray(storage, filePath.toString());
+    return CommandResult.success("Saved to " + filePath.toAbsolutePath());
   }
 
   public CommandResult undo(String[] args) {
@@ -597,36 +626,67 @@ public class CommandLogic {
 
   public CommandResult loadFile(String[] args) {
     if (args.length != 1) {
-      return CommandResult.failure("syntax: load file <filName>");
+      return CommandResult.failure("Syntax: load file <fileName>");
     }
-    try {
-      // Read JSON file into a String
-      String jsonContent =
-          Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
-      loadedfileName = args[0] + ".json";
 
-      // Parse the JSON string into a JsonArray
+    String filename = args[0];
+    // Ensure the filename ends with .json
+    if (!filename.endsWith(".json")) {
+      filename += ".json";
+    }
+
+    try {
+      // Read the JSON file content
+      Path filePath = Path.of(filename);
+      if (!Files.exists(filePath)) {
+        return CommandResult.failure("File not found: " + filePath.toAbsolutePath());
+      }
+
+      String jsonContent = Files.readString(filePath);
+      loadedfileName = filename; // Store the loaded file name
+
+      // Parse the JSON content into storage
       Gson gson = new Gson();
       JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
 
-      // Create an instance of ClassNodeService
       ClassNodeService classNodeService = new ClassNodeService();
-
-      // Iterate over the array and create UMLClassNode for each JSON object
       for (JsonElement element : jsonArray) {
         JsonObject jsonObject = element.getAsJsonObject();
         UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
         storage.addNode(classNode.getClassName(), classNode);
       }
+      return CommandResult.success("Loaded from " + filePath.toAbsolutePath());
     } catch (IOException e) {
-      System.err.println("Error reading JSON file: ");
+      return CommandResult.failure("Error reading file: " + e.getMessage());
     } catch (JsonSyntaxException e) {
-      System.err.println("Error parsing JSON: " + e.getMessage());
+      return CommandResult.failure("Error parsing JSON: " + e.getMessage());
     }
-    return CommandResult.success("Loaded!");
   }
 
-  public CommandResult load(String[] strings) {
-    return CommandResult.success("Loaded!");
+  public CommandResult load(String[] args) {
+    if (args.length != 0) {
+      return CommandResult.failure("Syntax: load");
+    }
+
+    String filePath = "src/main/resources/saves/temp_save.json";
+    try {
+      String jsonContent = Files.readString(Path.of(filePath));
+      loadedfileName = "temp_save.json";
+
+      Gson gson = new Gson();
+      JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
+
+      ClassNodeService classNodeService = new ClassNodeService();
+      for (JsonElement element : jsonArray) {
+        JsonObject jsonObject = element.getAsJsonObject();
+        UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+        storage.addNode(classNode.getClassName(), classNode);
+      }
+      return CommandResult.success("Loaded from " + filePath);
+    } catch (IOException e) {
+      return CommandResult.failure("Error reading file: " + e.getMessage());
+    } catch (JsonSyntaxException e) {
+      return CommandResult.failure("Error parsing JSON: " + e.getMessage());
+    }
   }
 }
