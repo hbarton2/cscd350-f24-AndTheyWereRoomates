@@ -40,7 +40,6 @@ public class CommandLineInterfaceController {
           .getStylesheets()
           .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
 
-//      terminalArea.setStyle("-fx-background-color: black; -fx-text-fill: white;");
       // Redirect System.out to the terminalArea
       System.setOut(new PrintStream(new TextAreaOutputStream(terminalArea)));
 
@@ -90,12 +89,14 @@ public class CommandLineInterfaceController {
         case ENTER -> {
           processCommand(currentInput.trim());
           event.consume();
+          scrollToBottom();
         }
         case BACK_SPACE -> {
           handleBackspace();
           event.consume();
         }
         case TAB -> {
+          scrollToBottom();
           handleAutocomplete();
           event.consume();
         }
@@ -108,7 +109,7 @@ public class CommandLineInterfaceController {
           event.consume();
         }
         default -> {
-          String text = event.getText();
+          String text = event.getText(); // This respects Shift and Caps Lock
           if (text != null && !text.isEmpty()) {
             currentInput += text;
             refreshTerminal();
@@ -149,6 +150,7 @@ public class CommandLineInterfaceController {
     if (!currentInput.isEmpty()) {
       currentInput = currentInput.substring(0, currentInput.length() - 1);
       refreshTerminal();
+      moveCaretToEnd();
     }
   }
 
@@ -156,17 +158,23 @@ public class CommandLineInterfaceController {
     try {
       List<String> suggestions = autoComplete.getSuggestions(currentInput);
 
+      // If no suggestions, simply return
       if (suggestions.isEmpty()) {
         return;
       }
 
+      // Clear any previous suggestions from the terminal display
+      clearAutocompleteDisplay();
+
       if (suggestions.size() == 1) {
+        // Autofill if there's a single suggestion
         currentInput = suggestions.get(0);
         refreshTerminal();
       } else {
+        // Display the suggestions below the current prompt
         appendToTerminal("\nSuggestions:\n");
         suggestions.forEach(suggestion -> appendToTerminal("- " + suggestion + "\n"));
-        appendPrompt();
+        moveCaretToEnd();
       }
     } catch (IOException e) {
       LOGGER.log(Level.WARNING, "Error fetching autocomplete suggestions", e);
@@ -181,6 +189,7 @@ public class CommandLineInterfaceController {
             String fullText = terminalArea.getText(0, promptPosition) + currentInput;
             terminalArea.setText(fullText);
             terminalArea.positionCaret(fullText.length());
+            moveCaretToEnd();
           } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Error refreshing terminal", e);
           }
@@ -189,6 +198,7 @@ public class CommandLineInterfaceController {
 
   private void appendToTerminal(String message) {
     Platform.runLater(() -> terminalArea.appendText(message));
+    moveCaretToEnd();
   }
 
   private void appendPrompt() {
@@ -196,6 +206,7 @@ public class CommandLineInterfaceController {
         () -> {
           terminalArea.appendText("$ ");
           promptPosition = terminalArea.getText().length();
+          moveCaretToEnd();
         });
   }
 
@@ -211,5 +222,39 @@ public class CommandLineInterfaceController {
       currentInput = commandHistory.get(historyIndex);
     }
     refreshTerminal();
+    scrollToBottom();
+    moveCaretToEnd();
   }
+
+  private void moveCaretToEnd() {
+    Platform.runLater(
+        () -> {
+          int expectedCaretPosition = promptPosition + currentInput.length();
+          terminalArea.positionCaret(expectedCaretPosition); // Move caret to the end of the input
+        });
+  }
+
+  private void handleShiftKey(KeyEvent event) {
+    if (event.isShiftDown()) {
+      appendToTerminal("Shift key pressed!\n"); // Example behavior
+    }
+  }
+
+  private void clearAutocompleteDisplay() {
+    Platform.runLater(() -> {
+      // Get the current text in the terminal up to the prompt
+      String terminalText = terminalArea.getText(0, promptPosition) + currentInput;
+
+      // Set the terminal's text to this base content
+      terminalArea.setText(terminalText);
+      scrollToBottom();
+      // Move the caret to the correct position after clearing suggestions
+      moveCaretToEnd();
+    });
+  }
+
+  private void scrollToBottom() {
+    Platform.runLater(() -> terminalArea.setScrollTop(Double.MAX_VALUE));
+  }
+
 }

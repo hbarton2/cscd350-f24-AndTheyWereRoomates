@@ -479,8 +479,6 @@ public class CommandLogic {
     return CommandResult.success("Saved");
   }
 
-
-
   public CommandResult undo(String[] args) {
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
@@ -604,7 +602,7 @@ public class CommandLogic {
     try {
       // Read JSON file into a String
       String jsonContent =
-        Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
+          Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
       loadedfileName = args[0] + ".json";
 
       // Parse the JSON string into a JsonArray
