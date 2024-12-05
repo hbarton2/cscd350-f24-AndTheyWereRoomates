@@ -181,9 +181,6 @@ public class CommandLogic {
     } else {
       return CommandResult.failure("Error: Failed to rename class.");
     }
-    // UMLClassNode classNode = storage.getNode(className);
-    // classNode.setClassName(newClassName);
-    // return CommandResult.success("Class renamed: " + className);
   }
 
   public CommandResult switchClass(String[] args) {
@@ -456,9 +453,9 @@ public class CommandLogic {
     return CommandResult.success("Listing Detail...");
   }
 
-  public CommandResult saveNewfile(String[] args) {
+  public CommandResult saveAs(String[] args) {
     if (args.length != 1) {
-      return CommandResult.failure("Syntax : save <fileName>");
+      return CommandResult.failure("Syntax : save as <fileName>");
     }
     String filename = args[0];
     if (!filename.endsWith(".json")) {
@@ -467,7 +464,7 @@ public class CommandLogic {
     String filePath = "src/main/resources/saves/" + filename;
 
     ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(this.storage, filePath);
+    classNodeService.StorageSaveToJsonArray(storage, filePath);
     return CommandResult.success("Saved");
   }
 
@@ -478,40 +475,11 @@ public class CommandLogic {
 
     String filePath = "src/main/resources/saves/" + loadedfileName;
     ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(this.storage, filePath);
+    classNodeService.StorageSaveToJsonArray(storage, filePath);
     return CommandResult.success("Saved");
   }
 
-  public CommandResult load(String[] args) {
-    if (args.length != 1) {
-      return CommandResult.failure("syntax: load file <filName");
-    }
-    try {
-      // Read JSON file into a String
-      String jsonContent =
-          Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
-      loadedfileName = args[0] + ".json";
 
-      // Parse the JSON string into a JsonArray
-      Gson gson = new Gson();
-      JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
-
-      // Create an instance of ClassNodeService
-      ClassNodeService classNodeService = new ClassNodeService();
-
-      // Iterate over the array and create UMLClassNode for each JSON object
-      for (JsonElement element : jsonArray) {
-        JsonObject jsonObject = element.getAsJsonObject();
-        UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
-        storage.addNode(classNode.getClassName(), classNode);
-      }
-    } catch (IOException e) {
-      System.err.println("Error reading JSON file: ");
-    } catch (JsonSyntaxException e) {
-      System.err.println("Error parsing JSON: " + e.getMessage());
-    }
-    return CommandResult.success("Loaded!");
-  }
 
   public CommandResult undo(String[] args) {
     if (args.length != 0) {
@@ -626,7 +594,41 @@ public class CommandLogic {
       return CommandResult.failure("No arguments needed for the 'clear' command.");
     }
 
-    System.clearProperty("cleared");
     return CommandResult.success("Terminal cleared.");
+  }
+
+  public CommandResult loadFile(String[] args) {
+    if (args.length != 1) {
+      return CommandResult.failure("syntax: load file <filName>");
+    }
+    try {
+      // Read JSON file into a String
+      String jsonContent =
+        Files.readString(Path.of("src/main/resources/saves/" + args[0] + ".json"));
+      loadedfileName = args[0] + ".json";
+
+      // Parse the JSON string into a JsonArray
+      Gson gson = new Gson();
+      JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
+
+      // Create an instance of ClassNodeService
+      ClassNodeService classNodeService = new ClassNodeService();
+
+      // Iterate over the array and create UMLClassNode for each JSON object
+      for (JsonElement element : jsonArray) {
+        JsonObject jsonObject = element.getAsJsonObject();
+        UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+        storage.addNode(classNode.getClassName(), classNode);
+      }
+    } catch (IOException e) {
+      System.err.println("Error reading JSON file: ");
+    } catch (JsonSyntaxException e) {
+      System.err.println("Error parsing JSON: " + e.getMessage());
+    }
+    return CommandResult.success("Loaded!");
+  }
+
+  public CommandResult load(String[] strings) {
+    return CommandResult.success("Loaded!");
   }
 }

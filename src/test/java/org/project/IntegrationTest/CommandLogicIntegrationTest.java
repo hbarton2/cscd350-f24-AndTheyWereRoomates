@@ -75,17 +75,17 @@ class CommandLogicIntegrationTest {
   }
 
   // TODO: This test failed
-  //  @Test
-  //  void testAddFieldToClass() {
-  //    // Create a class and add a field to it
-  //    commandRegistries.executeCommand("create class", new String[] {"TestClass"});
-  //    commandRegistries.executeCommand("switch class", new String[] {"TestClass"});
-  //    CommandResult result =
-  //        commandRegistries.executeCommand("add field", new String[] {"String", "name"});
-  //    assertTrue(result.isSuccess(), "Adding a field to the class should succeed.");
-  //    assertEquals(
-  //        "Field added: Type='String', Name='name' to class 'TestClass'", result.getMessage());
-  //  }
+  @Test
+  void testAddFieldToClass() {
+    // Create a class and add a field to it
+    commandRegistries.executeCommand("create class", new String[] {"TestClass"});
+    commandRegistries.executeCommand("switch class", new String[] {"TestClass"});
+    CommandResult result =
+        commandRegistries.executeCommand("add field", new String[] {"String", "name"});
+    assertTrue(result.isSuccess(), "Adding a field to the class should succeed.");
+    assertEquals(
+        "Field added: Type='String', Name='name' to class 'TestClass'", result.getMessage());
+  }
 
   @Test
   void testAddDuplicateField() {

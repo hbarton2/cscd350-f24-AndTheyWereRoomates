@@ -123,7 +123,7 @@ public class CommandBridgeAdapter implements CommandBridge {
 
   @Override
   public CommandResult saveNewfile(String[] args) {
-    return commandRegistries.saveNewfile(args);
+    return commandRegistries.saveAs(args);
   }
 
   @Override

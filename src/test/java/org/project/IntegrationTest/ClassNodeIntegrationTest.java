@@ -1,8 +1,12 @@
 package org.project.IntegrationTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.project.Controller.ClassNodeService;
 import org.project.Model.Storage;
 import org.project.Model.UMLClassNode;
@@ -58,41 +62,41 @@ public class ClassNodeIntegrationTest {
     storage.addNode(classNode.getClassName(), classNode);
   }
 
-  //    @Test
-  //    void testClassExistsInStorage() {
-  //        assertTrue(storage.containsNode("Car"), "Class 'Car' should exist in storage");
-  //    }
-  //
-  //    @Test
-  //    void testClassName() {
-  //        UMLClassNode retrievedNode = storage.getNode("Car");
-  //        assertEquals("Car", retrievedNode.getClassName(), "Class name should be 'Car'");
-  //    }
-  //
-  //    @Test
-  //    void testFieldExists() {
-  //        UMLClassNode retrievedNode = storage.getNode("Car");
-  //        assertEquals(1, retrievedNode.getFields().size(), "Class should have exactly one
-  // field");
-  //        assertEquals("color", retrievedNode.getFields().get(0).getName(), "Field name should be
-  // 'color'");
-  //    }
-  //
-  //    @Test
-  //    void testMethodExists() {
-  //        UMLClassNode retrievedNode = storage.getNode("Car");
-  //        assertEquals(1, retrievedNode.getMethods().size(), "Class should have exactly one
-  // method");
-  //        assertEquals("drive", retrievedNode.getMethods().get(0).getName(), "Method name should
-  // be 'drive'");
-  //    }
-  //
-  //    @Test
-  //    void testRelationshipExists() {
-  //        UMLClassNode retrievedNode = storage.getNode("Car");
-  //        assertEquals(1, retrievedNode.getRelationships().size(), "Class should have exactly one
-  // relationship");
-  //        assertEquals("Wheel", retrievedNode.getRelationships().get(0).getTarget(), "Relationship
-  // target should be 'Wheel'");
-  //    }
+  @Test
+  void testClassExistsInStorage() {
+    assertTrue(storage.containsNode("Car"), "Class 'Car' should exist in storage");
+  }
+
+  @Test
+  void testClassName() {
+    UMLClassNode retrievedNode = storage.getNode("Car");
+    assertEquals("Car", retrievedNode.getClassName(), "Class name should be 'Car'");
+  }
+
+  @Test
+  void testFieldExists() {
+    UMLClassNode retrievedNode = storage.getNode("Car");
+    assertEquals(1, retrievedNode.getFields().size(), "Class should have exactly one field");
+    assertEquals(
+        "color", retrievedNode.getFields().get(0).getName(), "Field name should be 'color' ");
+  }
+
+  @Test
+  void testMethodExists() {
+    UMLClassNode retrievedNode = storage.getNode("Car");
+    assertEquals(1, retrievedNode.getMethods().size(), "Class should have exactly one method");
+    assertEquals(
+        "drive", retrievedNode.getMethods().get(0).getName(), "Method name should be 'drive' ");
+  }
+
+  @Test
+  void testRelationshipExists() {
+    UMLClassNode retrievedNode = storage.getNode("Car");
+    assertEquals(
+        1, retrievedNode.getRelationships().size(), "Class should have exactly one relationship");
+    assertEquals(
+        "Wheel",
+        retrievedNode.getRelationships().get(0).getTarget(),
+        "Relationship target should be 'Wheel' ");
+  }
 }
