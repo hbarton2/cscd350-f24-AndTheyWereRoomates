@@ -82,15 +82,15 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
-          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}"
-          draft: false
-          prerelease: ${{ env.prerelease }}
+        run: |
+          gh release create \
+            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
+            --title "Release v4.4.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}" \
+            --notes "Automatically generated release" \
+            ${{ github.ref == 'refs/heads/main' && echo "--prerelease=false" || echo "--prerelease=true" }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Upload Renamed JAR to Release
         if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
