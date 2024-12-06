@@ -82,7 +82,6 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   private GraphicalClassNode selectedGraphicalClassNode = null;
   private final CommandBridge commandBridge;
-  public UMLController umlController;
   public static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
 
@@ -522,35 +521,35 @@ public class GraphicalUserInterfaceController implements Initializable {
    */
   @FXML
   public void handleRenameMethod(ActionEvent event) {
-    if (selectedGraphicalClassNode != null) {
-      ListView<String> methodList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
-      String selectedMethod = methodList.getSelectionModel().getSelectedItem();
-
-      if (selectedMethod != null) {
-        String newMethodName = methodNameInput.getText();
-
-        if (!newMethodName.isEmpty()) {
-          String oldMethodName = selectedMethod.substring(0, selectedMethod.indexOf("("));
-
-          umlController.methodCommands.renameMethod(
-              new String[] {
-                "rename",
-                "method",
-                selectedGraphicalClassNode.getName(),
-                oldMethodName,
-                newMethodName
-              });
-
-          int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
-          String updatedMethod =
-              newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
-          methodList.getItems().set(selectedIndex, updatedMethod);
-
-          methodNameInput.clear();
-        }
-      }
-    }
+//    if (selectedGraphicalClassNode != null) {
+//      ListView<String> methodList =
+//          (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
+//      String selectedMethod = methodList.getSelectionModel().getSelectedItem();
+//
+//      if (selectedMethod != null) {
+//        String newMethodName = methodNameInput.getText();
+//
+//        if (!newMethodName.isEmpty()) {
+//          String oldMethodName = selectedMethod.substring(0, selectedMethod.indexOf("("));
+//
+//          umlController.methodCommands.renameMethod(
+//              new String[] {
+//                "rename",
+//                "method",
+//                selectedGraphicalClassNode.getName(),
+//                oldMethodName,
+//                newMethodName
+//              });
+//
+//          int selectedIndex = methodList.getSelectionModel().getSelectedIndex();
+//          String updatedMethod =
+//              newMethodName + selectedMethod.substring(selectedMethod.indexOf('('));
+//          methodList.getItems().set(selectedIndex, updatedMethod);
+//
+//          methodNameInput.clear();
+//        }
+//      }
+//    }
   }
 
   /**
