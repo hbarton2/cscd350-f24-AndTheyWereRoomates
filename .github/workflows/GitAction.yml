@@ -37,26 +37,27 @@ jobs:
 
       - name: Verify Code Style with Spotless
         run: |
-          mvn spotless:check || echo "Spotless check failed. Proceeding with the build."
-          
+          mvn -f repo/pom.xml spotless:check || echo "Spotless check failed. Proceeding with the build."
+
       - name: Apply Code Style if Needed
         if: failure()
         run: |
-          mvn spotless:apply || echo "Spotless apply failed. Proceeding with the build."
-          
+          mvn -f repo/pom.xml spotless:apply || echo "Spotless apply failed. Proceeding with the build."
+
       - name: Commit and Push Spotless Changes
         if: failure()
         run: |
+          cd repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Apply Spotless formatting"
+          git commit -m "Apply Spotless formatting" || echo "No changes to commit."
           git push
-          
+
       - name: Run All Tests (Ignore Failures)
         run: |
           mvn -f repo/pom.xml test -DtestFailureIgnore=true || echo "Tests failed but proceeding with the build."
-      
+
       - name: Run Clean, Package, Install
         run: |
           mvn -f repo/pom.xml clean package install -B
@@ -68,7 +69,7 @@ jobs:
         with:
           name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
           path: repo/target/*.jar
-          
+
       - name: Determine Release Type
         id: determine_release
         shell: bash
@@ -108,7 +109,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/uml-editor.jar
+          asset_path: repo/target/uml-editor.jar
           asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
           asset_content_type: application/java-archive
         env:
@@ -116,4 +117,4 @@ jobs:
 
       - name: Copy Renamed JAR to Project Root (Cross-Platform)
         run: |
-          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
+          node -e "const fs = require('fs'); fs.copyFileSync('repo/target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
