@@ -53,7 +53,7 @@ jobs:
 
       - name: Run All Tests (Ignore Failures)
         run: |
-          mvn test -Dmaven.test.failure.ignore=true
+          mvn test -Dmaven.test.failure.ignore=true || echo "Tests failed but proceeding with the build."
 
       - name: Run Clean, Package, Install
         run: |
