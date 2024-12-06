@@ -76,16 +76,21 @@ jobs:
 
       - name: Create Release
         id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: actions/create-release@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
           release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}"
           draft: false
           prerelease: ${{ env.prerelease }}
 
+      - name: Debug Create Release Output
+        run: |
+          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+
       - name: Upload Renamed JAR to Release
-        if: always()  # Always runs if create_release succeeds
+        if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
