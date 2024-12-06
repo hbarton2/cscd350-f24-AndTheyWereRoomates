@@ -74,20 +74,21 @@ jobs:
             echo "prerelease=true" >> $GITHUB_ENV
           fi
 
+      - name: Debug Release Variables
+        run: |
+          echo "Release Type: ${{ env.release_type }}"
+          echo "Prerelease: ${{ env.prerelease }}"
+
       - name: Create Release
         id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: actions/create-release@v1
         with:
           tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
           release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}"
           draft: false
           prerelease: ${{ env.prerelease }}
-
-      - name: Debug Create Release Output
-        run: |
-          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Renamed JAR to Release
         if: steps.create_release.outputs.upload_url != ''
@@ -97,6 +98,8 @@ jobs:
           asset_path: target/uml-editor.jar
           asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
           asset_content_type: application/java-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy Renamed JAR to Project Root (Cross-Platform)
         run: |
