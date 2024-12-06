@@ -35,23 +35,7 @@ jobs:
 
       - name: Verify Code Style with Spotless
         run: |
-          mvn spotless:check || echo "Spotless check failed. Proceeding with the build."
-
-      - name: Apply Code Style if Needed
-        if: failure()
-        run: |
-          mvn spotless:apply || echo "Spotless apply failed. Proceeding with the build."
-
-      - name: Commit and Push Spotless Changes
-        if: failure()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Apply Spotless formatting" || echo "No changes to commit."
-          git fetch origin
-          git rebase origin/${{ github.ref_name }} || echo "Rebase failed, resolving conflicts..."
-          git push origin HEAD:${{ github.ref_name }} || echo "Push failed, check for conflicts."
+          mvn spotless:check || echo "Spotless check failed. Please run 'mvn spotless:apply' locally to fix."
 
       - name: Run All Tests (Ignore Failures)
         run: |
