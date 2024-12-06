@@ -117,3 +117,4 @@ jobs:
       - name: Copy Renamed JAR to Project Root (Cross-Platform)
         run: |
           node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
+
