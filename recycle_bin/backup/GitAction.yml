@@ -1,15 +1,18 @@
-name: Java CI with Maven
+name: Java Continuous Integration with Maven (GraalVM)
 
 on:
   push:
     branches:
-      - Developer
-      - main
+      - "*"
   pull_request:
     branches:
-      - Developer
-      - main
+      - "*"
   workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  packages: write
 
 jobs:
   build:
@@ -17,29 +20,25 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        java-version: ['21']
-
-    name: Build, Lint, and Deploy on ${{ matrix.os }} with JDK ${{ matrix.java-version }}
+        java-version: ['21.0.5']
 
     steps:
-      - name: Get Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set Up GraalVM JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
-          distribution: 'temurin'
+          distribution: 'graalvm'
           cache: maven
 
       - name: Verify Code Style with Spotless
-        run: |
-          mvn spotless:check
+        run: mvn spotless:check
 
-      - name: Apply Code Style with Spotless (if check fails)
-        run: |
-          mvn spotless:apply
+      - name: Apply Code Style if Needed
         if: failure()
+        run: mvn spotless:apply
 
       - name: Commit and Push Spotless Changes
         if: failure()
@@ -52,12 +51,11 @@ jobs:
 
       - name: Run Tests and Package
         run: |
-          mvn spotless:check clean test package -B \
-          -Dstyle.color=always \
-          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          mvn clean test package -B
+        shell: pwsh
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
           path: target/*.jar
@@ -69,15 +67,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v1.0.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}
-          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with JDK ${{ matrix.java-version }}"
+          release_name: "Release v1.0.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}"
           draft: false
           prerelease: false
 
       - name: Upload Shaded JAR to Release
-        if: success() && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-release-asset@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/uml-editor-shaded.jar
           asset_name: uml-editor-shaded-${{ matrix.os }}-${{ matrix.java-version }}.jar

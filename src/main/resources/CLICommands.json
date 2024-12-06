@@ -244,6 +244,17 @@
     },
     "misc commands": {
       "save": {
+        "syntax": "save",
+        "description": "Saves the current project to a JSON file.",
+        "example": "save",
+        "errors": {
+          "saveFailed": [
+            "Error: Could not save the project.",
+            "Suggestion: Check file permissions or try a different file name."
+          ]
+        }
+      },
+      "save as": {
         "syntax": "save as <filename>",
         "description": "Saves the current project to a JSON file.",
         "example": "save as myProject",
@@ -255,6 +266,17 @@
         }
       },
       "load": {
+        "syntax": "load",
+        "description": "Loads a project from a temporary file.",
+        "example": "load",
+        "errors": {
+          "loadFailed": [
+            "Error: Could not load the project. File may be missing or corrupted.",
+            "Suggestion: Verify the file path and format."
+          ]
+        }
+      },
+      "load file": {
         "syntax": "load file <filename>",
         "description": "Loads a project from a JSON file.",
         "example": "load file myProject",

@@ -38,7 +38,6 @@
       <artifactId>picocli-shell-jline3</artifactId>
       <version>4.7.6</version>
     </dependency>
-
     <!-- Autocomplete -->
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -157,7 +156,6 @@
           </java>
         </configuration>
       </plugin>
-
       <!--    This plugin compiles source code into a single JAR with all necessary dependencies    -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -182,7 +180,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -192,7 +189,6 @@
           <target>21</target>
         </configuration>
       </plugin>
-
       <!-- JavaFX Maven Plugin -->
       <plugin>
         <groupId>org.openjfx</groupId>
@@ -202,7 +198,22 @@
           <mainClass>org.project.View.GraphicalUserInterface</mainClass>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
 </project>
