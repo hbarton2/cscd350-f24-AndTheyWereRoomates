@@ -91,6 +91,7 @@ jobs:
         id: create_release
         shell: bash
         run: |
+          cd repo
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             prerelease_flag="--prerelease=false"
           else
@@ -103,7 +104,7 @@ jobs:
             $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Upload Renamed JAR to Release
         if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
