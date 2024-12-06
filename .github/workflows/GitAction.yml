@@ -83,11 +83,16 @@ jobs:
       - name: Create Release
         id: create_release
         run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            prerelease_flag="--prerelease=false"
+          else
+            prerelease_flag="--prerelease=true"
+          fi
           gh release create \
             "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
             --title "Release v4.4.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}" \
             --notes "Automatically generated release" \
-            ${{ github.ref == 'refs/heads/main' && echo "--prerelease=false" || echo "--prerelease=true" }}
+            $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
