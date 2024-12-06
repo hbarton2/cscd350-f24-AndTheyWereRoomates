@@ -23,13 +23,9 @@ jobs:
         java-version: [ '21.0.5' ]
 
     steps:
-      # Checkout repository to a short path to avoid long path issues on Windows
-      - name: Checkout Repository to Short Path
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          path: repo # Short path for checkout to avoid long path issues
 
-      # Set up GraalVM JDK
       - name: Set Up GraalVM JDK
         uses: actions/setup-java@v4
         with:
@@ -37,48 +33,36 @@ jobs:
           distribution: 'graalvm'
           cache: maven
 
-      # Verify Code Style with Spotless
       - name: Verify Code Style with Spotless
         run: |
-          mvn -f repo/pom.xml spotless:check || echo "Spotless check failed. Proceeding with the build."
-
-      # Apply Code Style if Needed
+          mvn spotless:check || echo "Spotless check failed. Proceeding with the build."
       - name: Apply Code Style if Needed
         if: failure()
         run: |
-          mvn -f repo/pom.xml spotless:apply || echo "Spotless apply failed. Proceeding with the build."
-
-      # Commit and Push Spotless Changes
+          mvn spotless:apply || echo "Spotless apply failed. Proceeding with the build."
       - name: Commit and Push Spotless Changes
         if: failure()
         run: |
-          cd repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Apply Spotless formatting" || echo "No changes to commit."
-          git push || echo "No changes to push."
-
-      # Run All Tests (Ignore Failures)
+          git commit -m "Apply Spotless formatting"
+          git push
       - name: Run All Tests (Ignore Failures)
         run: |
-          mvn -f repo/pom.xml test -DtestFailureIgnore=true || echo "Tests failed but proceeding with the build."
-
-      # Run Clean, Package, Install
+          mvn test -DtestFailureIgnore=true || echo "Tests failed but proceeding with the build."
       - name: Run Clean, Package, Install
         run: |
-          mvn -f repo/pom.xml clean package install -B
-          cp repo/target/original-uml-editor-shaded.jar repo/target/uml-editor.jar
+          mvn clean package install -B
+          cp target/original-uml-editor-shaded.jar target/uml-editor.jar
         shell: pwsh
 
-      # Upload Build Artifacts
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
-          path: repo/target/*.jar
+          path: target/*.jar
 
-      # Determine Release Type
       - name: Determine Release Type
         id: determine_release
         shell: bash
@@ -90,19 +74,14 @@ jobs:
             echo "release_type=pre-release" >> $GITHUB_ENV
             echo "prerelease=true" >> $GITHUB_ENV
           fi
-
-      # Debug Release Variables
       - name: Debug Release Variables
         run: |
           echo "Release Type: ${{ env.release_type }}"
           echo "Prerelease: ${{ env.prerelease }}"
-
-      # Create Release
       - name: Create Release
         id: create_release
         shell: bash
         run: |
-          cd repo
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             prerelease_flag="--prerelease=false"
           else
@@ -116,19 +95,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Upload Renamed JAR to Release
       - name: Upload Renamed JAR to Release
         if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: repo/target/uml-editor.jar
+          asset_path: target/uml-editor.jar
           asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
           asset_content_type: application/java-archive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Copy Renamed JAR to Project Root
       - name: Copy Renamed JAR to Project Root (Cross-Platform)
         run: |
-          node -e "const fs = require('fs'); fs.copyFileSync('repo/target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
+          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
