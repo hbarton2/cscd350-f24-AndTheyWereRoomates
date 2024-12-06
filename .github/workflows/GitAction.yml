@@ -67,14 +67,14 @@ jobs:
         id: determine_release
         shell: bash
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-          echo "release_type=release" >> $GITHUB_ENV
-          echo "prerelease=false" >> $GITHUB_ENV
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "release_type=release" >> $GITHUB_ENV
+            echo "prerelease=false" >> $GITHUB_ENV
           else
             echo "release_type=pre-release" >> $GITHUB_ENV
             echo "prerelease=true" >> $GITHUB_ENV
           fi
-          
+
       - name: Debug Release Variables
         run: |
           echo "Release Type: ${{ env.release_type }}"
@@ -82,8 +82,9 @@ jobs:
 
       - name: Create Release
         id: create_release
+        shell: bash
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             prerelease_flag="--prerelease=false"
           else
             prerelease_flag="--prerelease=true"
@@ -95,7 +96,7 @@ jobs:
             $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Upload Renamed JAR to Release
         if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
