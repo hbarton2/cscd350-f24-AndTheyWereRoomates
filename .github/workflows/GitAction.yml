@@ -74,15 +74,15 @@ jobs:
         id: create_release
         shell: bash
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [ "refs/heads/main" = "${{ github.ref }}" ]; then
             prerelease_flag="--prerelease=false"
             tag_name="v4.4.${{ github.run_number }}"
           else
             prerelease_flag="--prerelease=true"
-            tag_name="v4.4.${{ github.run_number }}-prerelease"
+          tag_name="v4.4.${{ github.run_number }}-prerelease"
           fi
           gh release create \
-            "$tag_name" \ # Use a valid tag name
+            "$tag_name" \
             --title "v4.4.${{ github.run_number }} UML Editor" \
             --notes "Automatically generated release" \
             $prerelease_flag
