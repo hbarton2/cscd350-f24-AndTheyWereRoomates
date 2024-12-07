@@ -80,27 +80,27 @@ jobs:
             prerelease_flag="--prerelease=true"
           fi
           gh release create \
-            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
-            --title "v4.4.${{ github.run_number }} UML Editor" \
+            "v4.4.${{ github.run_number }} UML Editor" \
+            --title "v4.4.${{ github.run_number }} UML Editor ${{ matrix.os }}" \
             --notes "Automatically generated release" \
             $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Renamed JAR to Release
-        if: steps.create_release.outputs.upload_url != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/uml-editor.jar
-          asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
-          asset_content_type: application/java-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Copy Renamed JAR to Project Root (Cross-Platform)
-        run: |
-          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
+#      - name: Upload Renamed JAR to Release
+#        if: steps.create_release.outputs.upload_url != ''
+#        uses: actions/upload-release-asset@v1
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: target/uml-editor.jar
+#          asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
+#          asset_content_type: application/java-archive
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Copy Renamed JAR to Project Root (Cross-Platform)
+#        run: |
+#          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
 
   check-code-coverage:
     needs: build
