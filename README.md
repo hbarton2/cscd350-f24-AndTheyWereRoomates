@@ -298,72 +298,90 @@ From here you'll be able to type in commands and start editing. Down below are a
 * Please make sure to read new CLI Introduction before reading this section.
 * These commands are general commands that can be used in the CLI.
 
-1. help - displays all possible commands
+1. Help - displays all possible commands.
 
-2. list details - Lists everything in the currently selected class
+2. List Detail - Lists everything in the currently selected class.
 
-3. list classes - List all created classes
+3. List Classes - List all created classes.
     * Example: `list classes`
-4. save `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
-    * Example: `save fruitbowl.json`
-5. load - loads a json as a UML class. It will ask you to input a name after typing load
-    * Example: `save fruitbowl.json`
+   
+4. Save As `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save as fruitbowl.json`
+   
+5. Load File `<filename>`- loads a json as a UML class. It will ask you to input a name after typing load.
+    * Example: `load file fruitbowl.json`
+   
+6. Switch Class `<classname>`- sets an existing class as the current class for quick editing.
+    * Example: `switch class apple`
+   
+7. Redo - Redoes the most recent undone action.
+    * Example: `redo`
+   
+8. Undo  - Undoes the most recent action.
+    * Example: `undo`
+   
+9. New Project - Resents the application to a fresh state, clearing all existing data.
+    * Example: `new project`
 
-6. exit - exits the program
+10. Clear - Clears the terminal screen.
+    * Example: `clear`
+
+11. Exit - Exits the program
+    * Example: `exit`
 ---
 ## Add Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands add things to the editor.
 
-1. create class `<class name>` - creates a class with that name
+1. Create Class `<class name>` - creates a class with that name
     * Example: `create class Apple`
 
-2. add method `<return type> <method name>` - creates a method with the given name and following parameters
+2. Add Method `<return type> <method name>` - creates a method with the given name and following parameters
     * Example: `add method Boolean eat`
 
-3. add field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+3. Add Field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
     * Example: `add field String color`
 
-4. add parameter `<method name> <parameter type> <parameter name>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+4. Add Parameter `<method name> <parameter type> <parameter name> [<parameter type> <parameter name> ... ]` - creates a parameter with the given name and type. This requires a method to exist in order to work
     * Example: `add parameter eat food String`
 
-5. add relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
+5. Add Relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
     * Example: `add relationship Apple Banana Aggregation`
 ---
 ## Remove Commands
 * * Please make sure to read CLI Introduction before reading this section.
 * These commands remove things in the editor.
 
-1. `remove class <classname>` - removes the class that is currently set
+1. Remove Class `<classname>` - removes the class that is currently set
    These commands remove things in the editor.
     * Example: `remove class Apple`
 
-2. remove method `<method name>` - removes a method with the given name
+2. Remove Method `<method name> [<parameter type> <parameter name> ... ]` - removes a method with the given name optionally with specific parameters, from the currently set class. 
     * Example: `remove method method1`
 
-3. remove field `<field name>` - removes a field with the given name
+3. Remove Field `<field name>` - removes a field with the given name
     * Example: `remove field field1`
 
-4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+4. Remove Parameter `<method name> <parameter name> [<parameter name> ... ]` - removes a parameter with the given name
     * Example: `remove parameter method1 param1`
 
-5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+5. Remove Relationship `<existing class name> <different existing class name> <relationship type>` -  removes a relationship between two existing classes.
     * Example: `remove relationship Apple Banana Aggregation`
 ---
 ## Rename Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands rename things in the editor.
 
-1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+1. Rename Class `<old class name> <new class name>` - renames the currently selected class to the new name
     * Example: `rename class Apple Banana`
 
-2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+2. Rename Method `<existing method name> <new method name>` - renames a method in currently selected class to the new name
     * Example: `rename method method1 method2`
 
-3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+3. Rename Field `<existing field name> <new field name> <new field type>` - renames a method in currently selected class to the new name
     * Example: `rename field field1 field2 String`
 
-4. rename parameter `<existing method> <existing parameter> <new name>` - renames a parameter in currently selected class to the new name
+4. Rename Parameter `<methond name> <old parameter name> <new parameter name>` - renames a parameter in currently selected class to the new name
     * Example: `rename parameter method1 param1 param2`
 ---
 
@@ -371,35 +389,49 @@ From here you'll be able to type in commands and start editing. Down below are a
 
 ---
 ## Sample Workflow
-Provide a simple walkthrough of how to use the CLI to create a UML diagram.
-
-
+1. View available commands.
+   * Type help to display all possible commands.
+   * Example: `help`
+   
+2. Create a class.
+   * Type create class followed by the class name to create a new class.
+   * Example: `create class apple`
+   
+3. Add methods to the class.
+   * Type add method followed by the method's return type and name to add a method to the current class.
+   * Example: `add method String getColor`
+   
+4. Add fields to a class.
+   * Type add field followed by the field's type and name to add a property to the current class.
+   * Example: `add field String color`
+   
+5. Add relationship between classes.
+   * First, create another class. Then, type add relationship followed by the relationship type and the target class name to link the classes.
+   * Example: `create class bannana`
+   * `switch class apple`
+   * `add relationship Aggregation bannana`
+   
+6. View added elements in class.
+   * To see all attributes and relationships of the current class, then type list class.
+   * Example: `list class`
+   
+7. Save the UML diagram.
+   * Type save as followed by the desired file name to save the current UML diagram.
+   * Example: `save as apple`
+   
+8. Load a saved UML file.
+   * Type load file followed by the name of the saved file to load a UML diagram.
+   * Example: `load file apple`
+   
+9. Edit another class.
+   * To edit a different class, type switch class followed by the class name.
+   * Example: `switch class bannana`
+   
+10. Exit the program.
+    * When finished,type exit. This closes the program.
+    * Example: `exit`
 ---
 
-As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all associated commands.
-
-Once the program starts, the first thing you need to add is a class.
-Type 'create class ' and the name of the class you wish to add to create a class into the program. (ex: 'create class _apple_') and press the enter key.
-
-To test that out, type 'add method ' and the name of the method you want to add. (ex: 'add method _banana_')
-You can test out the other add commands, but keep in mind that adding a field, relationship, and parameter requires two, two and three inputs respectively in order to work (Detailed explanation in CLI Commands)
-
-If you wish to edit another class, you'll need to type 'set class' with the name of another existing class that is created.
-
-To see what you've added to the currently set class, type 'list class' to see how your class is set up.
-What should display is everything added to the currently selected class.
-If you want to see all the classes you created, type 'list classes' and it'll display all currently created classes.
-
-Since you have something in the UML editor, to save the program, type 'save' to save everything you have into a json file.
-The program should prompt text asking to type a name for the file. Name the file whatever you want and press the enter key, and you should see a json file with that name in the project folder.
-
-If you want to load the file, type 'load'. This will prompt text asking for a file name in the project folder. The program will then prompt you to type in the name of a json file.
-As a heads-up, you don't need to include ".json" in your input, the program looks for a json file with the name of what you input.
-Assuming you typed in the name of the file, all your classes and every attribute tied to the classes should be loaded. (although if you're following along, it might be hard to notice considering you presumably didn't add anything after saving)
-
-If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on boot up, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
-
-This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
 ## WorkFlow Sample
 ![Sample WorkFlow](doc/images/flowSample.png)
 
@@ -407,27 +439,25 @@ This should give you the idea of how the UML editor works. If you need a reminde
 
 Upon booting up in GUI mode, you'll be presented with a new window titled "UML EDITOR".
 You should see this window upon boot up.
-![img.png](doc/images/UMLEDITORwindow.png)
+![img.png](doc/images/GUIEditorWindow.png)
 
 
 
 ## Window UI
 This is a general breakdown of what does what in the UI. A more detailed breakdown for each part is below in this document.
+![img.png](doc/images/GUIBreakdown.png)
 
-### Workspace UI
-![img.png](doc/images/DetailedGUIBreakdown.png)
-
-1. Workspace - This where your work will appear
-2. Class Editor Buttons - These buttons edit classes in your workspaceS
-3. Field Editor Buttons - These buttons edit fields in a class
-4. Method Editor Buttons - These buttons edit methods in a class. The buttons to add/remove/rename are seperated from the name text field
-5. Parameter Editor Buttons - These buttons edit parameters in a method.
-6. Relationship Editor Buttons - These button edit the relationship between two existing classes
-7. Miscellaneous Editing Dropdowns - These allow opening files, advance editing, and help
+1. **Workspace** - This where your work will appear
+2. **Class Editor** - These buttons edit classes in your workspaceS
+3. **Field Editor** - These buttons edit fields in a class
+4. **Method Editor** - These buttons edit methods in a class. The buttons to add/remove/rename are seperated from the name text field
+5. **Parameter Editor** - These buttons edit parameters in a method.
+6. **Relationship Editor** - These button edit the relationship between two existing classes
+7. **Miscellaneous** - These allow opening files, image exporting, undo/redo, and help
 
 
 ### Class UI
-![img.png](doc/images/ClassUIBreakdown.png)
+![img.png](doc/images/GUI_UI_Breakdown.png)
 
 * If you wish to edit something in a particular field, click on the specified field to start editing.
 * You can tell if you selected something in the list when it's colored blue.
@@ -440,68 +470,90 @@ This is a general breakdown of what does what in the UI. A more detailed breakdo
 ## Selecting Objects
 ### Selecting a Class
 If you want to select a class to edit, click the name of the box to select it for editing, otherwise you'll only
-select it to move it around. You know you have a class selected if it has a blue glow, like this:
-
-![img.png](doc/images/GUIExamplePicture_ClassSelected.png)
-### Selecting components of a Class
+select it to move it around. You know you have a class selected if it has a red glow.
+If the class name in the editing field is the same name as the object, you have it selected.
+<br>
 If you want to select attributes inside a class (in this example, a field), click the specific entry until
-it is highlighted blue like so:
-
-![img.png](doc/images/GUIExamplePicture_FieldSelected.png)
+it is highlighted blue.
+<br>
+![img.png](doc/images/GUISelectedElements.png)
 
 ### Class Editing
 These buttons all edit classes
 
-![img.png](doc/images/GUIClassDiagram.png)
-1. Add Class - Creates a completely new blank class
-2. Delete Class - Deletes a currently selected class
-3. Class Name: - This text field is where the class name will display and where you can edit the name.
-4. Set Class Name - Sets the name to the currently selected class if it's changed.
+![img.png](doc/images/GUIClassBreakdown.png)
+1. **Add Class** - Creates a completely new blank class
+2. **Delete Class** - Deletes a currently selected class
+3. **Class Name:** - This text field is where the class name will display and where you can edit the name.
+4. **Set Class Name** - Sets the name to the currently selected class if it's changed.
 
 ### Field Editing
 
 ![img.png](doc/images/GUIFieldDiagram.png)
-1. Field Name: - This text field is where you'll input a name for the field.
-2. Type - A dropdown field where you set what type the field is.
-3. Add - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
-4. Rename Field - Renames a currently selected field. Click on the specific field to rename it
-5. Delete Field - Deletes a currently selected field. Click on the specific field to remove it
+1. **Field Name:** - This text field is where you'll input a name for the field.
+2. **Type** - A dropdown field where you set what type the field is.
+3. **Add** - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
+4. **Rename Field** - Renames a currently selected field. Click on the specific field to rename it
+5. **Delete Field** - Deletes a currently selected field. Click on the specific field to remove it
 
 ### Method Editing
 
 ![img.png](doc/images/GUIMethodDiagram.png)
-1. Method Name - This text field is where you'll input a name for the method.
-2. Add - Adds a method to the given class
-3. Delete - Deletes a currently selected method. Click on the specific field to remove it
-4. Rename Method - Renames a currently selected method. Click on the specific field to rename it
+1. **Type** - A dropdown field where you set the type for the Method
+2. **Method Name:** - This text field is where you'll input a name for the method.
+3. **Add Method** - Adds a method to the given class
+4. **Delete Method** - Deletes a currently selected method. Click on the specific field to remove it
+5. **Rename Method** - Renames a currently selected method. Click on the specific field to rename it
 
 ### Parameter Editing
 
 ![img.png](doc/images/GUIParameterDiagram.png)
-* To edit a parameter, you must have a Method first
-1. Name - This text field is where you'll input a name for the parameter.
-2. Type - This opens a dropdown display to select a type for the parameter
-3. Add - Adds a parameter to a method
+* To edit a parameter, you must have a Method first and have it selected
+1. **Type** - This opens a dropdown display to select a type for the parameter
+2. **Name:** - This text field is where you'll input a name for the parameter.
+3. **Add Parameter** - Adds a parameter to a method
+4. **Delete Parameter** - Deletes parameter in a method
+5. **Rename Parameter** - Renames Parameter in a method
 
 ### Relationship Editing
 
 ![img.png](doc/images/GUIRelationshipDiagram.png)
 * This requires two existing classes to work.
-1. From - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
-2. To - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
-3. Type - This opens a dropdown display to select the type of relationship between two classes
-4. Add Relation - This creates a relationship between two classes, displaying as an arrow pointing from one class to another
-5. Delete Relation - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
+1. **From** - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
+2. **To** - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
+3. **Type** - This opens a dropdown display to select the type of relationship between two classes
+4. **Add Relation** - This creates a relationship between two classes, displaying as an arrow pointing from one class to another
+5. **Delete Relation** - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
+
+### Miscelanious Editing
+![img.png](doc/images/GUIMiscFile.png)
+![img.png](doc/images/GUIMiscEdit.png)
+
+#### Files
+* **Open** - Open a file to load into the GUI
+* **New Project** - Creates a new project
+* **Save** - Saves your current workspace into a JSON file
+<br>(Located in *scr/main/resources/saves*)
+* **Export Imag**e - Exports out your workspace into a PNG file 
+<br>(Located in *scr/main/resources/exports*)
+* **Back to Main Menu** - Sends you back to the main menu where you can pick betwen GUI and CLI
+* **Quit** - Shutdown program
+#### Edit
+* **Undo** - Undo your last action
+* **Redo** - Redo your last undo.
 
 ## Known GUI Bugs
+Connecting from one to another for some reason doesn't work, being labeled as "Cannot connect to self"
+![img.png](doc/images/GUIBug_CannotConnectToSelfError.png)
 
-1.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the
-    left of a class, creating weird graphical issues of overlapping
-    ![img.png](doc/images/GUIbug_RelationshipGraphicalIssues.png)
-2.  Class Display - Newly created classes appear over existing classes.  
-    Recreate: Create a new class, and then create a second class. Created class was moved to make the problem clear.
-    ![img.png](doc/images/GUIbug_classesOverlayingGUIIssue.PNG)
-3.  Saving Option - Trying to save the GUI doesn't open file explorer.
-    ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
+Creating more than 15 classes will cause objects to appear off-screen and be rendered unobtainable.
+In this image, there's only 15 classes but there's 18 (19 in the other image), and they're off-screen on the bottom.
+They still exist and are reachable through Relationship but cannot be moved into screen, and moving elements
+don't fill in the slot with the new element.
+Also, elements appears below the UI.
+![img.png](doc/images/GUIBugs_SoftLimitOnElements.png)
+![img.png](doc/images/GUIBug_SoftLimitOnElements2.png)
+
+
 ---
 

@@ -196,7 +196,7 @@ This should give you the idea of how the UML editor works. If you need a reminde
 
 Upon booting up in GUI mode, you'll be presented with a new window titled "UML EDITOR". 
 You should see this window upon boot up.
-![img.png](../../doc/images/UMLEDITORwindow.png)
+![img.png](../no_longer_needed/UMLEDITORwindow.png)
 
 ## GUI Usage
 On this window, you'll be able to add classes and edit. Down below are a detailed explanation as to what 
@@ -215,7 +215,7 @@ buttons does what and how to interface with the program.
 This is a general breakdown of what does what in the UI. A more detailed breakdown for each part is below in this document.
 
 ### Workspace UI
-![img.png](../../doc/images/DetailedGUIBreakdown.png)
+![img.png](../no_longer_needed/DetailedGUIBreakdown.png)
 
 1. Workspace - This where your work will appear 
 2. Class Editor Buttons - These buttons edit classes in your workspaceS
@@ -227,7 +227,7 @@ This is a general breakdown of what does what in the UI. A more detailed breakdo
 
 
 ### Class UI
-![img.png](../../doc/images/ClassUIBreakdown.png)
+![img.png](../no_longer_needed/ClassUIBreakdown.png)
 
 * If you wish to edit something in a particular field, click on the specified field to start editing.
 * You can tell if you selected something in the list when it's colored blue.
@@ -242,17 +242,17 @@ This is a general breakdown of what does what in the UI. A more detailed breakdo
 If you want to select a class to edit, click the name of the box to select it for editing, otherwise you'll only
 select it to move it around. You know you have a class selected if it has a blue glow, like this:
 
-![img.png](../../doc/images/GUIExamplePicture_ClassSelected.png)
+![img.png](../no_longer_needed/GUIExamplePicture_ClassSelected.png)
 ### Selecting components of a Class
 If you want to select attributes inside a class (in this example, a field), click the specific entry until
 it is highlighted blue like so:
 
-![img.png](../../doc/images/GUIExamplePicture_FieldSelected.png)
+![img.png](../no_longer_needed/GUIExamplePicture_FieldSelected.png)
 
 ### Class Editing
 These buttons all edit classes
 
-![img.png](../../doc/images/GUIClassDiagram.png)
+![img.png](../no_longer_needed/GUIClassDiagram.png)
 1. Add Class - Creates a completely new blank class
 2. Delete Class - Deletes a currently selected class
 3. Class Name: - This text field is where the class name will display and where you can edit the name.
@@ -260,7 +260,7 @@ These buttons all edit classes
 
 ### Field Editing
 
-![img.png](../../doc/images/GUIFieldDiagram.png)
+![img.png](../no_longer_needed/GUIFieldDiagram.png)
 1. Field Name: - This text field is where you'll input a name for the field.
 2. Type - A dropdown field where you set what type the field is. 
 3. Add - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
@@ -269,7 +269,7 @@ These buttons all edit classes
 
 ### Method Editing
 
-![img.png](../../doc/images/GUIMethodDiagram.png)
+![img.png](../no_longer_needed/GUIMethodDiagram.png)
 1. Method Name - This text field is where you'll input a name for the method.
 2. Add - Adds a method to the given class
 3. Delete - Deletes a currently selected method. Click on the specific field to remove it
@@ -277,7 +277,7 @@ These buttons all edit classes
 
 ### Parameter Editing
 
-![img.png](../../doc/images/GUIParameterDiagram.png)
+![img.png](../no_longer_needed/GUIParameterDiagram.png)
 * To edit a parameter, you must have a Method first
 1. Name - This text field is where you'll input a name for the parameter.
 2. Type - This opens a dropdown display to select a type for the parameter
@@ -285,7 +285,7 @@ These buttons all edit classes
 
 ### Relationship Editing
 
-![img.png](../../doc/images/GUIRelationshipDiagram.png)
+![img.png](../no_longer_needed/GUIRelationshipDiagram.png)
 * This requires two existing classes to work.
 1. From - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
 2. To - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
@@ -297,9 +297,9 @@ These buttons all edit classes
 
 1.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the 
 left of a class, creating weird graphical issues of overlapping 
-![img.png](../../doc/images/GUIbug_RelationshipGraphicalIssues.png)
+![img.png](../no_longer_needed/GUIbug_RelationshipGraphicalIssues.png)
 2.  Class Display - Newly created classes appear over existing classes.  
     Recreate: Create a new class, and then create a second class. Created class was moved to make the problem clear.
 ![img.png](../../doc/images/classesOverlayingGuiIssue.png)
 3.  Saving Option - Trying to save the GUI doesn't open file explorer.
-    ![img.png](../../doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
+    ![img.png](../no_longer_needed/GUIbug_saveNotOpeningFileExplorer.PNG)
