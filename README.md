@@ -156,6 +156,25 @@ JUnit 4 or 5 and Mockito is used for all testing throughout the project. To run 
 ```bash
 mvn test
 ```
+
+If you want to be able to see the current code coverage for the project for you to be able to write testing for the code.
+We have a tool to be able the current state of the code coverage. To access this tool:
+- go to www.github.com and go to the project repository.
+
+
+- next click on the actions tab and select `Testing PR with new GitAction`
+![CodeCoverageReadme1.png](doc/images/CodeCoverageReadme1.png)
+
+- Next you will select `code-coverage-report` the Actions box at the bottom of the page. and save it to your machine.
+![CodeCoverageReadme2.png](doc/images/CodeCoverageReadme2.png)
+
+- Go to the file you just downloaded and open it and open the file `index.htm`.
+![CodeCoverageReadme3.png](doc/images/CodeCoverageReadme3.png)
+
+- Once you open that file you should be able to see the current code coverage of the project.
+![CodeCoverageReadme4.png](doc/images/CodeCoverageReadme4.png)
+
+
 ---
 
 ## Run Tests
@@ -268,8 +287,7 @@ For any inquiries, feel free to reach out
     * [Add Commands](#add-commands)
     * [Remove Commands](#remove-commands)
     * [Rename Commands](#rename-commands)
-4. [Sample Workflow](#sample-workflow)
-5. [Known Bugs](#known-bugs)
+4. [Known Bugs](#known-bugs)
 
 
 ---
@@ -298,90 +316,90 @@ From here you'll be able to type in commands and start editing. Down below are a
 * Please make sure to read new CLI Introduction before reading this section.
 * These commands are general commands that can be used in the CLI.
 
-1. Help - displays all possible commands.
+1. help - displays all possible commands.
 
-2. List Detail - Lists everything in the currently selected class.
+2. list detail - Lists everything in the currently selected class.
 
-3. List Classes - List all created classes.
+3. list classes - List all created classes.
     * Example: `list classes`
    
-4. Save As `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
+4. save As `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
     * Example: `save as fruitbowl.json`
    
-5. Load File `<filename>`- loads a json as a UML class. It will ask you to input a name after typing load.
+5. load file `<filename>`- loads a json as a UML class. It will ask you to input a name after typing load.
     * Example: `load file fruitbowl.json`
    
-6. Switch Class `<classname>`- sets an existing class as the current class for quick editing.
+6. switch class `<classname>`- sets an existing class as the current class for quick editing.
     * Example: `switch class apple`
    
-7. Redo - Redoes the most recent undone action.
+7. redo - Redoes the most recent undone action.
     * Example: `redo`
    
-8. Undo  - Undoes the most recent action.
+8. undo  - Undoes the most recent action.
     * Example: `undo`
    
-9. New Project - Resents the application to a fresh state, clearing all existing data.
+9. new project - Resents the application to a fresh state, clearing all existing data.
     * Example: `new project`
 
-10. Clear - Clears the terminal screen.
+10. clear - Clears the terminal screen.
     * Example: `clear`
 
-11. Exit - Exits the program
+11. exit - Exits the program
     * Example: `exit`
 ---
 ## Add Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands add things to the editor.
 
-1. Create Class `<class name>` - creates a class with that name
+1. create class `<class name>` - creates a class with that name
     * Example: `create class Apple`
 
-2. Add Method `<return type> <method name>` - creates a method with the given name and following parameters
+2. add method `<return type> <method name>` - creates a method with the given name and following parameters
     * Example: `add method Boolean eat`
 
-3. Add Field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+3. add field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
     * Example: `add field String color`
 
-4. Add Parameter `<method name> <parameter type> <parameter name> [<parameter type> <parameter name> ... ]` - creates a parameter with the given name and type. This requires a method to exist in order to work
+4. add parameter `<method name> <parameter type> <parameter name> [<parameter type> <parameter name> ... ]` - creates a parameter with the given name and type. This requires a method to exist in order to work
     * Example: `add parameter eat food String`
 
-5. Add Relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
+5. add relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
     * Example: `add relationship Apple Banana Aggregation`
 ---
 ## Remove Commands
 * * Please make sure to read CLI Introduction before reading this section.
 * These commands remove things in the editor.
 
-1. Remove Class `<classname>` - removes the class that is currently set
+1. remove class `<classname>` - removes the class that is currently set
    These commands remove things in the editor.
     * Example: `remove class Apple`
 
-2. Remove Method `<method name> [<parameter type> <parameter name> ... ]` - removes a method with the given name optionally with specific parameters, from the currently set class. 
+2. remove method `<method name> [<parameter type> <parameter name> ... ]` - removes a method with the given name optionally with specific parameters, from the currently set class. 
     * Example: `remove method method1`
 
-3. Remove Field `<field name>` - removes a field with the given name
+3. remove field `<field name>` - removes a field with the given name
     * Example: `remove field field1`
 
-4. Remove Parameter `<method name> <parameter name> [<parameter name> ... ]` - removes a parameter with the given name
+4. remove parameter `<method name> <parameter name> [<parameter name> ... ]` - removes a parameter with the given name
     * Example: `remove parameter method1 param1`
 
-5. Remove Relationship `<existing class name> <different existing class name> <relationship type>` -  removes a relationship between two existing classes.
+5. remove relationship `<existing class name> <different existing class name> <relationship type>` -  removes a relationship between two existing classes.
     * Example: `remove relationship Apple Banana Aggregation`
 ---
 ## Rename Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands rename things in the editor.
 
-1. Rename Class `<old class name> <new class name>` - renames the currently selected class to the new name
+1. rename class `<old class name> <new class name>` - renames the currently selected class to the new name
     * Example: `rename class Apple Banana`
 
-2. Rename Method `<existing method name> <new method name>` - renames a method in currently selected class to the new name
+2. rename method `<existing method name> <new method name>` - renames a method in currently selected class to the new name
     * Example: `rename method method1 method2`
 
-3. Rename Field `<existing field name> <new field name> <new field type>` - renames a method in currently selected class to the new name
+3. rename field `<existing field name> <new field name> <new field type>` - renames a method in currently selected class to the new name
     * Example: `rename field field1 field2 String`
 
-4. Rename Parameter `<methond name> <old parameter name> <new parameter name>` - renames a parameter in currently selected class to the new name
+4. rename parameter `<methond name> <old parameter name> <new parameter name>` - renames a parameter in currently selected class to the new name
     * Example: `rename parameter method1 param1 param2`
 ---
 
@@ -392,48 +410,52 @@ From here you'll be able to type in commands and start editing. Down below are a
 1. View available commands.
    * Type help to display all possible commands.
    * Example: `help`
+   ![CLIHelpMenu.png](doc/images/CLIHelpMenu.png)
    
 2. Create a class.
    * Type create class followed by the class name to create a new class.
    * Example: `create class apple`
+   ![CLIAddClass.png](doc/images/CLIAddClass.png)
    
 3. Add methods to the class.
    * Type add method followed by the method's return type and name to add a method to the current class.
    * Example: `add method String getColor`
+   ![CLIAddMethod.png](doc/images/CLIAddMethod.png)
    
 4. Add fields to a class.
    * Type add field followed by the field's type and name to add a property to the current class.
    * Example: `add field String color`
+   ![CLIAddField.png](doc/images/CLIAddField.png)
    
 5. Add relationship between classes.
    * First, create another class. Then, type add relationship followed by the relationship type and the target class name to link the classes.
    * Example: `create class bannana`
    * `switch class apple`
    * `add relationship Aggregation bannana`
+   ![CLIAddRelationship.png](doc/images/CLIAddRelationship.png)
    
 6. View added elements in class.
    * To see all attributes and relationships of the current class, then type list class.
-   * Example: `list class`
+   * Example: `list detail`
+   ![CLIListDetail.png](doc/images/CLIListDetail.png)
    
 7. Save the UML diagram.
    * Type save as followed by the desired file name to save the current UML diagram.
    * Example: `save as apple`
+   ![CLISaveFile.png](doc/images/CLISaveFile.png)
    
 8. Load a saved UML file.
    * Type load file followed by the name of the saved file to load a UML diagram.
    * Example: `load file apple`
+![CLILoadFile.png](doc/images/CLILoadFile.png)
    
-9. Edit another class.
-   * To edit a different class, type switch class followed by the class name.
-   * Example: `switch class bannana`
-   
-10. Exit the program.
-    * When finished,type exit. This closes the program.
-    * Example: `exit`
+9. Exit the program.
+   * When finished,type exit. This closes the program.
+   * Example: `exit`
+
 ---
 
-## WorkFlow Sample
-![Sample WorkFlow](doc/images/flowSample.png)
+
 
 # GUI Instructions
 
@@ -443,7 +465,7 @@ You should see this window upon boot up.
 
 
 
-## Window UI
+## Workspace UI
 This is a general breakdown of what does what in the UI. A more detailed breakdown for each part is below in this document.
 ![img.png](doc/images/GUIBreakdown.png)
 
