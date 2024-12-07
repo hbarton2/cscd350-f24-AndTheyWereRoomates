@@ -43,6 +43,7 @@ public class ClassNodeIntegrationTest {
     JsonObject method = new JsonObject();
     method.addProperty("type", "void");
     method.addProperty("name", "drive");
+    method.addProperty("isOverloaded", false);
     JsonArray parameters = new JsonArray();
     method.add("parameters", parameters);
     methods.add(method);
@@ -54,6 +55,15 @@ public class ClassNodeIntegrationTest {
     relationship.addProperty("target", "Wheel");
     relationships.add(relationship);
     jsonNode.add("relationships", relationships);
+
+    JsonObject position = new JsonObject();
+    JsonArray coors = new JsonArray();
+    coors.add(0.0);
+    coors.add(0.0);
+
+    position.add("position", coors);
+    JsonArray positionArray = new JsonArray();
+    jsonNode.add("position", positionArray);
 
     // Create UMLClassNode using ClassNodeService
     classNode = classNodeService.createClassNodeFromJson(jsonNode);
