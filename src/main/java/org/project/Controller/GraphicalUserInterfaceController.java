@@ -896,23 +896,43 @@ public class GraphicalUserInterfaceController implements Initializable {
   private void refreshCanvas() {
     canvas.getChildren().clear();
 
+    int numberOfClasses = 0;
+    double spacing = 20.0;
+    double startX = 50.0;
+    double startY = 50.0;
+
     for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
       String className = classNode.getClassName();
       GraphicalClassNode graphicalClassNode =
-          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+              GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
-      // double[] position = classBoxPositions.getOrDefault(className, new double[] {50.0, 50.0});
       double[] position = classNode.getPosition();
+
+      if (position[0] == 0.0 && position[1] == 0.0) {
+        double offsetX = (numberOfClasses % 5) * (graphicalClassNode.getPrefWidth() + spacing);
+        double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
+
+        position[0] = startX + offsetX;
+        position[1] = startY + offsetY;
+
+        classNode.setPosition(position[0], position[1]);
+        numberOfClasses++;
+      }
+
       graphicalClassNode.setLayoutX(position[0]);
       graphicalClassNode.setLayoutY(position[1]);
+
       DraggableMaker draggableMaker = new DraggableMaker();
       draggableMaker.makeDraggable(graphicalClassNode, classNode);
 
       canvas.getChildren().add(graphicalClassNode);
-      observableClass.removeClasBox(graphicalClassNode);
+      observableClass.addClassBox(graphicalClassNode);
     }
+
     drawAllRelationships();
   }
+
 
   private void drawAllRelationships() {
     for (UMLClassNode fromNode : commandBridge.getStorage().getAllNodes().values()) {
