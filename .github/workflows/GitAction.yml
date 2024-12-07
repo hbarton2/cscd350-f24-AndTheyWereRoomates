@@ -78,9 +78,9 @@ jobs:
             prerelease_flag="--prerelease=false"
           else
             prerelease_flag="--prerelease=true"
-          fi  # Properly close the 'if' block
+          fi
           gh release create \
-            "v4.4.${{ github.run_number }}" \ # Use a valid tag name
+            "v4.4.${{ github.run_number }} UML Editor" \
             --title "v4.4.${{ github.run_number }} UML Editor" \
             --notes "Automatically generated release" \
             $prerelease_flag
