@@ -104,7 +104,7 @@ jobs:
 
   check-code-coverage:
     needs: build
-    runs-on: ubuntu-latest  # Use one platform to ensure it runs only once
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -114,6 +114,11 @@ jobs:
         with:
           java-version: '21.0.5'
           distribution: 'graalvm'
+
+      - name: Install xmllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
 
       - name: Generate Code Coverage Report
         run: |
