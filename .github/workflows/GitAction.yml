@@ -63,7 +63,6 @@ jobs:
           else
             echo "release_type=pre-release" >> $GITHUB_ENV
             echo "prerelease=true" >> $GITHUB_ENV
-          fi
 
       - name: Debug Release Variables
         run: |
@@ -80,21 +79,36 @@ jobs:
             prerelease_flag="--prerelease=true"
           fi
           gh release create \
-            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
-            --title "Release v4.4.${{ github.run_number }} on ${{ matrix.os }} with GraalVM JDK ${{ matrix.java-version }}" \
+            "v4.4.${{ github.run_number }} UML Editor" \
+            --title "v4.4.${{ github.run_number }} UML Editor" \
             --notes "Automatically generated release" \
             $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Renamed JAR to Release
+      - name: Upload JAR to Release
         if: steps.create_release.outputs.upload_url != ''
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/uml-editor.jar
-          asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
+          asset_name: uml-editor.jar
           asset_content_type: application/java-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Source ZIP and TAR.GZ to Release
+        if: steps.create_release.outputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            source.zip
+            source.tar.gz
+          asset_name: |
+            source.zip
+            source.tar.gz
+          asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -102,3 +116,39 @@ jobs:
         run: |
           node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
 
+  check-code-coverage:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    continue-on-error: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up GraalVM JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21.0.5'
+          distribution: 'graalvm'
+
+      - name: Generate Code Coverage Report
+        run: |
+          mvn jacoco:prepare-agent test jacoco:report
+        shell: bash
+
+      - name: Verify Code Coverage for Model Classes
+        run: |
+          COVERAGE=$(xmllint --xpath "string(//package[@name='org.project.Model']/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
+          MISSED=$(xmllint --xpath "string(//package[@name='org.project.Model']/counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
+          TOTAL=$((COVERAGE + MISSED))
+          PERCENT=$((COVERAGE * 100 / TOTAL))
+          echo "Coverage: $PERCENT%"
+          if [ $PERCENT -lt 90 ]; then
+            echo "Code coverage is below 90% for org.project.Model. Current: $PERCENT%"
+            exit 1
+          else
+            echo "Code coverage is above 90% for org.project.Model. Current: $PERCENT%"
+          fi
