@@ -76,11 +76,13 @@ jobs:
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             prerelease_flag="--prerelease=false"
+            tag_name="v4.4.${{ github.run_number }}"
           else
             prerelease_flag="--prerelease=true"
+            tag_name="v4.4.${{ github.run_number }}-prerelease"
           fi
           gh release create \
-            "v4.4.${{ github.run_number }} UML Editor" \
+            "$tag_name" \ # Use a valid tag name
             --title "v4.4.${{ github.run_number }} UML Editor" \
             --notes "Automatically generated release" \
             $prerelease_flag
