@@ -3,10 +3,7 @@ package org.project.Controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -818,14 +815,30 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   @FXML
   public void onSave(ActionEvent event) {
-    String fileName = getFileName();
-    if (!fileName.isEmpty()) {
-      CommandResult result = commandBridge.executeCommand("save as", new String[] {fileName});
-      if (!result.isSuccess()) {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+
+    File initialDirectory = new File(System.getProperty("user.home"));
+    if (initialDirectory.exists()) {
+      fileChooser.setInitialDirectory(initialDirectory);
+    }
+
+    File file = fileChooser.showSaveDialog(new Stage());
+    if (file != null) {
+      String filePath = file.getAbsolutePath();
+
+      if (!filePath.endsWith(".json")) {
+        filePath += ".json";
+      }
+
+      CommandResult result = commandBridge.saveNewfile(new String[] {filePath});
+      if (result.isSuccess()) {
+        showAlert("Success", "File saved to: " + filePath);
+      } else {
         showAlert("Save Error", result.getMessage());
       }
     } else {
-      showAlert("Save Error", "File name cannot be empty.");
+      showAlert("Save Error", "No file selected.");
     }
   }
 
@@ -840,18 +853,17 @@ public class GraphicalUserInterfaceController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
-    File initialDirectory = new File("src/main/resources/saves");
+    File initialDirectory = new File(System.getProperty("user.home"));
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
     File file = fileChooser.showOpenDialog(new Stage());
     if (file != null) {
-      String fileName = file.getName();
-      if (fileName.endsWith(".json")) {
-        fileName = fileName.substring(0, fileName.length() - 5);
-      }
-      CommandResult result = commandBridge.load(new String[] {fileName});
+      String fileName = file.getAbsolutePath();
+
+      CommandResult result = commandBridge.loadFile(new String[] {fileName});
+
       if (result.isSuccess()) {
         refreshCanvas();
       } else {
@@ -883,21 +895,40 @@ public class GraphicalUserInterfaceController implements Initializable {
   private void refreshCanvas() {
     canvas.getChildren().clear();
 
+    int numberOfClasses = 0;
+    double spacing = 20.0;
+    double startX = 50.0;
+    double startY = 50.0;
+
     for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
       String className = classNode.getClassName();
       GraphicalClassNode graphicalClassNode =
           GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
-      // double[] position = classBoxPositions.getOrDefault(className, new double[] {50.0, 50.0});
       double[] position = classNode.getPosition();
+
+      if (position[0] == 0.0 && position[1] == 0.0) {
+        double offsetX = (numberOfClasses % 5) * (graphicalClassNode.getPrefWidth() + spacing);
+        double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
+
+        position[0] = startX + offsetX;
+        position[1] = startY + offsetY;
+
+        classNode.setPosition(position[0], position[1]);
+        numberOfClasses++;
+      }
+
       graphicalClassNode.setLayoutX(position[0]);
       graphicalClassNode.setLayoutY(position[1]);
+
       DraggableMaker draggableMaker = new DraggableMaker();
       draggableMaker.makeDraggable(graphicalClassNode, classNode);
-      observableClass.addClassBox(graphicalClassNode);
+
       canvas.getChildren().add(graphicalClassNode);
-      observableClass.removeClasBox(graphicalClassNode);
+      observableClass.addClassBox(graphicalClassNode);
     }
+
     drawAllRelationships();
   }
 

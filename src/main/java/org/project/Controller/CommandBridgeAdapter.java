@@ -132,8 +132,8 @@ public class CommandBridgeAdapter implements CommandBridge {
   }
 
   @Override
-  public CommandResult load(String[] args) {
-    return commandRegistries.load(args);
+  public CommandResult loadFile(String[] args) {
+    return commandRegistries.loadFile(args);
   }
 
   @Override

@@ -50,7 +50,7 @@ public interface CommandBridge {
 
   CommandResult save(String[] args);
 
-  CommandResult load(String[] args);
+  CommandResult loadFile(String[] args);
 
   CommandResult help(String[] args);
 
