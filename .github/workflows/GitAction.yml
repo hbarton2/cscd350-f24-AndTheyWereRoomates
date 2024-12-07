@@ -80,7 +80,7 @@ jobs:
             prerelease_flag="--prerelease=true"
           fi
           gh release create \
-            "v4.4.${{ github.run_number }} UML Editor" \
+            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
             --title "v4.4.${{ github.run_number }} UML Editor ${{ matrix.os }}" \
             --notes "Automatically generated release" \
             $prerelease_flag
