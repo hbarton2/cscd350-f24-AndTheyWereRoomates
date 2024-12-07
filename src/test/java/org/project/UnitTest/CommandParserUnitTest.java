@@ -1,5 +1,6 @@
 package org.project.UnitTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -68,6 +69,43 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Class 'NonExistentClass' does not exist."),
         "Error message should indicate non-existent class.");
+  }
+
+  @Test
+  void testRenameClassSuccess() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("rename class Car Pinto");
+    assertTrue(result.isSuccess(), "Command should succeed for valid class renaming.");
+    assertTrue(
+        result.getMessage().contains("Class renamed: Car to Pinto"),
+        "Success message should match.");
+  }
+
+  @Test
+  void testRenameClassNotExist() {
+    CommandResult result = parser.parseCommand("rename class Car Pinto");
+    // assertTrue(result.isSuccess(), "Command should fail for valid class renaming.");
+    assertFalse(
+        result.getMessage().contains("Error: Class Car does not exist."),
+        "Error Message should indicate a class not existing");
+  }
+
+  @Test
+  void testRenameClassAlreadyExists() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("rename class Car Car");
+    // assertTrue(result.isSuccess(), "Command should fail for valid class renaming.");
+    assertFalse(
+        result.getMessage().contains("Error: Class Pinto already exists."),
+        "Error Message should indicate an already existing class");
+  }
+
+  @Test
+  void testListClassSuccess() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("list classes");
+    assertTrue(
+        result.getMessage().contains("Car"), "Error message should indicate duplicate class.");
   }
 
   @Test

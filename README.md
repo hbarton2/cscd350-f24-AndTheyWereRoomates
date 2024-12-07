@@ -31,9 +31,7 @@ Ensure that the following software is installed on the target machine:
 
 - **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 21.0.5 or higher.  
   You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or **Highly Recommend** [GraalVM for JDK 21.0.5](https://www.oracle.com/java/technologies/downloads/?er=221886#graalvmjava21).
-- **JavaFX** version 21.0.5.
-  You can download it from the [JavaFX Download page](https://gluonhq.com/products/javafx/).
-  ![JavaFX Download page](doc/images/JavaFX.png)
+- Any JDK 21+ is able to run project with **JavaFX** version 23.0.1.
 ---
 
 ## Running the Application for User
