@@ -407,27 +407,25 @@ This should give you the idea of how the UML editor works. If you need a reminde
 
 Upon booting up in GUI mode, you'll be presented with a new window titled "UML EDITOR".
 You should see this window upon boot up.
-![img.png](doc/images/UMLEDITORwindow.png)
+![img.png](doc/images/GUIEditorWindow.png)
 
 
 
 ## Window UI
 This is a general breakdown of what does what in the UI. A more detailed breakdown for each part is below in this document.
+![img.png](doc/images/GUIBreakdown.png)
 
-### Workspace UI
-![img.png](doc/images/DetailedGUIBreakdown.png)
-
-1. Workspace - This where your work will appear
-2. Class Editor Buttons - These buttons edit classes in your workspaceS
-3. Field Editor Buttons - These buttons edit fields in a class
-4. Method Editor Buttons - These buttons edit methods in a class. The buttons to add/remove/rename are seperated from the name text field
-5. Parameter Editor Buttons - These buttons edit parameters in a method.
-6. Relationship Editor Buttons - These button edit the relationship between two existing classes
-7. Miscellaneous Editing Dropdowns - These allow opening files, advance editing, and help
+1. **Workspace** - This where your work will appear
+2. **Class Editor** - These buttons edit classes in your workspaceS
+3. **Field Editor** - These buttons edit fields in a class
+4. **Method Editor** - These buttons edit methods in a class. The buttons to add/remove/rename are seperated from the name text field
+5. **Parameter Editor** - These buttons edit parameters in a method.
+6. **Relationship Editor** - These button edit the relationship between two existing classes
+7. **Miscellaneous** - These allow opening files, image exporting, undo/redo, and help
 
 
 ### Class UI
-![img.png](doc/images/ClassUIBreakdown.png)
+![img.png](doc/images/GUI_UI_Breakdown.png)
 
 * If you wish to edit something in a particular field, click on the specified field to start editing.
 * You can tell if you selected something in the list when it's colored blue.
@@ -440,68 +438,90 @@ This is a general breakdown of what does what in the UI. A more detailed breakdo
 ## Selecting Objects
 ### Selecting a Class
 If you want to select a class to edit, click the name of the box to select it for editing, otherwise you'll only
-select it to move it around. You know you have a class selected if it has a blue glow, like this:
-
-![img.png](doc/images/GUIExamplePicture_ClassSelected.png)
-### Selecting components of a Class
+select it to move it around. You know you have a class selected if it has a red glow.
+If the class name in the editing field is the same name as the object, you have it selected.
+<br>
 If you want to select attributes inside a class (in this example, a field), click the specific entry until
-it is highlighted blue like so:
-
-![img.png](doc/images/GUIExamplePicture_FieldSelected.png)
+it is highlighted blue.
+<br>
+![img.png](doc/images/GUISelectedElements.png)
 
 ### Class Editing
 These buttons all edit classes
 
-![img.png](doc/images/GUIClassDiagram.png)
-1. Add Class - Creates a completely new blank class
-2. Delete Class - Deletes a currently selected class
-3. Class Name: - This text field is where the class name will display and where you can edit the name.
-4. Set Class Name - Sets the name to the currently selected class if it's changed.
+![img.png](doc/images/GUIClassBreakdown.png)
+1. **Add Class** - Creates a completely new blank class
+2. **Delete Class** - Deletes a currently selected class
+3. **Class Name:** - This text field is where the class name will display and where you can edit the name.
+4. **Set Class Name** - Sets the name to the currently selected class if it's changed.
 
 ### Field Editing
 
 ![img.png](doc/images/GUIFieldDiagram.png)
-1. Field Name: - This text field is where you'll input a name for the field.
-2. Type - A dropdown field where you set what type the field is.
-3. Add - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
-4. Rename Field - Renames a currently selected field. Click on the specific field to rename it
-5. Delete Field - Deletes a currently selected field. Click on the specific field to remove it
+1. **Field Name:** - This text field is where you'll input a name for the field.
+2. **Type** - A dropdown field where you set what type the field is.
+3. **Add** - A button that'll create a field based on the name in the field and the type. Both Name and Type have to be filled in to add a field
+4. **Rename Field** - Renames a currently selected field. Click on the specific field to rename it
+5. **Delete Field** - Deletes a currently selected field. Click on the specific field to remove it
 
 ### Method Editing
 
 ![img.png](doc/images/GUIMethodDiagram.png)
-1. Method Name - This text field is where you'll input a name for the method.
-2. Add - Adds a method to the given class
-3. Delete - Deletes a currently selected method. Click on the specific field to remove it
-4. Rename Method - Renames a currently selected method. Click on the specific field to rename it
+1. **Type** - A dropdown field where you set the type for the Method
+2. **Method Name:** - This text field is where you'll input a name for the method.
+3. **Add Method** - Adds a method to the given class
+4. **Delete Method** - Deletes a currently selected method. Click on the specific field to remove it
+5. **Rename Method** - Renames a currently selected method. Click on the specific field to rename it
 
 ### Parameter Editing
 
 ![img.png](doc/images/GUIParameterDiagram.png)
-* To edit a parameter, you must have a Method first
-1. Name - This text field is where you'll input a name for the parameter.
-2. Type - This opens a dropdown display to select a type for the parameter
-3. Add - Adds a parameter to a method
+* To edit a parameter, you must have a Method first and have it selected
+1. **Type** - This opens a dropdown display to select a type for the parameter
+2. **Name:** - This text field is where you'll input a name for the parameter.
+3. **Add Parameter** - Adds a parameter to a method
+4. **Delete Parameter** - Deletes parameter in a method
+5. **Rename Parameter** - Renames Parameter in a method
 
 ### Relationship Editing
 
 ![img.png](doc/images/GUIRelationshipDiagram.png)
 * This requires two existing classes to work.
-1. From - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
-2. To - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
-3. Type - This opens a dropdown display to select the type of relationship between two classes
-4. Add Relation - This creates a relationship between two classes, displaying as an arrow pointing from one class to another
-5. Delete Relation - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
+1. **From** - This opens a dropdown display to select an existing class, this is the sending end of the relationship, where the arrow starts from.
+2. **To** - This opens a dropdown display to select an existing class, this is the receiving end of the relationship, where the arrow would point to.
+3. **Type** - This opens a dropdown display to select the type of relationship between two classes
+4. **Add Relation** - This creates a relationship between two classes, displaying as an arrow pointing from one class to another
+5. **Delete Relation** - This deletes a relationship between two classes. The type needs to be set in order to remove the given relationship
+
+### Miscelanious Editing
+![img.png](doc/images/GUIMiscFile.png)
+![img.png](doc/images/GUIMiscEdit.png)
+
+#### Files
+* **Open** - Open a file to load into the GUI
+* **New Project** - Creates a new project
+* **Save** - Saves your current workspace into a JSON file
+<br>(Located in *scr/main/resources/saves*)
+* **Export Imag**e - Exports out your workspace into a PNG file 
+<br>(Located in *scr/main/resources/exports*)
+* **Back to Main Menu** - Sends you back to the main menu where you can pick betwen GUI and CLI
+* **Quit** - Shutdown program
+#### Edit
+* **Undo** - Undo your last action
+* **Redo** - Redo your last undo.
 
 ## Known GUI Bugs
+Connecting from one to another for some reason doesn't work, being labeled as "Cannot connect to self"
+![img.png](doc/images/GUIBug_CannotConnectToSelfError.png)
 
-1.  Relationship Display - General graphical weirdness creating a relationship between two classes. The line starts on the right and arrow is always on the
-    left of a class, creating weird graphical issues of overlapping
-    ![img.png](doc/images/GUIbug_RelationshipGraphicalIssues.png)
-2.  Class Display - Newly created classes appear over existing classes.  
-    Recreate: Create a new class, and then create a second class. Created class was moved to make the problem clear.
-    ![img.png](doc/images/GUIbug_classesOverlayingGUIIssue.PNG)
-3.  Saving Option - Trying to save the GUI doesn't open file explorer.
-    ![img.png](doc/images/GUIbug_saveNotOpeningFileExplorer.PNG)
+Creating more than 15 classes will cause objects to appear off-screen and be rendered unobtainable.
+In this image, there's only 15 classes but there's 18 (19 in the other image), and they're off-screen on the bottom.
+They still exist and are reachable through Relationship but cannot be moved into screen, and moving elements
+don't fill in the slot with the new element.
+Also, elements appears below the UI.
+![img.png](doc/images/GUIBugs_SoftLimitOnElements.png)
+![img.png](doc/images/GUIBug_SoftLimitOnElements2.png)
+
+
 ---
 
