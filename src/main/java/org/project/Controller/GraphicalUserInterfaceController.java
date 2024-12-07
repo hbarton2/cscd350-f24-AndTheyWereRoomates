@@ -831,7 +831,7 @@ public class GraphicalUserInterfaceController implements Initializable {
         filePath += ".json";
       }
 
-      CommandResult result = commandBridge.saveNewfile(new String[]{filePath});
+      CommandResult result = commandBridge.saveNewfile(new String[] {filePath});
       if (result.isSuccess()) {
         showAlert("Success", "File saved to: " + filePath);
       } else {
@@ -862,8 +862,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     if (file != null) {
       String fileName = file.getAbsolutePath();
 
-
-      CommandResult result = commandBridge.loadFile(new String[]{fileName});
+      CommandResult result = commandBridge.loadFile(new String[] {fileName});
 
       if (result.isSuccess()) {
         refreshCanvas();
@@ -904,7 +903,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
       String className = classNode.getClassName();
       GraphicalClassNode graphicalClassNode =
-              GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
 
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
       double[] position = classNode.getPosition();
@@ -932,7 +931,6 @@ public class GraphicalUserInterfaceController implements Initializable {
 
     drawAllRelationships();
   }
-
 
   private void drawAllRelationships() {
     for (UMLClassNode fromNode : commandBridge.getStorage().getAllNodes().values()) {
