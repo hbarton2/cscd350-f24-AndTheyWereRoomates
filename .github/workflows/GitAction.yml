@@ -104,12 +104,7 @@ jobs:
 
   check-code-coverage:
     needs: build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-
-    continue-on-error: true
+    runs-on: ubuntu-latest  # Use one platform to ensure it runs only once
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -138,3 +133,9 @@ jobs:
           else
             echo "Code coverage is above 90% for org.project.Model. Current: $PERCENT%"
           fi
+
+      - name: Upload Code Coverage Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: target/site/jacoco/
