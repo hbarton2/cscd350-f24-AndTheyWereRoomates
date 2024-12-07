@@ -44,69 +44,63 @@ jobs:
       - name: Run Clean, Package, Install
         run: |
           mvn clean package install -B
-          cp target/original-uml-editor-shaded.jar target/uml-editor-${{ matrix.os }}.jar
-          zip -r source-${{ matrix.os }}.zip .
-          tar -czf source-${{ matrix.os }}.tar.gz .
-        shell: bash
+          cp target/original-uml-editor-shaded.jar target/uml-editor.jar
+        shell: pwsh
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.os }}
-          path: |
-            target/*.jar
-            source-${{ matrix.os }}.zip
-            source-${{ matrix.os }}.tar.gz
+          name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
+          path: target/*.jar
 
-  prerelease:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-
-    steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-${{ matrix.os }}
-          path: artifacts/
-
-      - name: Create Pre-Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Determine Release Type
+        id: determine_release
+        shell: bash
         run: |
-          gh release create \
-            "v4.4.${{ github.run_number }}-${{ matrix.os }}" \
-            --title "Pre-Release v4.4.${{ github.run_number }} on ${{ matrix.os }}" \
-            --notes "Automatically generated pre-release for ${{ matrix.os }}" \
-            --prerelease \
-            artifacts/uml-editor-${{ matrix.os }}.jar \
-            artifacts/source-${{ matrix.os }}.zip \
-            artifacts/source-${{ matrix.os }}.tar.gz
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "release_type=release" >> $GITHUB_ENV
+            echo "prerelease=false" >> $GITHUB_ENV
+          else
+            echo "release_type=pre-release" >> $GITHUB_ENV
+            echo "prerelease=true" >> $GITHUB_ENV
+          fi
 
-  release:
-    needs: prerelease
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download All Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-${{ matrix.os }}
-          path: artifacts/
+      - name: Debug Release Variables
+        run: |
+          echo "Release Type: ${{ env.release_type }}"
+          echo "Prerelease: ${{ env.prerelease }}"
 
       - name: Create Release
+        id: create_release
+        shell: bash
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            prerelease_flag="--prerelease=false"
+          else
+            prerelease_flag="--prerelease=true"
+          fi
+          gh release create \
+            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
+            --title "v4.4.${{ github.run_number }} UML Editor" \
+            --notes "Automatically generated release" \
+            $prerelease_flag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Renamed JAR to Release
+        if: steps.create_release.outputs.upload_url != ''
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/uml-editor.jar
+          asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
+          asset_content_type: application/java-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy Renamed JAR to Project Root (Cross-Platform)
         run: |
-          gh release create \
-            "v4.4.${{ github.run_number }}" \
-            --title "Release v4.4.${{ github.run_number }} UML Editor" \
-            --notes "Automatically generated full release including all platforms." \
-            artifacts/*.jar \
-            artifacts/*.zip \
-            artifacts/*.tar.gz
+          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
 
   check-code-coverage:
     needs: build
