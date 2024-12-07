@@ -298,72 +298,90 @@ From here you'll be able to type in commands and start editing. Down below are a
 * Please make sure to read new CLI Introduction before reading this section.
 * These commands are general commands that can be used in the CLI.
 
-1. help - displays all possible commands
+1. Help - displays all possible commands.
 
-2. list details - Lists everything in the currently selected class
+2. List Detail - Lists everything in the currently selected class.
 
-3. list classes - List all created classes
+3. List Classes - List all created classes.
     * Example: `list classes`
-4. save `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
-    * Example: `save fruitbowl.json`
-5. load - loads a json as a UML class. It will ask you to input a name after typing load
-    * Example: `save fruitbowl.json`
+   
+4. Save As `<filename>` - saves the current project as one json. It will ask you to input a name after typing in the command.
+    * Example: `save as fruitbowl.json`
+   
+5. Load File `<filename>`- loads a json as a UML class. It will ask you to input a name after typing load.
+    * Example: `load file fruitbowl.json`
+   
+6. Switch Class `<classname>`- sets an existing class as the current class for quick editing.
+    * Example: `switch class apple`
+   
+7. Redo - Redoes the most recent undone action.
+    * Example: `redo`
+   
+8. Undo  - Undoes the most recent action.
+    * Example: `undo`
+   
+9. New Project - Resents the application to a fresh state, clearing all existing data.
+    * Example: `new project`
 
-6. exit - exits the program
+10. Clear - Clears the terminal screen.
+    * Example: `clear`
+
+11. Exit - Exits the program
+    * Example: `exit`
 ---
 ## Add Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands add things to the editor.
 
-1. create class `<class name>` - creates a class with that name
+1. Create Class `<class name>` - creates a class with that name
     * Example: `create class Apple`
 
-2. add method `<return type> <method name>` - creates a method with the given name and following parameters
+2. Add Method `<return type> <method name>` - creates a method with the given name and following parameters
     * Example: `add method Boolean eat`
 
-3. add field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
+3. Add Field `<field type> <field name>` - creates a field with the given name and type. You will need to type in a type otherwise it won't work.
     * Example: `add field String color`
 
-4. add parameter `<method name> <parameter type> <parameter name>` - creates a parameter with the given name and type. This requires a method to exist in order to work
+4. Add Parameter `<method name> <parameter type> <parameter name> [<parameter type> <parameter name> ... ]` - creates a parameter with the given name and type. This requires a method to exist in order to work
     * Example: `add parameter eat food String`
 
-5. add relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
+5. Add Relationship `<relationship type> <target class name>` - creates a relationship between two existing classes.
     * Example: `add relationship Apple Banana Aggregation`
 ---
 ## Remove Commands
 * * Please make sure to read CLI Introduction before reading this section.
 * These commands remove things in the editor.
 
-1. `remove class <classname>` - removes the class that is currently set
+1. Remove Class `<classname>` - removes the class that is currently set
    These commands remove things in the editor.
     * Example: `remove class Apple`
 
-2. remove method `<method name>` - removes a method with the given name
+2. Remove Method `<method name> [<parameter type> <parameter name> ... ]` - removes a method with the given name optionally with specific parameters, from the currently set class. 
     * Example: `remove method method1`
 
-3. remove field `<field name>` - removes a field with the given name
+3. Remove Field `<field name>` - removes a field with the given name
     * Example: `remove field field1`
 
-4. remove parameter `<existing method> <name>` - removes a parameter with the given name
+4. Remove Parameter `<method name> <parameter name> [<parameter name> ... ]` - removes a parameter with the given name
     * Example: `remove parameter method1 param1`
 
-5. remove relationship `<existing class name> <different existing class name> <Type>` -  removes a relationship between two existing classes.
+5. Remove Relationship `<existing class name> <different existing class name> <relationship type>` -  removes a relationship between two existing classes.
     * Example: `remove relationship Apple Banana Aggregation`
 ---
 ## Rename Commands
 * Please make sure to read CLI Introduction before reading this section.
 * These commands rename things in the editor.
 
-1. rename class `<old name> <new name>` - renames the currently selected class to the new name
+1. Rename Class `<old class name> <new class name>` - renames the currently selected class to the new name
     * Example: `rename class Apple Banana`
 
-2. rename method `<existing method> <new name>` - renames a method in currently selected class to the new name
+2. Rename Method `<existing method name> <new method name>` - renames a method in currently selected class to the new name
     * Example: `rename method method1 method2`
 
-3. rename field `<existing field> <new name> <new type>` - renames a method in currently selected class to the new name
+3. Rename Field `<existing field name> <new field name> <new field type>` - renames a method in currently selected class to the new name
     * Example: `rename field field1 field2 String`
 
-4. rename parameter `<existing method> <existing parameter> <new name>` - renames a parameter in currently selected class to the new name
+4. Rename Parameter `<methond name> <old parameter name> <new parameter name>` - renames a parameter in currently selected class to the new name
     * Example: `rename parameter method1 param1 param2`
 ---
 
@@ -371,35 +389,49 @@ From here you'll be able to type in commands and start editing. Down below are a
 
 ---
 ## Sample Workflow
-Provide a simple walkthrough of how to use the CLI to create a UML diagram.
-
-
+1. View available commands.
+   * Type help to display all possible commands.
+   * Example: `help`
+   
+2. Create a class.
+   * Type create class followed by the class name to create a new class.
+   * Example: `create class apple`
+   
+3. Add methods to the class.
+   * Type add method followed by the method's return type and name to add a method to the current class.
+   * Example: `add method String getColor`
+   
+4. Add fields to a class.
+   * Type add field followed by the field's type and name to add a property to the current class.
+   * Example: `add field String color`
+   
+5. Add relationship between classes.
+   * First, create another class. Then, type add relationship followed by the relationship type and the target class name to link the classes.
+   * Example: `create class bannana`
+   * `switch class apple`
+   * `add relationship Aggregation bannana`
+   
+6. View added elements in class.
+   * To see all attributes and relationships of the current class, then type list class.
+   * Example: `list class`
+   
+7. Save the UML diagram.
+   * Type save as followed by the desired file name to save the current UML diagram.
+   * Example: `save as apple`
+   
+8. Load a saved UML file.
+   * Type load file followed by the name of the saved file to load a UML diagram.
+   * Example: `load file apple`
+   
+9. Edit another class.
+   * To edit a different class, type switch class followed by the class name.
+   * Example: `switch class bannana`
+   
+10. Exit the program.
+    * When finished,type exit. This closes the program.
+    * Example: `exit`
 ---
 
-As a primer, typing '_help_' into the menu will bring up all the possible commands you can type into the command line, and typing 'help' with one of those commands will bring up an expanded explanation to all associated commands.
-
-Once the program starts, the first thing you need to add is a class.
-Type 'create class ' and the name of the class you wish to add to create a class into the program. (ex: 'create class _apple_') and press the enter key.
-
-To test that out, type 'add method ' and the name of the method you want to add. (ex: 'add method _banana_')
-You can test out the other add commands, but keep in mind that adding a field, relationship, and parameter requires two, two and three inputs respectively in order to work (Detailed explanation in CLI Commands)
-
-If you wish to edit another class, you'll need to type 'set class' with the name of another existing class that is created.
-
-To see what you've added to the currently set class, type 'list class' to see how your class is set up.
-What should display is everything added to the currently selected class.
-If you want to see all the classes you created, type 'list classes' and it'll display all currently created classes.
-
-Since you have something in the UML editor, to save the program, type 'save' to save everything you have into a json file.
-The program should prompt text asking to type a name for the file. Name the file whatever you want and press the enter key, and you should see a json file with that name in the project folder.
-
-If you want to load the file, type 'load'. This will prompt text asking for a file name in the project folder. The program will then prompt you to type in the name of a json file.
-As a heads-up, you don't need to include ".json" in your input, the program looks for a json file with the name of what you input.
-Assuming you typed in the name of the file, all your classes and every attribute tied to the classes should be loaded. (although if you're following along, it might be hard to notice considering you presumably didn't add anything after saving)
-
-If you wish to see it work, you can restart the program (typing 'exit' closes the program) and on boot up, type in the load command along with the name of the json you saved, and type 'list classes' to see all the classes you saved.
-
-This should give you the idea of how the UML editor works. If you need a reminder or further explanation for the commands, type 'help' for all the commands, and help and a command name after (ex: 'help add') to get a detailed explanation to all the commands.
 ## WorkFlow Sample
 ![Sample WorkFlow](doc/images/flowSample.png)
 
