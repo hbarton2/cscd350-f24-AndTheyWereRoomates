@@ -71,6 +71,16 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testRenameClassSuccess() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("rename class Car Pinto");
+    assertTrue(result.isSuccess(), "Command should succeed for valid class renaming.");
+    assertTrue(
+        result.getMessage().contains("Class renamed: Car to Pinto"),
+        "Success message should match.");
+  }
+
+  @Test
   void testHelpCommand() {
     CommandResult result = parser.parseCommand("help");
     assertTrue(result.isSuccess(), "Help command should succeed.");
