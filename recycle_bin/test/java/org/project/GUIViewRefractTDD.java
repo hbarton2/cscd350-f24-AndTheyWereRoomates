@@ -4,12 +4,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import org.mockito.Mock;
 import org.project.Controller.GraphicalUserInterfaceController;
-import org.project.Controller.UMLController;
 import org.project.View.GraphicalClassNode;
 
 public class GUIViewRefractTDD {
 
-  @Mock UMLController umlController;
+  //@Mock UMLController umlController;
 
   @Mock private Canvas canvas;
 
