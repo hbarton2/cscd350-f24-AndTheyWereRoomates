@@ -552,8 +552,9 @@ public class CommandLogic {
     }
 
     // Ensure CommandRegistries is initialized with the correct file path
-    CommandRegistries commandRegistries =
-        CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+    //    CommandRegistries commandRegistries =
+    // CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+    CommandRegistries commandRegistries = CommandRegistries.getInstance("CLICommands.json");
 
     // Get all available commands and their syntax
     StringBuilder helpMessage = new StringBuilder("Available Commands:\n\n");

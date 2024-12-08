@@ -2,8 +2,11 @@ package org.project.Model;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,8 +47,36 @@ public class CommandRegistries extends CommandLogic {
   }
 
   // Method to load commands from a specified JSON file
+  //  public void loadCommands(String jsonFilePath) {
+  //    try (FileReader reader = new FileReader(jsonFilePath)) {
+  //      JsonObject commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
+  //      JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
+  //
+  //      for (String group : commandGroups.keySet()) {
+  //        JsonObject commands = commandGroups.getAsJsonObject(group);
+  //        for (String commandName : commands.keySet()) {
+  //          JsonObject commandDetails = commands.getAsJsonObject(commandName);
+  //          String syntax =
+  //              commandDetails.has("syntax") ? commandDetails.get("syntax").getAsString() : "";
+  //          String description =
+  //              commandDetails.has("description")
+  //                  ? commandDetails.get("description").getAsString()
+  //                  : "";
+  //          commandMap.put(commandName, new CommandInfo(syntax, description));
+  //        }
+  //      }
+  //      logger.info("Commands loaded successfully from " + jsonFilePath);
+  //    } catch (IOException e) {
+  //      logger.log(Level.SEVERE, "Error loading commands from JSON file: " + jsonFilePath, e);
+  //    }
+  //  }
   public void loadCommands(String jsonFilePath) {
-    try (FileReader reader = new FileReader(jsonFilePath)) {
+    try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(jsonFilePath)) {
+      if (inputStream == null) {
+        throw new FileNotFoundException("Resource not found: " + jsonFilePath);
+      }
+      Reader reader = new InputStreamReader(inputStream);
+
       JsonObject commandsJson = JsonParser.parseReader(reader).getAsJsonObject();
       JsonObject commandGroups = commandsJson.getAsJsonObject("commands");
 

@@ -1,11 +1,9 @@
 # UML Editor
 
-v4.3.77
-* How to read version # Version main branch_demo release_pull_request changes
 * What's New:
-  * GUI and CLI now on JavaFX
+  * 
 * Major changes:
-  * Menu System
+  * 
 ---
 
 ## Table of Contents
