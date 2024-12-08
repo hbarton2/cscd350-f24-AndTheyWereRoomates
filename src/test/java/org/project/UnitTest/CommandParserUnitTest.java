@@ -310,8 +310,8 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("add relationship aggregation NONEXISTENT");
     // assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
     assertTrue(
-            result.getMessage().contains("Error: Class 'NONEXISTENT' does not exist"),
-            "Success message should match.");
+        result.getMessage().contains("Error: Class 'NONEXISTENT' does not exist"),
+        "Success message should match.");
   }
 
   @Test
@@ -320,10 +320,10 @@ class CommandParserUnitTest {
     parser.parseCommand("create class banana");
     parser.parseCommand("switch class apple");
     CommandResult result = parser.parseCommand("remove relationship aggregation NONEXISTENT");
-    //assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
     assertTrue(
-            result.getMessage().contains("Error: Relationship NONEXISTENT not found."),
-            "Success message should match.");
+        result.getMessage().contains("Error: Relationship NONEXISTENT not found."),
+        "Success message should match.");
   }
 
   @Test
@@ -332,10 +332,10 @@ class CommandParserUnitTest {
     parser.parseCommand("switch class apple");
     parser.parseCommand("add relationship aggregation banana");
     CommandResult result = parser.parseCommand("remove relationship aggregation banana");
-    //assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
     assertTrue(
-            result.getMessage().contains("Error: Relationship banana not found."),
-            "Success message should match.");
+        result.getMessage().contains("Error: Relationship banana not found."),
+        "Success message should match.");
   }
 
   @Test
@@ -399,17 +399,21 @@ class CommandParserUnitTest {
   }
 
   @Test
-  void testClear(){
+  void testClear() {
     CommandResult result = parser.parseCommand("clear");
     assertTrue(result.isSuccess(), "Command should succeed for clearing screen.");
     assertTrue(result.getMessage().contains("Terminal cleared"), "Success message should match.");
   }
 
   @Test
-  void testNewProject(){
+  void testNewProject() {
     CommandResult result = parser.parseCommand("new project");
     assertTrue(result.isSuccess(), "Command should succeed for clearing screen.");
-    assertTrue(result.getMessage().contains("New project initialized. All previous data has been cleared."), "Success message should match.");
+    assertTrue(
+        result
+            .getMessage()
+            .contains("New project initialized. All previous data has been cleared."),
+        "Success message should match.");
   }
 
   @Test
@@ -437,14 +441,14 @@ class CommandParserUnitTest {
   //
   //  }
 
-//  @Test
-//  void testLoad() {
-//    CommandResult result = parser.parseCommand("load");
-//    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-//    assertTrue(
-//            result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
-//            "Success message should match.");
-//  }
+  //  @Test
+  //  void testLoad() {
+  //    CommandResult result = parser.parseCommand("load");
+  //    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //    assertTrue(
+  //            result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
+  //            "Success message should match.");
+  //  }
 
   @Test
   void testListClassSuccess() {
