@@ -17,10 +17,10 @@ public class AggregationArrow implements ArrowStrategy {
             -20.0, 10.0,
             -40.0, 0.0);
 
-    arrowHead.setFill(Color.GRAY);
-    arrowHead.setStroke(Color.WHITE);
+    arrowHead.setFill(Color.WHITE);
+    arrowHead.setStroke(Color.BLACK);
 
-    line.setStroke(Color.WHITE);
+    line.setStroke(Color.BLACK);
     line.setStrokeWidth(2.0);
   }
 }
