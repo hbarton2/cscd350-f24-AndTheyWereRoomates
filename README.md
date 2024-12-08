@@ -16,11 +16,12 @@ v4.3.77
 4. [Features](#features)
 5. [Installation for Developers](#installation-for-Developers)
 6. [Testing](#testing)
-7. [Dependencies](#Dependencies)
-8. [Contributing](#contributing)
-9. [License](#license)
-10. [Contact](#contact)
-11. [Project Details/Technical Document include Usage](#Project-Details)
+7. [Testing for Code Coverage](#How-to-View-Code-Coverage-for-the-Project)
+8. [Dependencies](#Dependencies)
+9. [Contributing](#contributing)
+10. [License](#license)
+11. [Contact](#contact)
+12. [Project Details/Technical Document include Usage](#Project-Details)
 ---
 
 ## Getting Started for User
@@ -156,13 +157,20 @@ JUnit 4 or 5 and Mockito is used for all testing throughout the project. To run 
 ```bash
 mvn test
 ```
+## How to View Code Coverage for the Project
+- To access the current code coverage for the project, which is essential for writing effective tests, follow these steps:
 
-If you want to be able to see the current code coverage for the project for you to be able to write testing for the code.
-We have a tool to be able the current state of the code coverage. To access this tool:
-- go to www.github.com and go to the project repository.
+- Navigate to GitHub and open the project repository.
 
+- Go to the Actions tab.
 
-- next click on the actions tab and select `Testing PR with new GitAction`
+- Code coverage details are available under every action event as artifacts. This makes it easy to stay informed about the current state of the code.
+
+- While using this tool, developers can ensure high-quality code and write effective tests.
+
+- Go to www.github.com and go to the project repository.
+
+- Next click on the actions tab and select `Testing PR with new GitAction`
 ![CodeCoverageReadme1.png](doc/images/CodeCoverageReadme1.png)
 
 - Next you will select `code-coverage-report` the Actions box at the bottom of the page. and save it to your machine.
