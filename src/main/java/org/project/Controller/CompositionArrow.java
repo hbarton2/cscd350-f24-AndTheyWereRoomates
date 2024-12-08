@@ -18,20 +18,20 @@ public class CompositionArrow implements ArrowStrategy {
    * and a white line representing the shaft of the arrow.
    *
    * @param arrowHead the {@code Polygon} object representing the arrowhead
-   * @param line the {@code Line} object representing the arrow shaft
+   * @param line      the {@code Line} object representing the arrow shaft
    */
 
   @Override
   public void drawArrow(Polygon arrowHead, Line line) {
     arrowHead.getPoints().clear();
     arrowHead
-        .getPoints()
-        .addAll(
-            -40.0, 0.0,
-            -20.0, -10.0,
-            0.0, 0.0,
-            -20.0, 10.0,
-            -40.0, 0.0);
+            .getPoints()
+            .addAll(
+                    -40.0, 0.0,
+                    -20.0, -10.0,
+                    0.0, 0.0,
+                    -20.0, 10.0,
+                    -40.0, 0.0);
 
     arrowHead.setFill(Color.RED);
     arrowHead.setStroke(Color.WHITE);

@@ -23,21 +23,21 @@ public class AggregationArrow implements ArrowStrategy {
    *
    * @param arrowHead the {@code Polygon} object representing the arrowhead. The points
    *                  and style of this polygon are configured to form a diamond shape.
-   * @param line the {@code Line} object representing the shaft of the arrow. The style
-   *             of this line is configured to match the arrowhead.
+   * @param line      the {@code Line} object representing the shaft of the arrow. The style
+   *                  of this line is configured to match the arrowhead.
    */
 
   @Override
   public void drawArrow(Polygon arrowHead, Line line) {
     arrowHead.getPoints().clear();
     arrowHead
-        .getPoints()
-        .addAll(
-            -40.0, 0.0,
-            -20.0, -10.0,
-            0.0, 0.0,
-            -20.0, 10.0,
-            -40.0, 0.0);
+            .getPoints()
+            .addAll(
+                    -40.0, 0.0,
+                    -20.0, -10.0,
+                    0.0, 0.0,
+                    -20.0, 10.0,
+                    -40.0, 0.0);
 
     arrowHead.setFill(Color.GRAY);
     arrowHead.setStroke(Color.WHITE);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
@@ -33,7 +34,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import javax.imageio.ImageIO;
+
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
 import org.project.Model.Storage;
@@ -44,36 +47,64 @@ import org.project.View.GraphicalClassNodeFactory;
 public class GraphicalUserInterfaceController implements Initializable {
 
   private static final Logger LOGGER =
-      Logger.getLogger(GraphicalUserInterfaceController.class.getName());
+          Logger.getLogger(GraphicalUserInterfaceController.class.getName());
 
-  @FXML public Menu menubar;
-  @FXML public MenuItem loadButton;
-  @FXML public Button deleteClassButton;
-  @FXML public Button addClass;
-  @FXML public Button setClassName;
-  @FXML public Button renameFieldButton;
-  @FXML public Button addField;
-  @FXML public Button deleteField;
-  @FXML public Button deleteMethod;
-  @FXML public Button renameMethodButton;
-  @FXML public Button addParameter;
-  @FXML public Button addRelationButton;
-  @FXML public Button deleteRelationButton;
-  @FXML public ComboBox<String> methodTypeComboBox;
-  @FXML public Button deleteParameter;
-  @FXML public Button renameParameter;
-  @FXML private Pane canvas;
-  @FXML private VBox inspectorPane;
-  @FXML private Button toggleInspectorButton;
-  @FXML private TextField classNameInput;
-  @FXML private TextField fieldNameInput;
-  @FXML private ComboBox<String> dataTypeComboBox;
-  @FXML private TextField methodNameInput;
-  @FXML private TextField parameterNameInput;
-  @FXML private ComboBox<String> parameterTypeComboBox;
-  @FXML private ComboBox<String> fromComboBox;
-  @FXML private ComboBox<String> toComboBox;
-  @FXML private ComboBox<String> relationshipTypeComboBox;
+  @FXML
+  public Menu menubar;
+  @FXML
+  public MenuItem loadButton;
+  @FXML
+  public Button deleteClassButton;
+  @FXML
+  public Button addClass;
+  @FXML
+  public Button setClassName;
+  @FXML
+  public Button renameFieldButton;
+  @FXML
+  public Button addField;
+  @FXML
+  public Button deleteField;
+  @FXML
+  public Button deleteMethod;
+  @FXML
+  public Button renameMethodButton;
+  @FXML
+  public Button addParameter;
+  @FXML
+  public Button addRelationButton;
+  @FXML
+  public Button deleteRelationButton;
+  @FXML
+  public ComboBox<String> methodTypeComboBox;
+  @FXML
+  public Button deleteParameter;
+  @FXML
+  public Button renameParameter;
+  @FXML
+  private Pane canvas;
+  @FXML
+  private VBox inspectorPane;
+  @FXML
+  private Button toggleInspectorButton;
+  @FXML
+  private TextField classNameInput;
+  @FXML
+  private TextField fieldNameInput;
+  @FXML
+  private ComboBox<String> dataTypeComboBox;
+  @FXML
+  private TextField methodNameInput;
+  @FXML
+  private TextField parameterNameInput;
+  @FXML
+  private ComboBox<String> parameterTypeComboBox;
+  @FXML
+  private ComboBox<String> fromComboBox;
+  @FXML
+  private ComboBox<String> toComboBox;
+  @FXML
+  private ComboBox<String> relationshipTypeComboBox;
   private final ObservableClass observableClass = new ObservableClass();
   private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
 
@@ -85,7 +116,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   /**
    * This sets the default path to be the user's home directory.
    *
-   * @param url - These are not setup
+   * @param url            - These are not setup
    * @param resourceBundle - Not setup
    */
   @Override
@@ -95,12 +126,12 @@ public class GraphicalUserInterfaceController implements Initializable {
 
     canvas.setStyle("-fx-background-color: black;");
     List<ComboBox<String>> comboBoxList =
-        Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
+            Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
     List<ComboBox<String>> classOnlyBoxes = Arrays.asList(fromComboBox, toComboBox);
     ComboBoxObserver comboBoxObserver =
-        new ComboBoxObserver(comboBoxList, observableClass, defaultTypes);
+            new ComboBoxObserver(comboBoxList, observableClass, defaultTypes);
     ComboBoxObserver classOnlyObserver =
-        new ComboBoxObserver(classOnlyBoxes, observableClass, null);
+            new ComboBoxObserver(classOnlyBoxes, observableClass, null);
     observableClass.addObserver(comboBoxObserver);
     observableClass.addObserver(classOnlyObserver);
     for (ComboBox<String> comboBox : comboBoxList) {
@@ -123,8 +154,8 @@ public class GraphicalUserInterfaceController implements Initializable {
     String methodType = methodTypeComboBox.getValue();
     String parameterName = parameterNameInput.getText();
     String parameterType = parameterTypeComboBox.getValue();
-    return new String[] {
-      className, fieldName, fieldType, methodType, methodName, parameterName, parameterType
+    return new String[]{
+            className, fieldName, fieldType, methodType, methodName, parameterName, parameterType
     };
   }
 
@@ -136,29 +167,29 @@ public class GraphicalUserInterfaceController implements Initializable {
   public void createClass(ActionEvent event) {
     String[] inspectorValues = getInspectorValues();
     String className =
-        inspectorValues[0].isEmpty()
-            ? "New_Class_" + (canvas.getChildren().size() + 1)
-            : inspectorValues[0];
+            inspectorValues[0].isEmpty()
+                    ? "New_Class_" + (canvas.getChildren().size() + 1)
+                    : inspectorValues[0];
 
-    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+    CommandResult result = commandBridge.createClass(new String[]{className}); // Updates storage
     UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
     if (result.isSuccess()) {
-      result = commandBridge.switchClass(new String[] {className});
+      result = commandBridge.switchClass(new String[]{className});
 
       if (result.isSuccess()) {
 
         GraphicalClassNode graphicalClassNode =
-            GraphicalClassNodeFactory.createClassBox(
-                CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
+                GraphicalClassNodeFactory.createClassBox(
+                        CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
 
         graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
 
         int numberOfClasses =
-            (int)
-                canvas.getChildren().stream()
-                    .filter(node -> node instanceof GraphicalClassNode)
-                    .count();
+                (int)
+                        canvas.getChildren().stream()
+                                .filter(node -> node instanceof GraphicalClassNode)
+                                .count();
         double spacing = 20.0;
         double offsetX = (numberOfClasses % 5) * (graphicalClassNode.getPrefWidth() + spacing);
         double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
@@ -191,19 +222,19 @@ public class GraphicalUserInterfaceController implements Initializable {
       Label className = (Label) selectedGraphicalClassNode.getChildren().get(0);
       String classNameRemove = className.getText();
 
-      CommandResult result = commandBridge.removeClass(new String[] {classNameRemove});
+      CommandResult result = commandBridge.removeClass(new String[]{classNameRemove});
 
       if (result.isSuccess()) {
         // Remove relationships involving the class
         canvas
-            .getChildren()
-            .removeIf(
-                node -> {
-                  String nodeId = node.getId();
-                  return nodeId != null
-                      && (nodeId.startsWith(classNameRemove + "->")
-                          || nodeId.contains("->" + classNameRemove));
-                });
+                .getChildren()
+                .removeIf(
+                        node -> {
+                          String nodeId = node.getId();
+                          return nodeId != null
+                                  && (nodeId.startsWith(classNameRemove + "->")
+                                  || nodeId.contains("->" + classNameRemove));
+                        });
 
         // GUI update
         canvas.getChildren().remove(selectedGraphicalClassNode);
@@ -225,7 +256,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   private void selectClassBox(GraphicalClassNode graphicalClassNode) {
 
     if (selectedGraphicalClassNode != null
-        && selectedGraphicalClassNode.equals(graphicalClassNode)) {
+            && selectedGraphicalClassNode.equals(graphicalClassNode)) {
       selectedGraphicalClassNode.setEffect(null);
       selectedGraphicalClassNode = null;
       classNameInput.clear();
@@ -244,7 +275,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
       Label classNameLabel = (Label) selectedGraphicalClassNode.getChildren().get(0);
       classNameInput.setText(classNameLabel.getText());
-      commandBridge.switchClass(new String[] {graphicalClassNode.getName()});
+      commandBridge.switchClass(new String[]{graphicalClassNode.getName()});
     }
   }
 
@@ -275,7 +306,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       String currentName = className.getText();
 
       // Rename class in storage
-      CommandResult result = commandBridge.renameClass(new String[] {currentName, newName});
+      CommandResult result = commandBridge.renameClass(new String[]{currentName, newName});
       if (!result.isSuccess()) {
         showAlert("Class Rename Error", result.getMessage());
         return;
@@ -304,17 +335,17 @@ public class GraphicalUserInterfaceController implements Initializable {
 
       // Update relationships
       canvas
-          .getChildren()
-          .forEach(
-              node -> {
-                String nodeId = node.getId();
-                if (nodeId != null
-                    && (nodeId.startsWith(currentName + "->")
-                        || nodeId.contains("->" + currentName))) {
-                  String newNodeId = nodeId.replace(currentName, newName);
-                  node.setId(newNodeId);
-                }
-              });
+              .getChildren()
+              .forEach(
+                      node -> {
+                        String nodeId = node.getId();
+                        if (nodeId != null
+                                && (nodeId.startsWith(currentName + "->")
+                                || nodeId.contains("->" + currentName))) {
+                          String newNodeId = nodeId.replace(currentName, newName);
+                          node.setId(newNodeId);
+                        }
+                      });
     }
   }
 
@@ -336,8 +367,8 @@ public class GraphicalUserInterfaceController implements Initializable {
       String fieldName = fieldNameInput.getText();
       String fieldType = dataTypeComboBox.getValue();
       ListView<String> fieldList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
-      CommandResult result = commandBridge.addField(new String[] {fieldType, fieldName});
+              (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
+      CommandResult result = commandBridge.addField(new String[]{fieldType, fieldName});
 
       if (result.isSuccess()) {
         fieldNameInput.clear();
@@ -358,7 +389,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   public void handleDeleteField(ActionEvent event) {
     if (selectedGraphicalClassNode != null) {
       ListView<String> fieldList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
+              (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
       String selectedField = fieldList.getSelectionModel().getSelectedItem();
 
       if (selectedField == null) {
@@ -368,7 +399,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
       // Extract the field name from the selected field string
       String fieldName = selectedField.split(" ")[1];
-      CommandResult result = commandBridge.removeField(new String[] {fieldName});
+      CommandResult result = commandBridge.removeField(new String[]{fieldName});
 
       if (result.isSuccess()) {
         fieldList.getItems().remove(selectedField);
@@ -390,7 +421,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   public void handleRenameField(ActionEvent event) {
     if (selectedGraphicalClassNode != null) {
       ListView<String> fieldList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
+              (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
       String selectedField = fieldList.getSelectionModel().getSelectedItem();
 
       if (selectedField != null) {
@@ -407,7 +438,7 @@ public class GraphicalUserInterfaceController implements Initializable {
           // Extract the old field name from the selected field string
           String oldFieldName = selectedField.split(" ")[1];
           CommandResult result =
-              commandBridge.renameField(new String[] {oldFieldName, newFieldName, newFieldType});
+                  commandBridge.renameField(new String[]{oldFieldName, newFieldName, newFieldType});
 
           if (!result.isSuccess()) {
             showAlert("Error", result.getMessage());
@@ -428,7 +459,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   public void handleAddParameter(ActionEvent event) {
     if (selectedGraphicalClassNode != null) {
       ListView<String> methodList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
+              (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
 
       if (!methodList.getItems().isEmpty()) {
         String parameterName = parameterNameInput.getText();
@@ -441,10 +472,10 @@ public class GraphicalUserInterfaceController implements Initializable {
 
             if (currentMethod.endsWith("()")) {
               currentMethod =
-                  currentMethod.replace("()", "(" + parameterType + " " + parameterName + ")");
+                      currentMethod.replace("()", "(" + parameterType + " " + parameterName + ")");
             } else {
               currentMethod =
-                  currentMethod.replace(")", ", " + parameterType + " " + parameterName + ")");
+                      currentMethod.replace(")", ", " + parameterType + " " + parameterName + ")");
             }
 
             parameterNameInput.clear();
@@ -469,12 +500,12 @@ public class GraphicalUserInterfaceController implements Initializable {
 
       if (!methodName.isEmpty()) {
 
-        CommandResult result = commandBridge.addMethod(new String[] {returnType, methodName});
+        CommandResult result = commandBridge.addMethod(new String[]{returnType, methodName});
 
         if (result.isSuccess()) {
           String formattedMethod = returnType + " " + methodName + "()";
           ListView<String> methodList =
-              (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
+                  (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
           methodList.getItems().add(formattedMethod);
 
         } else {
@@ -495,12 +526,12 @@ public class GraphicalUserInterfaceController implements Initializable {
   public void handleDeleteMethod(ActionEvent event) {
     if (selectedGraphicalClassNode != null) {
       ListView<String> methodList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
+              (ListView<String>) selectedGraphicalClassNode.getChildren().get(2);
       String selectedMethod = methodList.getSelectionModel().getSelectedItem();
 
       if (selectedMethod != null) {
         String methodName = selectedMethod.split(" ")[1];
-        CommandResult result = commandBridge.removeMethod(new String[] {methodName});
+        CommandResult result = commandBridge.removeMethod(new String[]{methodName});
 
         if (result.isSuccess()) {
           methodList.getItems().remove(selectedMethod);
@@ -554,10 +585,10 @@ public class GraphicalUserInterfaceController implements Initializable {
    * Draws a relationship line with an arrowhead between two class boxes, based on the selected
    * relationship type.
    *
-   * @param fromBox the VBox representing the source class box
-   * @param toBox the Vbox representing the destination class box
+   * @param fromBox      the VBox representing the source class box
+   * @param toBox        the Vbox representing the destination class box
    * @param relationType the type of relationship (Aggregation, Composition, Generalization,
-   *     Realization)
+   *                     Realization)
    */
   @FXML
   public void drawRelationLine(VBox fromBox, VBox toBox, String relationType) {
@@ -574,14 +605,14 @@ public class GraphicalUserInterfaceController implements Initializable {
 
     // Remove the existing relationship if it exists
     canvas
-        .getChildren()
-        .removeIf(
-            node -> {
-              String nodeId = node.getId();
-              return (nodeId != null
-                  && (nodeId.startsWith(fromClassName + "->" + toClassName)
-                      || nodeId.startsWith(toClassName + "->" + fromClassName)));
-            });
+            .getChildren()
+            .removeIf(
+                    node -> {
+                      String nodeId = node.getId();
+                      return (nodeId != null
+                              && (nodeId.startsWith(fromClassName + "->" + toClassName)
+                              || nodeId.startsWith(toClassName + "->" + fromClassName)));
+                    });
 
     Line line = createAndBindLine(fromBox, toBox, relationshipId);
 
@@ -621,46 +652,46 @@ public class GraphicalUserInterfaceController implements Initializable {
    */
   private DoubleBinding[][] classBoxPoints(VBox box) {
     DoubleBinding topX =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutX() + box.getWidth() / 2,
-            box.layoutXProperty(),
-            box.widthProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutX() + box.getWidth() / 2,
+                    box.layoutXProperty(),
+                    box.widthProperty());
     DoubleBinding topY =
-        Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
+            Bindings.createDoubleBinding(() -> box.getLayoutY(), box.layoutYProperty());
     DoubleBinding bottomX =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutX() + box.getWidth() / 2,
-            box.layoutXProperty(),
-            box.widthProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutX() + box.getWidth() / 2,
+                    box.layoutXProperty(),
+                    box.widthProperty());
     DoubleBinding bottomY =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutY() + box.getHeight(), box.layoutYProperty(), box.heightProperty());
     DoubleBinding leftX =
-        Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
+            Bindings.createDoubleBinding(() -> box.getLayoutX(), box.layoutXProperty());
     DoubleBinding leftY =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutY() + box.getHeight() / 2,
-            box.layoutYProperty(),
-            box.heightProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutY() + box.getHeight() / 2,
+                    box.layoutYProperty(),
+                    box.heightProperty());
     DoubleBinding rightX =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutX() + box.getWidth(), box.layoutXProperty(), box.widthProperty());
     DoubleBinding rightY =
-        Bindings.createDoubleBinding(
-            () -> box.getLayoutY() + box.getHeight() / 2,
-            box.layoutYProperty(),
-            box.heightProperty());
+            Bindings.createDoubleBinding(
+                    () -> box.getLayoutY() + box.getHeight() / 2,
+                    box.layoutYProperty(),
+                    box.heightProperty());
 
-    return new DoubleBinding[][] {
-      {topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}
+    return new DoubleBinding[][]{
+            {topX, topY}, {bottomX, bottomY}, {leftX, leftY}, {rightX, rightY}
     };
   }
 
   /**
    * Creates a line between two class boxes and binds the line to the class boxes.
    *
-   * @param fromBox the VBox representing the source class box
-   * @param toBox the VBox representing the destination class box
+   * @param fromBox        the VBox representing the source class box
+   * @param toBox          the VBox representing the destination class box
    * @param relationshipId the id of the relationship
    * @return the line between the two class boxes
    */
@@ -678,28 +709,28 @@ public class GraphicalUserInterfaceController implements Initializable {
     DoubleProperty endY = new SimpleDoubleProperty();
 
     Runnable updateLine =
-        () -> {
-          double minDistance = Double.MAX_VALUE;
-          for (DoubleBinding[] fromPoint : fromPoints) {
-            for (DoubleBinding[] toPoint : toPoints) {
-              double distance =
-                  Math.sqrt(
-                      Math.pow(fromPoint[0].get() - toPoint[0].get(), 2)
-                          + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
-              if (distance < minDistance) {
-                minDistance = distance;
-                startX.set(fromPoint[0].get());
-                startY.set(fromPoint[1].get());
-                endX.set(toPoint[0].get());
-                endY.set(toPoint[1].get());
+            () -> {
+              double minDistance = Double.MAX_VALUE;
+              for (DoubleBinding[] fromPoint : fromPoints) {
+                for (DoubleBinding[] toPoint : toPoints) {
+                  double distance =
+                          Math.sqrt(
+                                  Math.pow(fromPoint[0].get() - toPoint[0].get(), 2)
+                                          + Math.pow(fromPoint[1].get() - toPoint[1].get(), 2));
+                  if (distance < minDistance) {
+                    minDistance = distance;
+                    startX.set(fromPoint[0].get());
+                    startY.set(fromPoint[1].get());
+                    endX.set(toPoint[0].get());
+                    endY.set(toPoint[1].get());
+                  }
+                }
               }
-            }
-          }
-          line.startXProperty().bind(startX);
-          line.startYProperty().bind(startY);
-          line.endXProperty().bind(endX);
-          line.endYProperty().bind(endY);
-        };
+              line.startXProperty().bind(startX);
+              line.startYProperty().bind(startY);
+              line.endXProperty().bind(endX);
+              line.endYProperty().bind(endY);
+            };
 
     fromBox.layoutXProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
     fromBox.layoutYProperty().addListener((obs, oldVal, newVal) -> updateLine.run());
@@ -726,7 +757,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       return;
     }
 
-    CommandResult result = commandBridge.addRelationship(new String[] {relationType, toClassName});
+    CommandResult result = commandBridge.addRelationship(new String[]{relationType, toClassName});
 
     if (result.isSuccess()) {
       VBox fromBox = findClassName(fromClassName);
@@ -774,7 +805,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     }
 
     CommandResult result =
-        commandBridge.removeRelationship(new String[] {relationType, toClassName});
+            commandBridge.removeRelationship(new String[]{relationType, toClassName});
 
     if (result.isSuccess()) {
       String relationshipId = fromClassName + "->" + toClassName + ":" + relationType;
@@ -788,7 +819,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   /**
    * Displays an alert pop up with a title and content.
    *
-   * @param title the title of the alert pop up
+   * @param title   the title of the alert pop up
    * @param content the message content to be displayed in the alert
    */
   private void showAlert(String title, String content) {
@@ -808,7 +839,9 @@ public class GraphicalUserInterfaceController implements Initializable {
     return result.orElse("");
   }
 
-  /** Exits the program when the exit button is clicked. */
+  /**
+   * Exits the program when the exit button is clicked.
+   */
   @FXML
   public void exitProgram() {
     System.exit(0);
@@ -832,7 +865,7 @@ public class GraphicalUserInterfaceController implements Initializable {
         filePath += ".json";
       }
 
-      CommandResult result = commandBridge.saveNewfile(new String[] {filePath});
+      CommandResult result = commandBridge.saveNewfile(new String[]{filePath});
       if (result.isSuccess()) {
         showAlert("Success", "File saved to: " + filePath);
       } else {
@@ -863,7 +896,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     if (file != null) {
       String fileName = file.getAbsolutePath();
 
-      CommandResult result = commandBridge.loadFile(new String[] {fileName});
+      CommandResult result = commandBridge.loadFile(new String[]{fileName});
 
       if (result.isSuccess()) {
         refreshCanvas();
@@ -904,7 +937,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
       String className = classNode.getClassName();
       GraphicalClassNode graphicalClassNode =
-          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+              GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
 
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
       double[] position = classNode.getPosition();
@@ -947,10 +980,12 @@ public class GraphicalUserInterfaceController implements Initializable {
   }
 
   @FXML
-  public void handleDeleteParam(ActionEvent event) {}
+  public void handleDeleteParam(ActionEvent event) {
+  }
 
   @FXML
-  public void handleRenameParam(ActionEvent event) {}
+  public void handleRenameParam(ActionEvent event) {
+  }
 
   public void newProjectHandler(ActionEvent event) {
     canvas.getChildren().clear();

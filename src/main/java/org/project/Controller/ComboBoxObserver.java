@@ -1,6 +1,7 @@
 package org.project.Controller;
 
 import java.util.List;
+
 import javafx.scene.control.ComboBox;
 import org.project.View.GraphicalClassNode;
 
@@ -23,15 +24,15 @@ public class ComboBoxObserver implements ObserverInterface {
    * Constructs a new {@code ComboBoxObserver} with the specified combo boxes, observable class,
    * and default types.
    *
-   * @param comboBoxes the list of {@code ComboBox} objects to be updated.
+   * @param comboBoxes      the list of {@code ComboBox} objects to be updated.
    * @param observableClass the {@code ObservableClass} that provides the list of graphical class nodes.
-   * @param defaultTypes the list of default types to include in the combo boxes.
+   * @param defaultTypes    the list of default types to include in the combo boxes.
    */
 
   public ComboBoxObserver(
-      List<ComboBox<String>> comboBoxes,
-      ObservableClass observableClass,
-      List<String> defaultTypes) {
+          List<ComboBox<String>> comboBoxes,
+          ObservableClass observableClass,
+          List<String> defaultTypes) {
     this.comboBoxes = comboBoxes;
     this.observableClass = observableClass;
     this.defaultTypes = defaultTypes;

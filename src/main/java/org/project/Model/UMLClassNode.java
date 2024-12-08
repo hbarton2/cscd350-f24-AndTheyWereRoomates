@@ -19,11 +19,11 @@ public class UMLClassNode {
 
   // Constructor
   public UMLClassNode(
-      String className,
-      List<Field> fields,
-      List<Method> methods,
-      List<Relationship> relationships,
-      double[] position) {
+          String className,
+          List<Field> fields,
+          List<Method> methods,
+          List<Relationship> relationships,
+          double[] position) {
     this.className = className;
     this.fields = fields;
     this.methods = methods;
@@ -37,7 +37,7 @@ public class UMLClassNode {
     this.fields = new ArrayList<>();
     this.methods = new ArrayList<>();
     this.relationships = new ArrayList<>();
-    this.position = new double[] {0.0, 0.0};
+    this.position = new double[]{0.0, 0.0};
   }
 
   /**
@@ -102,16 +102,16 @@ public class UMLClassNode {
   @Override
   public String toString() {
     return "UMLClassNode{"
-        + "className='"
-        + className
-        + '\''
-        + ", fields="
-        + fields
-        + ", methods="
-        + methods
-        + ", relationships="
-        + relationships
-        + '}';
+            + "className='"
+            + className
+            + '\''
+            + ", fields="
+            + fields
+            + ", methods="
+            + methods
+            + ", relationships="
+            + relationships
+            + '}';
   }
 
   // Inner classes for Field, Method, and Relationship
@@ -207,7 +207,8 @@ public class UMLClassNode {
     }
 
     //Getter
-    public void setParameters(List<Parameter> parameters) {}
+    public void setParameters(List<Parameter> parameters) {
+    }
 
     public boolean isOverloaded() {
       return isOverloaded;
@@ -216,17 +217,17 @@ public class UMLClassNode {
     @Override
     public String toString() {
       return "Method{"
-          + "type='"
-          + type
-          + '\''
-          + ", name='"
-          + name
-          + '\''
-          + ", parameters="
-          + parameters
-          + ", isOverloaded="
-          + isOverloaded
-          + '}';
+              + "type='"
+              + type
+              + '\''
+              + ", name='"
+              + name
+              + '\''
+              + ", parameters="
+              + parameters
+              + ", isOverloaded="
+              + isOverloaded
+              + '}';
     }
 
     public static class Parameter {
@@ -271,6 +272,7 @@ public class UMLClassNode {
       this.type = other.type;
       this.target = other.target;
     }
+
     //Getter
     public String getType() {
       return type;

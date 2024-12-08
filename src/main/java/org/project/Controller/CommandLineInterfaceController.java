@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -22,7 +23,8 @@ import org.project.View.TextAreaOutputStream;
  * the GUI. It supports features like command history, auto-completion, and custom styling.
  */
 public class CommandLineInterfaceController {
-  @FXML private TextArea terminalArea;
+  @FXML
+  private TextArea terminalArea;
 
   private final List<String> commandHistory = new ArrayList<>();
   private int historyIndex = -1;
@@ -33,7 +35,7 @@ public class CommandLineInterfaceController {
   private AutoComplete autoComplete;
 
   private static final Logger LOGGER =
-      Logger.getLogger(CommandLineInterfaceController.class.getName());
+          Logger.getLogger(CommandLineInterfaceController.class.getName());
 
   /**
    * Initializes the CLI controller.
@@ -48,8 +50,8 @@ public class CommandLineInterfaceController {
 
       // Apply custom CSS
       terminalArea
-          .getStylesheets()
-          .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+              .getStylesheets()
+              .add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
 
       // Redirect System.out to the terminalArea
       System.setOut(new PrintStream(new TextAreaOutputStream(terminalArea)));
@@ -84,15 +86,15 @@ public class CommandLineInterfaceController {
 
       // Populate autocomplete suggestions
       commandRegistries
-          .getAllCommandNames()
-          .forEach(
-              (key, value) -> {
-                try {
-                  autoComplete.addCommand((String) key);
-                } catch (IOException e) {
-                  LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
-                }
-              });
+              .getAllCommandNames()
+              .forEach(
+                      (key, value) -> {
+                        try {
+                          autoComplete.addCommand((String) key);
+                        } catch (IOException e) {
+                          LOGGER.log(Level.WARNING, "Error adding command to AutoComplete: " + key, e);
+                        }
+                      });
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Error initializing components", e);
     }
@@ -223,16 +225,16 @@ public class CommandLineInterfaceController {
    */
   private void refreshTerminal() {
     Platform.runLater(
-        () -> {
-          try {
-            String fullText = terminalArea.getText(0, promptPosition) + currentInput;
-            terminalArea.setText(fullText);
-            terminalArea.positionCaret(fullText.length());
-            moveCaretToEnd();
-          } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error refreshing terminal", e);
-          }
-        });
+            () -> {
+              try {
+                String fullText = terminalArea.getText(0, promptPosition) + currentInput;
+                terminalArea.setText(fullText);
+                terminalArea.positionCaret(fullText.length());
+                moveCaretToEnd();
+              } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Error refreshing terminal", e);
+              }
+            });
   }
 
   /**
@@ -244,16 +246,17 @@ public class CommandLineInterfaceController {
     Platform.runLater(() -> terminalArea.appendText(message));
     moveCaretToEnd();
   }
+
   /**
    * Appends a command prompt to the terminal area.
    */
   private void appendPrompt() {
     Platform.runLater(
-        () -> {
-          terminalArea.appendText("$ ");
-          promptPosition = terminalArea.getText().length();
-          moveCaretToEnd();
-        });
+            () -> {
+              terminalArea.appendText("$ ");
+              promptPosition = terminalArea.getText().length();
+              moveCaretToEnd();
+            });
   }
 
   /**
@@ -280,10 +283,10 @@ public class CommandLineInterfaceController {
    */
   private void moveCaretToEnd() {
     Platform.runLater(
-        () -> {
-          int expectedCaretPosition = promptPosition + currentInput.length();
-          terminalArea.positionCaret(expectedCaretPosition); // Move caret to the end of the input
-        });
+            () -> {
+              int expectedCaretPosition = promptPosition + currentInput.length();
+              terminalArea.positionCaret(expectedCaretPosition); // Move caret to the end of the input
+            });
   }
 
   private void handleShiftKey(KeyEvent event) {
@@ -297,16 +300,16 @@ public class CommandLineInterfaceController {
    */
   private void clearAutocompleteDisplay() {
     Platform.runLater(
-        () -> {
-          // Get the current text in the terminal up to the prompt
-          String terminalText = terminalArea.getText(0, promptPosition) + currentInput;
+            () -> {
+              // Get the current text in the terminal up to the prompt
+              String terminalText = terminalArea.getText(0, promptPosition) + currentInput;
 
-          // Set the terminal's text to this base content
-          terminalArea.setText(terminalText);
-          scrollToBottom();
-          // Move the caret to the correct position after clearing suggestions
-          moveCaretToEnd();
-        });
+              // Set the terminal's text to this base content
+              terminalArea.setText(terminalText);
+              scrollToBottom();
+              // Move the caret to the correct position after clearing suggestions
+              moveCaretToEnd();
+            });
   }
 
   /**

@@ -30,7 +30,7 @@ public class Caretaker {
    * the undo stack. If no undo state is available, returns {@code null}.
    *
    * @return the {@code Memento} object representing the previous state, or {@code null}
-   *         if no state is available to undo
+   * if no state is available to undo
    */
   public Memento undo() {
     if (!undoStack.isEmpty()) {
@@ -50,7 +50,7 @@ public class Caretaker {
    * If no redo state is available, returns {@code null}.
    *
    * @return the {@code Memento} object representing the redone state, or {@code null}
-   *         if no state is available to redo
+   * if no state is available to redo
    */
   public Memento redo() {
     if (!redoStack.isEmpty()) {

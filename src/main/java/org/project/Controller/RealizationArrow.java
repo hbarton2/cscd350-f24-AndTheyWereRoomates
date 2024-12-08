@@ -19,17 +19,17 @@ public class RealizationArrow implements ArrowStrategy {
    * in white, and a dashed white line representing the arrow shaft.
    *
    * @param arrowHead the {@code Polygon} object representing the arrowhead
-   * @param line the {@code Line} object representing the arrow shaft
+   * @param line      the {@code Line} object representing the arrow shaft
    */
   @Override
   public void drawArrow(Polygon arrowHead, Line line) {
     arrowHead.getPoints().clear();
     arrowHead
-        .getPoints()
-        .addAll(
-            -20.0, 10.0,
-            0.0, 0.0,
-            -20.0, -10.0);
+            .getPoints()
+            .addAll(
+                    -20.0, 10.0,
+                    0.0, 0.0,
+                    -20.0, -10.0);
     arrowHead.setFill(Color.RED);
     arrowHead.setStroke(Color.WHITE);
 

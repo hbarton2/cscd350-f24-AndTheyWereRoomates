@@ -19,17 +19,17 @@ public class GeneralizationArrow implements ArrowStrategy {
    * and outlined in white, and a white line representing the shaft of the arrow.
    *
    * @param arrowHead the {@code Polygon} object representing the arrowhead
-   * @param line the {@code Line} object representing the arrow shaft
+   * @param line      the {@code Line} object representing the arrow shaft
    */
   @Override
   public void drawArrow(Polygon arrowHead, Line line) {
     arrowHead.getPoints().clear();
     arrowHead
-        .getPoints()
-        .addAll(
-            -20.0, 10.0,
-            0.0, 0.0,
-            -20.0, -10.0);
+            .getPoints()
+            .addAll(
+                    -20.0, 10.0,
+                    0.0, 0.0,
+                    -20.0, -10.0);
     arrowHead.setFill(Color.GRAY);
     arrowHead.setStroke(Color.WHITE);
 

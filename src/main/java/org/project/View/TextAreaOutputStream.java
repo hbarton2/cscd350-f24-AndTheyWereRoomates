@@ -1,6 +1,7 @@
 package org.project.View;
 
 import java.io.OutputStream;
+
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
@@ -43,7 +44,7 @@ public class TextAreaOutputStream extends OutputStream {
    * to the text area. The update is performed on the JavaFX Application Thread using
    * {@code Platform.runLater}.
    *
-   * @param b the byte array containing the data to be written
+   * @param b   the byte array containing the data to be written
    * @param off the start offset in the array
    * @param len the number of bytes to write
    */
