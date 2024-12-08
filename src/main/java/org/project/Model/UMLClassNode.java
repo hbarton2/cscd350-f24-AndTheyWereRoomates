@@ -3,6 +3,12 @@ package org.project.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a UML class node with its attributes, methods, relationships, and position.
+ *
+ * <p>This class provides the ability to manage the class name, fields, methods, relationships, and
+ * graphical position in a diagram. It also supports deep copying for immutability.
+ */
 public class UMLClassNode {
 
   private String className;
@@ -34,6 +40,11 @@ public class UMLClassNode {
     this.position = new double[] {0.0, 0.0};
   }
 
+  /**
+   * Constructs a deep copy of another {@code UMLClassNode}.
+   *
+   * @param other the {@code UMLClassNode} to copy
+   */
   public UMLClassNode(UMLClassNode other) {
     this.className = other.className;
     this.fields = new ArrayList<>();
@@ -77,6 +88,12 @@ public class UMLClassNode {
     this.className = className;
   }
 
+  /**
+   * Sets the position of the class node.
+   *
+   * @param x the x-coordinate
+   * @param y the y-coordinate
+   */
   public void setPosition(double x, double y) {
     this.position[0] = x;
     this.position[1] = y;
@@ -113,22 +130,27 @@ public class UMLClassNode {
       this.name = other.name;
     }
 
+    // Getter
     public String getType() {
       return type;
     }
 
+    // Setter
     public void setType(String type) {
       this.type = type;
     }
 
+    // Getter
     public String getName() {
       return name;
     }
 
+    // Setter
     public void setName(String name) {
       this.name = name;
     }
 
+    // toString
     @Override
     public String toString() {
       return "Field{" + "type='" + type + '\'' + ", name='" + name + '\'' + '}';
@@ -159,26 +181,32 @@ public class UMLClassNode {
       this.isOverloaded = other.isOverloaded;
     }
 
+    // Getter
     public String getType() {
       return type;
     }
 
+    // Getter
     public String getName() {
       return name;
     }
 
+    // Setter
     public void setName(String name) {
       this.name = name;
     }
 
+    // Setter
     public void setType(String type) {
       this.type = type;
     }
 
+    // Getter
     public List<Parameter> getParameters() {
       return parameters;
     }
 
+    // Getter
     public void setParameters(List<Parameter> parameters) {}
 
     public boolean isOverloaded() {
@@ -211,14 +239,17 @@ public class UMLClassNode {
         this.name = name;
       }
 
+      // Getter
       public String getType() {
         return type;
       }
 
+      // Getter
       public String getName() {
         return name;
       }
 
+      // toString
       @Override
       public String toString() {
         return "Parameter{" + "type='" + type + '\'' + ", name='" + name + '\'' + '}';
@@ -241,14 +272,17 @@ public class UMLClassNode {
       this.target = other.target;
     }
 
+    // Getter
     public String getType() {
       return type;
     }
 
+    // Getter
     public String getTarget() {
       return target;
     }
 
+    // toString
     @Override
     public String toString() {
       return "Relationship{" + "type='" + type + '\'' + ", target='" + target + '\'' + '}';

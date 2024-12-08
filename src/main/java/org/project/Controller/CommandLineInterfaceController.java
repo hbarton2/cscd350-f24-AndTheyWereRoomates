@@ -15,8 +15,13 @@ import org.project.Model.AutoComplete;
 import org.project.Model.CommandRegistries;
 import org.project.View.TextAreaOutputStream;
 
+/**
+ * Controller for the Command Line Interface (CLI) of the UML Editor application.
+ *
+ * <p>This class handles user input, command processing, and interaction with the terminal area in
+ * the GUI. It supports features like command history, auto-completion, and custom styling.
+ */
 public class CommandLineInterfaceController {
-
   @FXML private TextArea terminalArea;
 
   private final List<String> commandHistory = new ArrayList<>();
@@ -30,6 +35,12 @@ public class CommandLineInterfaceController {
   private static final Logger LOGGER =
       Logger.getLogger(CommandLineInterfaceController.class.getName());
 
+  /**
+   * Initializes the CLI controller.
+   *
+   * <p>Sets up the terminal area, redirects system output, applies custom CSS, initializes
+   * components, and displays the welcome message and prompt.
+   */
   @FXML
   public void initialize() {
     try {
@@ -60,6 +71,7 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /** Initializes the components required for command parsing and auto-completion. */
   private void initializeComponents() {
     try {
       //      CommandRegistries commandRegistries =
@@ -84,6 +96,14 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /**
+   * Handles user input in the terminal area.
+   *
+   * <p>Supports commands like Enter, Backspace, Tab (for auto-complete), and arrow keys for
+   * navigating command history.
+   *
+   * @param event the {@code KeyEvent} triggered by the user
+   */
   private void handleInput(KeyEvent event) {
     try {
       switch (event.getCode()) {
@@ -124,6 +144,13 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /**
+   * Processes a command entered by the user.
+   *
+   * <p>Parses and executes the command, and displays the result or error messages in the terminal.
+   *
+   * @param command the command entered by the user
+   */
   private void processCommand(String command) {
     if (!command.isEmpty()) {
       commandHistory.add(command);
@@ -147,6 +174,7 @@ public class CommandLineInterfaceController {
     appendPrompt();
   }
 
+  /** Handles the backspace key to delete the last character in the current input. */
   private void handleBackspace() {
     if (!currentInput.isEmpty()) {
       currentInput = currentInput.substring(0, currentInput.length() - 1);
@@ -155,6 +183,7 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /** Handles the Tab key for auto-completion of commands. */
   private void handleAutocomplete() {
     try {
       List<String> suggestions = autoComplete.getSuggestions(currentInput);
@@ -183,6 +212,7 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /** Updates the terminal area with the current input. */
   private void refreshTerminal() {
     Platform.runLater(
         () -> {
@@ -197,11 +227,17 @@ public class CommandLineInterfaceController {
         });
   }
 
+  /**
+   * Appends a message to the terminal area.
+   *
+   * @param message the message to display
+   */
   private void appendToTerminal(String message) {
     Platform.runLater(() -> terminalArea.appendText(message));
     moveCaretToEnd();
   }
 
+  /** Appends a command prompt to the terminal area. */
   private void appendPrompt() {
     Platform.runLater(
         () -> {
@@ -211,6 +247,7 @@ public class CommandLineInterfaceController {
         });
   }
 
+  /** Navigates through the command history based on the given direction. */
   private void navigateHistory(int direction) {
     if (commandHistory.isEmpty()) return;
 
@@ -227,6 +264,7 @@ public class CommandLineInterfaceController {
     moveCaretToEnd();
   }
 
+  /** Moves the caret to the end of the terminal input. */
   private void moveCaretToEnd() {
     Platform.runLater(
         () -> {
@@ -241,6 +279,7 @@ public class CommandLineInterfaceController {
     }
   }
 
+  /** Clears auto-completion suggestions from the terminal area. */
   private void clearAutocompleteDisplay() {
     Platform.runLater(
         () -> {
@@ -255,6 +294,7 @@ public class CommandLineInterfaceController {
         });
   }
 
+  /** Scrolls the terminal area to the bottom. */
   private void scrollToBottom() {
     Platform.runLater(() -> terminalArea.setScrollTop(Double.MAX_VALUE));
   }
