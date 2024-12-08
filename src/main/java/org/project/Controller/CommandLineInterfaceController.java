@@ -62,8 +62,9 @@ public class CommandLineInterfaceController {
 
   private void initializeComponents() {
     try {
-      CommandRegistries commandRegistries =
-          CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+      //      CommandRegistries commandRegistries =
+      // CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+      CommandRegistries commandRegistries = CommandRegistries.getInstance("CLICommands.json");
       commandParser = new CommandParser(commandRegistries);
       autoComplete = new AutoComplete();
 

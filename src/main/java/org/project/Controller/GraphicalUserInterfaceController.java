@@ -109,8 +109,9 @@ public class GraphicalUserInterfaceController implements Initializable {
   }
 
   public GraphicalUserInterfaceController() {
-    CommandLogic commandLogic =
-        CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+    //    CommandLogic commandLogic =
+    // CommandRegistries.getInstance("src/main/resources/CLICommands.json");
+    CommandLogic commandLogic = CommandRegistries.getInstance("CLICommands.json");
     this.commandBridge = new CommandBridgeAdapter(commandLogic);
   }
 
