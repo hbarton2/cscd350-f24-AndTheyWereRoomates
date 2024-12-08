@@ -168,9 +168,7 @@ mvn test
 
 - While using this tool, developers can ensure high-quality code and write effective tests.
 
-- Go to www.github.com and go to the project repository.
-
-- Next click on the actions tab and select `Testing PR with new GitAction`
+- select `Testing PR with new GitAction`
 ![CodeCoverageReadme1.png](doc/images/CodeCoverageReadme1.png)
 
 - Next you will select `code-coverage-report` the Actions box at the bottom of the page. and save it to your machine.
