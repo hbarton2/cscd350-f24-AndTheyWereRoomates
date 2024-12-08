@@ -191,8 +191,101 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(result.getMessage().contains("Method: banana to pear"), "Success message should match.");
   }
-  
 
+  @Test
+  void testRenameMethodNotExist() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    CommandResult result = parser.parseCommand("rename method banana pear int");
+    //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Error: Method 'banana' does not exist."), "Success message should match.");
+  }
+  @Test
+  void testRenameMethodExists() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    parser.parseCommand("add method int pear");
+    CommandResult result = parser.parseCommand("rename method banana pear int");
+    //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Error: Method 'pear' already exists."), "Success message should match.");
+  }
+
+  @Test
+  void testAddParameterSuccess() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    CommandResult result = parser.parseCommand("add parameter banana int peach");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Method: banana to int"), "Success message should match.");
+  }
+
+  @Test
+  void testAddParameterNotExist() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    CommandResult result = parser.parseCommand("add parameter banana int peach");
+    assertTrue(result.getMessage().contains("Error: Method 'banana' does not exist."), "Success message should match.");
+  }
+
+  @Test
+  void testRemoveParameterSuccess() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    parser.parseCommand("add parameter banana int peach");
+    CommandResult result = parser.parseCommand("remove parameter banana peach");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Parameters removed from banana"), "Success message should match.");
+  }
+
+  @Test
+  void testRemoveParameterNoClassSelected() {
+    parser.parseCommand("create class apple");
+    CommandResult result = parser.parseCommand("remove parameter banana peach");
+    //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Error: No class selected."), "Success message should match.");
+  }
+
+  @Test
+  void testRenameParameterSuccess() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    parser.parseCommand("add parameter banana int peach");
+    CommandResult result = parser.parseCommand("rename parameter banana peach peanut");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Ready to rename parameter from peach to peanut in method banana"), "Success message should match.");
+  }
+
+  @Test
+  void testUndoSuccess() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+
+    CommandResult result = parser.parseCommand("undo");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Undone"), "Success message should match.");
+  }
+
+  @Test
+  void testUndoNoUndo() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+
+    CommandResult result = parser.parseCommand("undo");
+    //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Error: Nothing to undo"), "Success message should match.");
+  }
+
+  @Test
+  void testUndoNoClass() {
+    CommandResult result = parser.parseCommand("undo");
+    //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Error: No class selected"), "Success message should match.");
+  }
 
   @Test
   void testListClassSuccess() {
