@@ -18,12 +18,13 @@ class CommandParserUnitTest {
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
 
+
   @BeforeEach
   void setUp() {
     try {
       // Mock or create a valid instance of CommandRegistries
       CommandRegistries commandRegistries =
-          CommandRegistries.getInstance("src/main/resources/CLICommands.json"); // Use singleton
+          CommandRegistries.getInstance("CLICommands.json"); // Use singleton
       parser = new CommandParser(commandRegistries);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -281,6 +282,35 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testListDetailSuccess(){
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    parser.parseCommand("add parameter banana int peach");
+    CommandResult result = parser.parseCommand("list detail");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+            result
+                    .getMessage()
+                    .contains("Listing Detail..."),
+            "Success message should match.");
+
+  }
+
+  @Test
+  void testListDetailNotSelected(){
+    parser.parseCommand("create class apple");
+
+    CommandResult result = parser.parseCommand("list detail");
+    assertTrue(
+            result
+                    .getMessage()
+                    .contains("Error: No class selected"),
+            "Success message should match.");
+
+  }
+
+  @Test
   void testUndoSuccess() {
     parser.parseCommand("create class apple");
     parser.parseCommand("switch class apple");
@@ -305,9 +335,20 @@ class CommandParserUnitTest {
   @Test
   void testUndoNoClass() {
     CommandResult result = parser.parseCommand("undo");
-    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Error: No class selected"), "Success message should match.");
+  }
+
+  @Test
+void testSaveAs(){
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+
+    CommandResult result = parser.parseCommand("save");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+            result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"), "Success message should match.");
+
   }
 
   @Test
