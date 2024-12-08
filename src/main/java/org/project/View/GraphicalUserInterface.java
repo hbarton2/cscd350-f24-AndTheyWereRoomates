@@ -2,7 +2,6 @@ package org.project.View;
 
 import java.io.IOException;
 import java.util.Objects;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +14,7 @@ public class GraphicalUserInterface extends Application {
   public void start(Stage stage) throws IOException {
     // Load the FXML file
     Parent root =
-            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUIGraphics.fxml")));
+        FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUIGraphics.fxml")));
 
     // Set up the scene
     Scene scene = new Scene(root);
@@ -26,9 +25,7 @@ public class GraphicalUserInterface extends Application {
     stage.show();
   }
 
-  /**
-   * Launch the GUI
-   */
+  /** Launch the GUI */
   public static void launchApplication() {
     launch();
   }

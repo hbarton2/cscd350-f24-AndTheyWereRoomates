@@ -3,7 +3,6 @@ package org.project.Model;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.suggest.Lookup.LookupResult;
 import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
@@ -47,8 +46,8 @@ public class AutoComplete {
     // Convert result to String
     //    System.out.println("Suggestions found: " + suggestions); // TODO: Debug log
     return results.stream()
-            .map(result -> result.key.toString()) // Convert result to String
-            .collect(Collectors.toList());
+        .map(result -> result.key.toString()) // Convert result to String
+        .collect(Collectors.toList());
   }
 
   /**

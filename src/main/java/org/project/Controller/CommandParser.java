@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.project.Model.AutoComplete;
 import org.project.Model.CommandInfo;
 import org.project.Model.CommandRegistries;
@@ -69,13 +68,13 @@ public class CommandParser {
       CommandInfo commandInfo = entry.getValue();
 
       commandList
-              .append("- ")
-              .append(commandName)
-              .append(": ")
-              .append(commandInfo.description())
-              .append("\n  Syntax: ")
-              .append(commandInfo.syntax())
-              .append("\n\n");
+          .append("- ")
+          .append(commandName)
+          .append(": ")
+          .append(commandInfo.description())
+          .append("\n  Syntax: ")
+          .append(commandInfo.syntax())
+          .append("\n\n");
     }
 
     return commandList.toString();
@@ -97,9 +96,7 @@ public class CommandParser {
     return suggestions;
   }
 
-  /**
-   * Releases resources used by AutoComplete.
-   */
+  /** Releases resources used by AutoComplete. */
   public void close() throws IOException {
     autoComplete.close(); // Release resources
   }

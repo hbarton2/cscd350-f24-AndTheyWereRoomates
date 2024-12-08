@@ -7,11 +7,9 @@ import org.project.Model.UMLClassNode;
 
 public class GraphicalClassNodeFactory {
 
-  /**
-   * This class is responsible for created a classBox for visualization
-   */
+  /** This class is responsible for created a classBox for visualization */
   public static GraphicalClassNode createClassBox(
-          UMLClassNode umlClassNode, String[] inspectorValues, CommandBridge commandBridge) {
+      UMLClassNode umlClassNode, String[] inspectorValues, CommandBridge commandBridge) {
 
     GraphicalClassNode graphicalClassNode = new GraphicalClassNode(umlClassNode.getClassName());
 
@@ -26,7 +24,7 @@ public class GraphicalClassNodeFactory {
     ListView<String> methodList = (ListView<String>) graphicalClassNode.getChildren().get(2);
 
     if (fieldType != null && fieldName != null && !fieldName.isEmpty()) {
-      CommandResult result = commandBridge.addField(new String[]{fieldType, fieldName});
+      CommandResult result = commandBridge.addField(new String[] {fieldType, fieldName});
       if (result.isSuccess()) {
 
         fieldList.getItems().add(fieldType + " " + fieldName);
@@ -36,15 +34,15 @@ public class GraphicalClassNodeFactory {
     if (methodType != null && methodName != null && !methodType.isEmpty()) {
       if (parameterType != null && parameterName != null && !parameterName.isEmpty()) {
         CommandResult result =
-                commandBridge.addMethod(
-                        new String[]{methodType, methodName, parameterType, parameterName});
+            commandBridge.addMethod(
+                new String[] {methodType, methodName, parameterType, parameterName});
         if (result.isSuccess()) {
           String methodFormat =
-                  methodType + " " + methodName + "(" + parameterType + " " + parameterName + ")";
+              methodType + " " + methodName + "(" + parameterType + " " + parameterName + ")";
           methodList.getItems().add(methodFormat);
         }
       } else {
-        CommandResult result = commandBridge.addMethod(new String[]{methodType, methodName});
+        CommandResult result = commandBridge.addMethod(new String[] {methodType, methodName});
         if (result.isSuccess()) {
           String methodFormat = methodType + " " + methodName + "()";
           methodList.getItems().add(methodFormat);
@@ -56,7 +54,7 @@ public class GraphicalClassNodeFactory {
   }
 
   public static GraphicalClassNode createClassBox(
-          UMLClassNode umlClassNode, CommandBridge commandBridge) {
+      UMLClassNode umlClassNode, CommandBridge commandBridge) {
 
     GraphicalClassNode graphicalClassNode = new GraphicalClassNode(umlClassNode.getClassName());
 
