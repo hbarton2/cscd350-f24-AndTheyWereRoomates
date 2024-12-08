@@ -1,17 +1,31 @@
 package org.project.View;
 
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
 import org.project.Controller.CommandBridge;
 import org.project.Controller.CommandResult;
 import org.project.Model.UMLClassNode;
 
 public class GraphicalClassNodeFactory {
 
-  /** This class is responsible for created a classBox for visualization */
+  /**
+   * This method creates a classBox for visualization with inspector values.
+   *
+   * @param umlClassNode the UML class node
+   * @param inspectorValues values from the inspector panel
+   * @param commandBridge the command bridge for executing commands
+   * @param canvas the canvas Pane where the node will be displayed
+   * @return a new GraphicalClassNode
+   */
   public static GraphicalClassNode createClassBox(
-      UMLClassNode umlClassNode, String[] inspectorValues, CommandBridge commandBridge) {
+      UMLClassNode umlClassNode,
+      String[] inspectorValues,
+      CommandBridge commandBridge,
+      Pane canvas) {
 
-    GraphicalClassNode graphicalClassNode = new GraphicalClassNode(umlClassNode.getClassName());
+    // Pass canvas to the constructor
+    GraphicalClassNode graphicalClassNode =
+        new GraphicalClassNode(umlClassNode.getClassName(), canvas);
 
     String fieldName = inspectorValues[1];
     String fieldType = inspectorValues[2];
@@ -26,7 +40,6 @@ public class GraphicalClassNodeFactory {
     if (fieldType != null && fieldName != null && !fieldName.isEmpty()) {
       CommandResult result = commandBridge.addField(new String[] {fieldType, fieldName});
       if (result.isSuccess()) {
-
         fieldList.getItems().add(fieldType + " " + fieldName);
       }
     }
@@ -53,10 +66,20 @@ public class GraphicalClassNodeFactory {
     return graphicalClassNode;
   }
 
+  /**
+   * This method creates a classBox for visualization without inspector values.
+   *
+   * @param umlClassNode the UML class node
+   * @param commandBridge the command bridge for executing commands
+   * @param canvas the canvas Pane where the node will be displayed
+   * @return a new GraphicalClassNode
+   */
   public static GraphicalClassNode createClassBox(
-      UMLClassNode umlClassNode, CommandBridge commandBridge) {
+      UMLClassNode umlClassNode, CommandBridge commandBridge, Pane canvas) {
 
-    GraphicalClassNode graphicalClassNode = new GraphicalClassNode(umlClassNode.getClassName());
+    // Pass canvas to the constructor
+    GraphicalClassNode graphicalClassNode =
+        new GraphicalClassNode(umlClassNode.getClassName(), canvas);
 
     ListView<String> fieldList = (ListView<String>) graphicalClassNode.getChildren().get(1);
     ListView<String> methodList = (ListView<String>) graphicalClassNode.getChildren().get(2);

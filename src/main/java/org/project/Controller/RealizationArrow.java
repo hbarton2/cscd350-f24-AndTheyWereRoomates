@@ -30,10 +30,10 @@ public class RealizationArrow implements ArrowStrategy {
             -20.0, 10.0,
             0.0, 0.0,
             -20.0, -10.0);
-    arrowHead.setFill(Color.RED);
-    arrowHead.setStroke(Color.WHITE);
+    arrowHead.setFill(Color.BLACK);
+    arrowHead.setStroke(Color.BLACK);
 
-    line.setStroke(Color.WHITE);
+    line.setStroke(Color.BLACK);
     line.setStrokeWidth(2.0);
     line.getStrokeDashArray().addAll(10.0, 10.0);
   }

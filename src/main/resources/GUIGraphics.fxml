@@ -17,6 +17,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.Group?>
 <AnchorPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.project.Controller.GraphicalUserInterfaceController">
   <MenuBar layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="524.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <Menu fx:id="menubar" mnemonicParsing="false" text="File">
@@ -38,7 +40,16 @@
       <MenuItem mnemonicParsing="false" text="About" />
     </Menu>
   </MenuBar>
-  <Pane fx:id="canvas" layoutX="-15.0" layoutY="28.0" prefHeight="974.0" prefWidth="1135.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="-15.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="28.0" />
+
+  <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" pannable="true"
+    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+    <Group fx:id="zoomGroup">
+      <Pane fx:id="canvas" prefHeight="974.0" prefWidth="1135.0"/>
+<!--        style="-fx-background-color: black;"/>-->
+    </Group>
+  </ScrollPane>
+  <Label fx:id="zoomLabel" text="Zoom: 100%" layoutX="20.0" layoutY="20.0" />
 
   <HBox spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
     <Button fx:id="addClass" onAction="#createClass" text="Add Class" />
@@ -99,17 +110,18 @@
       </ComboBox>
       <TextField fx:id="parameterNameInput" prefHeight="26.0" prefWidth="132.0" promptText="Name" />
     </HBox>
-      <HBox alignment="CENTER" prefHeight="27.0" prefWidth="230.0" spacing="15.0">
-         <children>
-          <Button fx:id="addParameter" onAction="#handleAddParameter" prefHeight="26.0" prefWidth="44.0" text="Add" />
-            <Button fx:id="deleteParameter" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeleteParam" text="Delete">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="renameParameter" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleRenameParam" text="Rename" />
-         </children>
-      </HBox>
+    <HBox alignment="CENTER" prefHeight="27.0" prefWidth="230.0" spacing="15.0">
+      <Button fx:id="addParameter" onAction="#handleAddParameter" prefHeight="26.0" prefWidth="44.0"
+        text="Add"/>
+      <Button fx:id="deleteParameter" alignment="CENTER" mnemonicParsing="false"
+        onAction="#handleDeleteParam" text="Delete">
+        <HBox.margin>
+          <Insets/>
+        </HBox.margin>
+      </Button>
+      <Button fx:id="renameParameter" alignment="CENTER_RIGHT" mnemonicParsing="false"
+        onAction="#handleRenameParam" text="Rename"/>
+    </HBox>
 
     <Separator />
 
@@ -117,11 +129,9 @@
     <HBox spacing="5.0">
       <ComboBox fx:id="fromComboBox" prefHeight="25.0" prefWidth="244.0" promptText="From" />
     </HBox>
-      <HBox prefHeight="26.0" prefWidth="230.0">
-         <children>
-         <ComboBox fx:id="toComboBox" prefHeight="25.0" prefWidth="231.0" promptText="To" />
-         </children>
-      </HBox>
+    <HBox prefHeight="26.0" prefWidth="230.0">
+      <ComboBox fx:id="toComboBox" prefHeight="25.0" prefWidth="231.0" promptText="To"/>
+    </HBox>
     <ComboBox fx:id="relationshipTypeComboBox" prefHeight="25.0" prefWidth="243.0" promptText="Type">
       <items>
         <FXCollections fx:factory="observableArrayList">

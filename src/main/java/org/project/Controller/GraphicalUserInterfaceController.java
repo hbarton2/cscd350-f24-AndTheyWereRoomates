@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -22,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
@@ -62,7 +64,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   @FXML public ComboBox<String> methodTypeComboBox;
   @FXML public Button deleteParameter;
   @FXML public Button renameParameter;
-  @FXML private Pane canvas;
+  //  @FXML private Pane canvas;
   @FXML private VBox inspectorPane;
   @FXML private Button toggleInspectorButton;
   @FXML private TextField classNameInput;
@@ -74,13 +76,34 @@ public class GraphicalUserInterfaceController implements Initializable {
   @FXML private ComboBox<String> fromComboBox;
   @FXML private ComboBox<String> toComboBox;
   @FXML private ComboBox<String> relationshipTypeComboBox;
+
+  public MenuItem openButton;
+  public MenuItem newProjectButton;
+  public MenuItem saveButton;
+  public Button addMethod;
+
   private final ObservableClass observableClass = new ObservableClass();
   private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
-
   private GraphicalClassNode selectedGraphicalClassNode = null;
   private final CommandBridge commandBridge;
   public static final Storage storage = Storage.getInstance();
   FileChooser fileChooser = new FileChooser();
+
+  @FXML private ScrollPane scrollPane;
+
+  @FXML private Group zoomGroup;
+
+  @FXML private Pane canvas;
+
+  @FXML private Label zoomLabel;
+
+  private double zoomFactor = 1.0;
+  private static final double ZOOM_INCREMENT = 0.1;
+  private static final double MIN_ZOOM = 0.5;
+  private static final double MAX_ZOOM = 3.0;
+  private boolean draggingBackground = false;
+
+  private DraggableMaker draggableMaker;
 
   /**
    * This sets the default path to be the user's home directory.
@@ -90,10 +113,15 @@ public class GraphicalUserInterfaceController implements Initializable {
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    draggableMaker = new DraggableMaker(canvas);
+    scrollPane.setOnMousePressed(event -> draggingBackground = true);
+    scrollPane.setOnMouseReleased(event -> draggingBackground = false);
+    scrollPane.setPannable(true);
+
     String home = System.getProperty("user.home"); // This could be changed later
     fileChooser.setInitialDirectory(new File(home));
 
-    canvas.setStyle("-fx-background-color: black;");
+    //    canvas.setStyle("-fx-background-color: black;");
     List<ComboBox<String>> comboBoxList =
         Arrays.asList(dataTypeComboBox, parameterTypeComboBox, methodTypeComboBox);
     List<ComboBox<String>> classOnlyBoxes = Arrays.asList(fromComboBox, toComboBox);
@@ -106,11 +134,32 @@ public class GraphicalUserInterfaceController implements Initializable {
     for (ComboBox<String> comboBox : comboBoxList) {
       comboBox.getItems().addAll(defaultTypes);
     }
+
+    // Add zoom functionality
+    canvas.setOnScroll(
+        event -> {
+          if (event.getDeltaY() > 0) { // Scroll up to zoom in
+            zoomFactor = Math.min(zoomFactor + ZOOM_INCREMENT, MAX_ZOOM);
+          } else { // Scroll down to zoom out
+            zoomFactor = Math.max(zoomFactor - ZOOM_INCREMENT, MIN_ZOOM);
+          }
+
+          // Apply the zoom factor
+          zoomGroup.setScaleX(zoomFactor);
+          zoomGroup.setScaleY(zoomFactor);
+
+          // Update the zoom label
+          zoomLabel.setText(String.format("Zoom: %.0f%%", zoomFactor * 100));
+
+          event.consume();
+        });
+
+    scrollPane.setPannable(true);
+
+    zoomLabel.setText("Zoom: 100%");
   }
 
   public GraphicalUserInterfaceController() {
-    //    CommandLogic commandLogic =
-    // CommandRegistries.getInstance("src/main/resources/CLICommands.json");
     CommandLogic commandLogic = CommandRegistries.getInstance("CLICommands.json");
     this.commandBridge = new CommandBridgeAdapter(commandLogic);
   }
@@ -133,6 +182,59 @@ public class GraphicalUserInterfaceController implements Initializable {
    *
    * @param event - When the "Create Class" button is clicked
    */
+  //  public void createClass(ActionEvent event) {
+  //    String[] inspectorValues = getInspectorValues();
+  //    String className =
+  //        inspectorValues[0].isEmpty()
+  //            ? "New_Class_" + (canvas.getChildren().size() + 1)
+  //            : inspectorValues[0];
+  //
+  //    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates
+  // storage
+  //    UMLClassNode node1 = commandBridge.getStorage().getNode(className);
+  //
+  //    if (result.isSuccess()) {
+  //      result = commandBridge.switchClass(new String[] {className});
+  //
+  //      if (result.isSuccess()) {
+  //
+  //        GraphicalClassNode graphicalClassNode =
+  //            GraphicalClassNodeFactory.createClassBox(
+  //                CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
+  //
+  //        graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
+  //
+  //        int numberOfClasses =
+  //            (int)
+  //                canvas.getChildren().stream()
+  //                    .filter(node -> node instanceof GraphicalClassNode)
+  //                    .count();
+  //        double spacing = 20.0;
+  //        double offsetX = (numberOfClasses % 5) * (graphicalClassNode.getPrefWidth() + spacing);
+  //        double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
+  //        double startX = 50.0; // Starting X position
+  //        double startY = 50.0; // Starting Y position
+  //        // classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
+  //        node1.setPosition(startX + offsetX, startY + offsetY);
+  //        graphicalClassNode.setLayoutX(startX + offsetX);
+  //        graphicalClassNode.setLayoutY(startY + offsetY);
+  //
+  //        DraggableMaker draggableMaker = new DraggableMaker();
+  //        draggableMaker.makeDraggable(graphicalClassNode, node1);
+  //
+  //        canvas.getChildren().add(graphicalClassNode);
+  //        observableClass.addClassBox(graphicalClassNode);
+  //      } else {
+  //        showAlert("Error", result.getMessage());
+  //      }
+  //    }
+  //  }
+
+  /**
+   * This method creates a Class object with a default name of "Class Name #"
+   *
+   * @param event - When the "Create Class" button is clicked
+   */
   public void createClass(ActionEvent event) {
     String[] inspectorValues = getInspectorValues();
     String className =
@@ -140,6 +242,7 @@ public class GraphicalUserInterfaceController implements Initializable {
             ? "New_Class_" + (canvas.getChildren().size() + 1)
             : inspectorValues[0];
 
+    // Create the class and retrieve its node
     CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
     UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
@@ -147,13 +250,17 @@ public class GraphicalUserInterfaceController implements Initializable {
       result = commandBridge.switchClass(new String[] {className});
 
       if (result.isSuccess()) {
-
+        // Create and configure the GraphicalClassNode
         GraphicalClassNode graphicalClassNode =
             GraphicalClassNodeFactory.createClassBox(
-                CommandLogic.getStorage().getNode(className), inspectorValues, commandBridge);
+                CommandLogic.getStorage().getNode(className),
+                inspectorValues,
+                commandBridge,
+                canvas);
 
         graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
 
+        // Calculate position
         int numberOfClasses =
             (int)
                 canvas.getChildren().stream()
@@ -164,14 +271,14 @@ public class GraphicalUserInterfaceController implements Initializable {
         double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
         double startX = 50.0; // Starting X position
         double startY = 50.0; // Starting Y position
-        // classBoxPositions.put(className, new double[] {startX + offsetX, startY + offsetY});
         node1.setPosition(startX + offsetX, startY + offsetY);
         graphicalClassNode.setLayoutX(startX + offsetX);
         graphicalClassNode.setLayoutY(startY + offsetY);
 
-        DraggableMaker draggableMaker = new DraggableMaker();
-        draggableMaker.makeDraggable(graphicalClassNode, node1);
+        // Make the node draggable and link it with the UML node
+        draggableMaker.makeDraggable(graphicalClassNode, node1, () -> draggingBackground);
 
+        // Add the node to the canvas
         canvas.getChildren().add(graphicalClassNode);
         observableClass.addClassBox(graphicalClassNode);
       } else {
@@ -893,6 +1000,45 @@ public class GraphicalUserInterfaceController implements Initializable {
     }
   }
 
+  //  private void refreshCanvas() {
+  //    canvas.getChildren().clear();
+  //
+  //    int numberOfClasses = 0;
+  //    double spacing = 20.0;
+  //    double startX = 50.0;
+  //    double startY = 50.0;
+  //
+  //    for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
+  //      String className = classNode.getClassName();
+  //      GraphicalClassNode graphicalClassNode =
+  //          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+  //
+  //      graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
+  //      double[] position = classNode.getPosition();
+  //
+  //      if (position[0] == 0.0 && position[1] == 0.0) {
+  //        double offsetX = (numberOfClasses % 5) * (graphicalClassNode.getPrefWidth() + spacing);
+  //        double offsetY = (numberOfClasses / 5) * (graphicalClassNode.getPrefHeight() + spacing);
+  //
+  //        position[0] = startX + offsetX;
+  //        position[1] = startY + offsetY;
+  //
+  //        classNode.setPosition(position[0], position[1]);
+  //        numberOfClasses++;
+  //      }
+  //
+  //      graphicalClassNode.setLayoutX(position[0]);
+  //      graphicalClassNode.setLayoutY(position[1]);
+  //
+  //      DraggableMaker draggableMaker = new DraggableMaker();
+  //      draggableMaker.makeDraggable(graphicalClassNode, classNode);
+  //
+  //      canvas.getChildren().add(graphicalClassNode);
+  //      observableClass.addClassBox(graphicalClassNode);
+  //    }
+  //
+  //    drawAllRelationships();
+  //  }
   private void refreshCanvas() {
     canvas.getChildren().clear();
 
@@ -903,8 +1049,10 @@ public class GraphicalUserInterfaceController implements Initializable {
 
     for (UMLClassNode classNode : commandBridge.getStorage().getAllNodes().values()) {
       String className = classNode.getClassName();
+
+      // Pass canvas as an additional argument
       GraphicalClassNode graphicalClassNode =
-          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge);
+          GraphicalClassNodeFactory.createClassBox(classNode, commandBridge, canvas);
 
       graphicalClassNode.setOnMouseClicked(e -> selectClassBox(graphicalClassNode));
       double[] position = classNode.getPosition();
@@ -923,7 +1071,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       graphicalClassNode.setLayoutX(position[0]);
       graphicalClassNode.setLayoutY(position[1]);
 
-      DraggableMaker draggableMaker = new DraggableMaker();
+      // Use the existing DraggableMaker instance
       draggableMaker.makeDraggable(graphicalClassNode, classNode);
 
       canvas.getChildren().add(graphicalClassNode);
