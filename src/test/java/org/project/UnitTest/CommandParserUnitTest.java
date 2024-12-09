@@ -33,9 +33,10 @@ class CommandParserUnitTest {
 
   @Test
   void testCreateClassSuccess() {
-    CommandResult result = parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("create class Ferari");
     assertTrue(result.isSuccess(), "Command should succeed for valid class creation.");
-    assertTrue(result.getMessage().contains("Class added: Car"), "Success message should match.");
+    assertTrue(
+        result.getMessage().contains("Class added: Ferari"), "Success message should match.");
   }
 
   @Test
@@ -74,10 +75,10 @@ class CommandParserUnitTest {
   @Test
   void testRenameClassSuccess() {
     parser.parseCommand("create class Car");
-    CommandResult result = parser.parseCommand("rename class Car Pinto");
+    CommandResult result = parser.parseCommand("rename class Car Limo");
     assertTrue(result.isSuccess(), "Command should succeed for valid class renaming.");
     assertTrue(
-        result.getMessage().contains("Class renamed: Car to Pinto"),
+        result.getMessage().contains("Class renamed: Car to Limo"),
         "Success message should match.");
   }
 
@@ -444,12 +445,26 @@ class CommandParserUnitTest {
 
   @Test
   void testLoad() {
-
     CommandResult result = parser.parseCommand("load");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
         "Success message should match.");
+  }
+
+  @Test
+  void testLoadFile() {
+
+    CommandResult result = parser.parseCommand("load file DUMMY");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Loaded from"), "Success message should match.");
+  }
+
+  @Test
+  void testLoadFileNotExisting() {
+    CommandResult result = parser.parseCommand("load file NONEXISTENT");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
   }
 
   //  @Test
