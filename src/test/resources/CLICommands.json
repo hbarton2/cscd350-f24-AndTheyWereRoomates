@@ -1,0 +1,353 @@
+{
+  "commands": {
+    "class commands": {
+      "create class": {
+        "syntax": "create class <class name>",
+        "description": "Creates a new class and sets it as the current class for quick-editing.",
+        "example": "create class Car",
+        "errors": {
+          "classExists": [
+            "Error: Class <class name> already exists.",
+            "Hint: Use 'rename class <existing classname> <new classname>' if you want to rename it."
+          ],
+          "invalidName": [
+            "Error: <class name> is an invalid class name.",
+            "Hint: Class names must start with a letter and contain only letters, numbers, or underscores."
+          ],
+          "emptyName": [
+            "Error: Class name cannot be empty.",
+            "Suggestion: Provide a valid class name after 'create class'."
+          ]
+        }
+      },
+      "remove class": {
+        "syntax": "remove class <classname>",
+        "description": "Removes an existing class.",
+        "example": "remove class Car",
+        "errors": {
+          "classNotFound": [
+            "Error: Class <classname> does not exist.",
+            "Suggestion: Check for typos or list all classes using 'list all class'."
+          ],
+          "classInUse": [
+            "Error: Class <classname> is currently set and cannot be removed.",
+            "Action: Switch to another class using 'switch <class name>' before removing."
+          ]
+        }
+      },
+      "rename class": {
+        "syntax": "rename class <existing classname> <new classname>",
+        "description": "Renames an existing class.",
+        "example": "rename class Car Vehicle",
+        "errors": {
+          "classNotFound": [
+            "Error: Class <existing classname> does not exist.",
+            "Hint: Use 'list all class' to see all existing classes."
+          ],
+          "classExists": [
+            "Error: Class <new classname> already exists.",
+            "Suggestion: Choose a different name to avoid duplication."
+          ],
+          "invalidName": [
+            "Error: <new classname> is an invalid class name.",
+            "Hint: Class names must start with a letter and contain only valid characters."
+          ]
+        }
+      },
+      "switch": {
+        "syntax": "switch class <existing classname>",
+        "description": "Sets an existing class as the current class for quick-editing.",
+        "example": "switch Car",
+        "errors": {
+          "classNotFound": [
+            "Error: Class <classname> does not exist.",
+            "Suggestion: Check spelling or list all classes with 'list all class'."
+          ]
+        }
+      },
+      "list classes": {
+        "syntax": "list classes",
+        "description": "Lists the names of all currently created classes without additional details.",
+        "example": "list classes",
+        "errors": {
+          "noClasses": [
+            "Error: No classes have been created yet.",
+            "Suggestion: Use 'create class <classname>' to add a new class."
+          ]
+        }
+      },
+      "list detail": {
+        "syntax": "list detail",
+        "description": "Lists the currently set class with all the additional details.",
+        "example": "list detail",
+        "errors": {
+          "noClasses": [
+            "Error: No classes have been created yet or set.",
+            "Suggestion: Use 'list detail' to see current class details."
+          ]
+        }
+      }
+    },
+    "field commands": {
+      "add field": {
+        "syntax": "add field <field type> <field name>",
+        "description": "Adds a field to the currently set class.",
+        "example": "add field String exampleField",
+        "errors": {
+          "classNotSet": [
+            "Error: No class is currently set. Use 'switch <classname>' first."
+          ],
+          "fieldExists": [
+            "Error: Field <field name> already exists in the class.",
+            "Suggestion: Rename the field or delete the existing one."
+          ],
+          "invalidType": [
+            "Error: <field type> is not a recognized type.",
+            "Supported types: int, double, string, boolean, etc."
+          ]
+        }
+      },
+      "remove field": {
+        "syntax": "remove field <field name>",
+        "description": "Removes a field from the currently set class.",
+        "example": "remove field exampleField",
+        "errors": {
+          "classNotSet": [
+            "Error: No class is currently set. Use 'switch <class name>' first."
+          ],
+          "fieldNotFound": [
+            "Error: Field <field name> does not exist in the class.",
+            "Suggestion: Verify the field name or add it first."
+          ]
+        }
+      },
+      "rename field": {
+        "syntax": "rename field <existing field name> <new field name> <newType>",
+        "description": "Renames a field in the currently set class.",
+        "example": "rename field exampleField newFieldName newFieldType",
+        "errors": {
+          "classNotSet": [
+            "Error: No class is currently set. Use 'switch <classname>' first."
+          ],
+          "fieldNotFound": [
+            "Error: Field <existing field name> does not exist in the class.",
+            "Suggestion: Verify the field name or add it first."
+          ]
+        }
+      }
+    },
+    "method commands": {
+      "add method": {
+        "syntax": "add method <return type> <method name> [<parameter type> <parameter name> ...]",
+        "description": "Adds a method with specified parameters to the currently set class. Supports method overloading.",
+        "example": "add method void exampleMethod int param1, String param2",
+        "errors": {
+          "methodExists": [
+            "Error: Method <method name> with the specified parameters already exists in the class.",
+            "Suggestion: Use unique parameter types or names to create an overloaded method."
+          ],
+          "invalidType": [
+            "Error: <parameter type> is not a recognized type.",
+            "Supported types: int, double, string, boolean, etc."
+          ]
+        }
+      },
+      "remove method": {
+        "syntax": "remove method <method name> [<parameter type> <parameter name> ...]",
+        "description": "Removes a method, optionally with specific parameters, from the currently set class.",
+        "example": "remove method exampleMethod int param1, String param2",
+        "errors": {
+          "methodNotFound": [
+            "Error: Method <method name> with the specified parameters does not exist in the class.",
+            "Suggestion: Verify the method signature."
+          ]
+        }
+      },
+      "rename method": {
+        "syntax": "rename method <existing method name> <new method name> <return type>",
+        "description": "Renames a method in the currently set class.",
+        "example": "rename method exampleMethod newMethodName void",
+        "errors": {
+          "methodNotFound": [
+            "Error: Method <existing method name> does not exist in the class.",
+            "Suggestion: Verify the method name or add it first."
+          ]
+        }
+      }
+    },
+    "parameter commands": {
+      "add parameter": {
+        "syntax": "add parameter <method name> <parameter type> <parameter name> [<parameter type> <parameter name> ...]",
+        "description": "Adds one or more parameters to a specified method in the currently set class.",
+        "example": "add parameter exampleMethod int param1, String param2",
+        "errors": {
+          "methodNotFound": [
+            "Error: Method <method name> does not exist in the class.",
+            "Suggestion: Check if the method is already defined."
+          ],
+          "parameterExists": [
+            "Error: Parameter <parameter name> already exists in the specified method.",
+            "Suggestion: Use a different parameter name."
+          ]
+        }
+      },
+      "remove parameter": {
+        "syntax": "remove parameter <method name> <parameter name> [<parameter name> ...]",
+        "description": "Removes one or more parameters from a specified method in the currently set class.",
+        "example": "remove parameter exampleMethod param1 param2",
+        "errors": {
+          "parameterNotFound": [
+            "Error: Parameter <parameter name> not found in method <method name>.",
+            "Suggestion: Verify the parameter name and method."
+          ]
+        }
+      },
+      "rename parameter": {
+        "syntax": "rename parameter <method name> <old parameter name> <new parameter name>",
+        "description": "Renames a parameter in a specified method within the currently set class.",
+        "example": "rename parameter exampleMethod oldParamName newParamName",
+        "errors": {
+          "parameterNotFound": [
+            "Error: Parameter <old parameter name> not found in method <method name>.",
+            "Suggestion: Verify the parameter name and method."
+          ],
+          "parameterExists": [
+            "Error: Parameter <new parameter name> already exists in method <method name>.",
+            "Suggestion: Choose a unique parameter name."
+          ]
+        }
+      }
+    },
+    "relationship commands": {
+      "add relationship": {
+        "syntax": "add relationship <relationship type> <target class name>",
+        "description": "Adds a relationship between the current class and a target class.",
+        "example": "add relationship association AssociatedClass",
+        "errors": {
+          "relationshipExists": [
+            "Error: Relationship of type <relationship type> with <target class name> already exists.",
+            "Suggestion: Use a different relationship type or remove the existing one first."
+          ]
+        }
+      },
+      "remove relationship": {
+        "syntax": "remove relationship <relationship type> <target class name>",
+        "description": "Removes a relationship between the current class and a target class.",
+        "example": "remove relationship association AssociatedClass",
+        "errors": {
+          "relationshipNotFound": [
+            "Error: Relationship <relationship type> with <target class name> not found.",
+            "Suggestion: Verify the relationship type and target class."
+          ]
+        }
+      }
+    },
+    "misc commands": {
+      "save": {
+        "syntax": "save",
+        "description": "Saves the current project to a JSON file.",
+        "example": "save",
+        "errors": {
+          "saveFailed": [
+            "Error: Could not save the project.",
+            "Suggestion: Check file permissions or try a different file name."
+          ]
+        }
+      },
+      "save as": {
+        "syntax": "save as <filename>",
+        "description": "Saves the current project to a JSON file.",
+        "example": "save as myProject",
+        "errors": {
+          "saveFailed": [
+            "Error: Could not save the project.",
+            "Suggestion: Check file permissions or try a different file name."
+          ]
+        }
+      },
+      "load": {
+        "syntax": "load",
+        "description": "Loads a project from a temporary file.",
+        "example": "load",
+        "errors": {
+          "loadFailed": [
+            "Error: Could not load the project. File may be missing or corrupted.",
+            "Suggestion: Verify the file path and format."
+          ]
+        }
+      },
+      "load file": {
+        "syntax": "load file <filename>",
+        "description": "Loads a project from a JSON file.",
+        "example": "load file myProject",
+        "errors": {
+          "loadFailed": [
+            "Error: Could not load the project. File may be missing or corrupted.",
+            "Suggestion: Verify the file path and format."
+          ]
+        }
+      },
+      "undo": {
+        "syntax": "undo",
+        "description": "Undoes the most recent action.",
+        "example": "undo",
+        "errors": {
+          "noUndo": [
+            "Error: No actions to undo.",
+            "Suggestion: Perform an action first, then try undoing."
+          ]
+        }
+      },
+      "redo": {
+        "syntax": "redo",
+        "description": "Redoes the most recent undone action.",
+        "example": "redo",
+        "errors": {
+          "noRedo": [
+            "Error: No actions to redo.",
+            "Suggestion: Use undo first, then redo."
+          ]
+        }
+      },
+      "help": {
+        "syntax": "help",
+        "description": "Displays a list of available commands or details for a specific command.",
+        "example": "help create",
+        "errors": {
+          "commandNotFound": [
+            "Error: The specified command does not exist.",
+            "Suggestion: Enter 'help' to view a list of all commands."
+          ]
+        }
+      },
+      "exit": {
+        "syntax": "exit",
+        "description": "Terminates the application.",
+        "example": "exit",
+        "errors": {}
+      },
+      "clear": {
+        "syntax": "clear",
+        "description": "Clears the terminal screen.",
+        "example": "clear",
+        "errors": {
+          "invalidArguments": [
+            "Error: 'clear' does not take any arguments.",
+            "Suggestion: Use the command without any arguments."
+          ]
+        }
+      },
+      "new project": {
+        "syntax": "new project",
+        "description": "Resets the application to a fresh state, clearing all existing data.",
+        "example": "new project",
+        "errors": {
+          "invalidArguments": [
+            "Error: 'new project' does not take any arguments.",
+            "Suggestion: Use the command without any arguments."
+          ]
+        }
+      }
+    }
+  }
+}
