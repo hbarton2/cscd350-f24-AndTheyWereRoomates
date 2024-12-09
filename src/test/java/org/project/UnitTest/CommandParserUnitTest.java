@@ -417,47 +417,48 @@ class CommandParserUnitTest {
         "Success message should match.");
   }
 
-//  @Test
-//  void testSave() {
-//    parser.parseCommand("create class apple");
-//    parser.parseCommand("switch class apple");
-//
-//    CommandResult result = parser.parseCommand("save");
-//    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-//    assertTrue(
-//        result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-//        "Success message should match.");
-//  }
+  //  @Test
+  //  void testSave() {
+  //    parser.parseCommand("create class apple");
+  //    parser.parseCommand("switch class apple");
+  //
+  //    CommandResult result = parser.parseCommand("save");
+  //    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //    assertTrue(
+  //        result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
+  //        "Success message should match.");
+  //  }
 
-//    @Test
-//    void testSaveAs(){
-//      parser.parseCommand("create class apple");
-//      parser.parseCommand("switch class apple");
-//
-//      CommandResult result = parser.parseCommand("save as DUMMY");
-//      assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-//      assertTrue(
-//              result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-//   "Success message should match.");
-//
-//    }
+  //    @Test
+  //    void testSaveAs(){
+  //      parser.parseCommand("create class apple");
+  //      parser.parseCommand("switch class apple");
+  //
+  //      CommandResult result = parser.parseCommand("save as DUMMY");
+  //      assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //      assertTrue(
+  //              result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
+  //   "Success message should match.");
+  //
+  //    }
 
-    @Test
-    void testLoad() {
+  @Test
+  void testLoad() {
 
-      CommandResult result = parser.parseCommand("load");
-      //assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-      assertTrue(
-              result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
-              "Success message should match.");
-    }
+    CommandResult result = parser.parseCommand("load");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+        result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
+        "Success message should match.");
+  }
 
-//  @Test
-//  void testExit() {
-//    CommandResult result = parser.parseCommand("exit");
-//    assertTrue(result.isSuccess(), "Command should succeed for clearing screen.");
-//    assertTrue(result.getMessage().contains("Program exited successfully."), "Success message should match.");
-//  }
+  //  @Test
+  //  void testExit() {
+  //    CommandResult result = parser.parseCommand("exit");
+  //    assertTrue(result.isSuccess(), "Command should succeed for clearing screen.");
+  //    assertTrue(result.getMessage().contains("Program exited successfully."), "Success message
+  // should match.");
+  //  }
 
   @Test
   void testListClassSuccess() {
