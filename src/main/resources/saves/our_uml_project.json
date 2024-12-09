@@ -1,0 +1,2706 @@
+[
+    {
+        "className": "AggregationArrow",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "drawArrow",
+                "parameters": [
+                    {
+                        "type": "Polygon",
+                        "name": "arrowHead"
+                    },
+                    {
+                        "type": "Line",
+                        "name": "line"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "ArrowStrategy"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "AutoComplete",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "addCommand",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "command"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<String>",
+                "name": "getSuggestions",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "prefix"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "close",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "ByteBuffersDirectory"
+            },
+            {
+                "type": "Composition",
+                "target": "AnalyzingInfixSuggester"
+            },
+            {
+                "type": "Composition",
+                "target": "BytesRef"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "Caretaker",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "saveState",
+                "parameters": [
+                    {
+                        "type": "Memento",
+                        "name": "memento"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "Memento",
+                "name": "undo",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "Memento",
+                "name": "redo",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "ClassNodeService",
+        "fields": [],
+        "methods": [
+            {
+                "type": "UMLClassNode",
+                "name": "createClassNodeFromJson",
+                "parameters": [
+                    {
+                        "type": "JsonObject",
+                        "name": "jsonData"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "StorageSaveToJsonArray",
+                "parameters": [
+                    {
+                        "type": "Storage",
+                        "name": "storage"
+                    },
+                    {
+                        "type": "String",
+                        "name": "fileName"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "Gson",
+                "name": "getJson",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "GsonBuilder"
+            },
+            {
+                "type": "Composition",
+                "target": "Field"
+            },
+            {
+                "type": "Composition",
+                "target": "Parameter"
+            },
+            {
+                "type": "Composition",
+                "target": "Method"
+            },
+            {
+                "type": "Composition",
+                "target": "Relationship"
+            },
+            {
+                "type": "Composition",
+                "target": "UMLClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "Gson"
+            },
+            {
+                "type": "Composition",
+                "target": "FileWriter"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "ComboBoxObserver",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "update",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "selectedGraphicalClassNode"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "ObserverInterface"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandBridgeAdapter",
+        "fields": [],
+        "methods": [
+            {
+                "type": "CommandResult",
+                "name": "executeCommand",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "command"
+                    },
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "undo",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "redo",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "saveState",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "createClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "switchClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "listClasses",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addRelationship",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeRelationship",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "listDetail",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "saveNewfile",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "save",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "loadFile",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "help",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "exit",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "Storage",
+                "name": "getStorage",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "CommandBridge"
+            },
+            {
+                "type": "Composition",
+                "target": "IllegalArgumentException"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandLineInterfaceController",
+        "fields": [
+            {
+                "type": "CommandParser",
+                "name": "commandParser"
+            },
+            {
+                "type": "AutoComplete",
+                "name": "autoComplete"
+            }
+        ],
+        "methods": [
+            {
+                "type": "void",
+                "name": "initialize",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "initializeComponents",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleInput",
+                "parameters": [
+                    {
+                        "type": "KeyEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "processCommand",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "command"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleBackspace",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleAutocomplete",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "refreshTerminal",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "appendToTerminal",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "message"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "appendPrompt",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "navigateHistory",
+                "parameters": [
+                    {
+                        "type": "int",
+                        "name": "direction"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "moveCaretToEnd",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleShiftKey",
+                "parameters": [
+                    {
+                        "type": "KeyEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "clearAutocompleteDisplay",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "scrollToBottom",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Aggregation",
+                "target": "CommandParser"
+            },
+            {
+                "type": "Aggregation",
+                "target": "AutoComplete"
+            },
+            {
+                "type": "Composition",
+                "target": "PrintStream"
+            },
+            {
+                "type": "Composition",
+                "target": "CommandParser"
+            },
+            {
+                "type": "Composition",
+                "target": "AutoComplete"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandLogic",
+        "fields": [
+            {
+                "type": "UMLClassNode",
+                "name": "currentClass"
+            }
+        ],
+        "methods": [
+            {
+                "type": "CommandResult",
+                "name": "saveState",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "boolean",
+                "name": "classExists",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "className"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "boolean",
+                "name": "fieldExists",
+                "parameters": [
+                    {
+                        "type": "List<UMLClassNode.Field>",
+                        "name": "fieldList"
+                    },
+                    {
+                        "type": "String",
+                        "name": "name"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "boolean",
+                "name": "methodExists",
+                "parameters": [
+                    {
+                        "type": "List<UMLClassNode.Method>",
+                        "name": "methodList"
+                    },
+                    {
+                        "type": "String",
+                        "name": "name"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "createClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addClass",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "className"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "switchClass",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "listClasses",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameField",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameMethod",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "renameParameters",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "addRelationship",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "removeRelationship",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "listDetail",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "save",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "saveAs",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "undo",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "redo",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "updateCurrentClass",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "help",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "exit",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "newProject",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "clear",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "loadFile",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "load",
+                "parameters": [
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Aggregation",
+                "target": "UMLClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "Caretaker"
+            },
+            {
+                "type": "Composition",
+                "target": "Memento"
+            },
+            {
+                "type": "Composition",
+                "target": "UMLClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "StringBuilder"
+            },
+            {
+                "type": "Composition",
+                "target": "ClassNodeService"
+            },
+            {
+                "type": "Composition",
+                "target": "ClassNodeService"
+            },
+            {
+                "type": "Composition",
+                "target": "StringBuilder"
+            },
+            {
+                "type": "Composition",
+                "target": "Gson"
+            },
+            {
+                "type": "Composition",
+                "target": "ClassNodeService"
+            },
+            {
+                "type": "Composition",
+                "target": "Gson"
+            },
+            {
+                "type": "Composition",
+                "target": "ClassNodeService"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandParser",
+        "fields": [],
+        "methods": [
+            {
+                "type": "CommandResult",
+                "name": "parseCommand",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "input"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getCommandList",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<String>",
+                "name": "autocomplete",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "partialInput"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "close",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<String>",
+                "name": "getAllCommandNames",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "AutoComplete"
+            },
+            {
+                "type": "Composition",
+                "target": "StringBuilder"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandRegistries",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "loadCommands",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "jsonFilePath"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "initializeCommandHandlers",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "CommandResult",
+                "name": "executeCommand",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "command"
+                    },
+                    {
+                        "type": "String[]",
+                        "name": "args"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Generalization",
+                "target": "CommandLogic"
+            },
+            {
+                "type": "Composition",
+                "target": "CommandRegistries"
+            },
+            {
+                "type": "Composition",
+                "target": "FileNotFoundException"
+            },
+            {
+                "type": "Composition",
+                "target": "InputStreamReader"
+            },
+            {
+                "type": "Composition",
+                "target": "CommandInfo"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CommandResult",
+        "fields": [],
+        "methods": [
+            {
+                "type": "boolean",
+                "name": "isSuccess",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getMessage",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getCommandName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "CommandResult"
+            },
+            {
+                "type": "Composition",
+                "target": "CommandResult"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "CompositionArrow",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "drawArrow",
+                "parameters": [
+                    {
+                        "type": "Polygon",
+                        "name": "arrowHead"
+                    },
+                    {
+                        "type": "Line",
+                        "name": "line"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "ArrowStrategy"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "DraggableMaker",
+        "fields": [
+            {
+                "type": "double",
+                "name": "mouseAnchorX"
+            },
+            {
+                "type": "double",
+                "name": "mouseAnchorY"
+            }
+        ],
+        "methods": [
+            {
+                "type": "void",
+                "name": "makeDraggable",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "node"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "makeDraggable",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "graphicalNode"
+                    },
+                    {
+                        "type": "UMLClassNode",
+                        "name": "umlNode"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "ensureCanvasSize",
+                "parameters": [
+                    {
+                        "type": "double",
+                        "name": "x"
+                    },
+                    {
+                        "type": "double",
+                        "name": "y"
+                    },
+                    {
+                        "type": "Node",
+                        "name": "node"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "GeneralizationArrow",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "drawArrow",
+                "parameters": [
+                    {
+                        "type": "Polygon",
+                        "name": "arrowHead"
+                    },
+                    {
+                        "type": "Line",
+                        "name": "line"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "ArrowStrategy"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "GraphicalClassNode",
+        "fields": [
+            {
+                "type": "double",
+                "name": "xCoordinate"
+            },
+            {
+                "type": "double",
+                "name": "yCoordinate"
+            }
+        ],
+        "methods": [
+            {
+                "type": "void",
+                "name": "addField",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "field"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "addMethod",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "method"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "double",
+                "name": "getxCoordinate",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setxCoordinate",
+                "parameters": [
+                    {
+                        "type": "double",
+                        "name": "xCoordinate"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "double",
+                "name": "getyCoordinate",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setyCoordinate",
+                "parameters": [
+                    {
+                        "type": "double",
+                        "name": "yCoordinate"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Generalization",
+                "target": "VBox"
+            },
+            {
+                "type": "Composition",
+                "target": "Label"
+            },
+            {
+                "type": "Composition",
+                "target": "DraggableMaker"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "GraphicalClassNodeFactory",
+        "fields": [],
+        "methods": [],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "GraphicalClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "GraphicalClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "StringBuilder"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "GraphicalUserInterface",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "start",
+                "parameters": [
+                    {
+                        "type": "Stage",
+                        "name": "stage"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Generalization",
+                "target": "Application"
+            },
+            {
+                "type": "Composition",
+                "target": "Scene"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "GraphicalUserInterfaceController",
+        "fields": [
+            {
+                "type": "MenuItem",
+                "name": "openButton"
+            },
+            {
+                "type": "MenuItem",
+                "name": "newProjectButton"
+            },
+            {
+                "type": "MenuItem",
+                "name": "saveButton"
+            },
+            {
+                "type": "Button",
+                "name": "addMethod"
+            },
+            {
+                "type": "DraggableMaker",
+                "name": "draggableMaker"
+            }
+        ],
+        "methods": [
+            {
+                "type": "void",
+                "name": "initialize",
+                "parameters": [
+                    {
+                        "type": "URL",
+                        "name": "url"
+                    },
+                    {
+                        "type": "ResourceBundle",
+                        "name": "resourceBundle"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "createClass",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "deleteClass",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "selectClassBox",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "graphicalClassNode"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "toggleInspector",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleSetClassName",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleAddField",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleDeleteField",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleRenameField",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleAddParameter",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleAddMethod",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleDeleteMethod",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleRenameMethod",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "drawRelationLine",
+                "parameters": [
+                    {
+                        "type": "VBox",
+                        "name": "fromBox"
+                    },
+                    {
+                        "type": "VBox",
+                        "name": "toBox"
+                    },
+                    {
+                        "type": "String",
+                        "name": "relationType"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "Line",
+                "name": "createAndBindLine",
+                "parameters": [
+                    {
+                        "type": "VBox",
+                        "name": "fromBox"
+                    },
+                    {
+                        "type": "VBox",
+                        "name": "toBox"
+                    },
+                    {
+                        "type": "String",
+                        "name": "relationshipId"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "addRelation",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "VBox",
+                "name": "findClassName",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "classBoxName"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "deleteRelation",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "showAlert",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "title"
+                    },
+                    {
+                        "type": "String",
+                        "name": "content"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getFileName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "exitProgram",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "onSave",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "onOpen",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "onRedo",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "onUndo",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "refreshCanvas",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "drawAllRelationships",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleDeleteParam",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "handleRenameParam",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "newProjectHandler",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "backToMainMenu",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "actionEvent"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "onExportImage",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "Initializable"
+            },
+            {
+                "type": "Aggregation",
+                "target": "MenuItem"
+            },
+            {
+                "type": "Aggregation",
+                "target": "MenuItem"
+            },
+            {
+                "type": "Aggregation",
+                "target": "MenuItem"
+            },
+            {
+                "type": "Aggregation",
+                "target": "Button"
+            },
+            {
+                "type": "Composition",
+                "target": "ObservableClass"
+            },
+            {
+                "type": "Composition",
+                "target": "FileChooser"
+            },
+            {
+                "type": "Aggregation",
+                "target": "DraggableMaker"
+            },
+            {
+                "type": "Composition",
+                "target": "DraggableMaker"
+            },
+            {
+                "type": "Composition",
+                "target": "File"
+            },
+            {
+                "type": "Composition",
+                "target": "ComboBoxObserver"
+            },
+            {
+                "type": "Composition",
+                "target": "ComboBoxObserver"
+            },
+            {
+                "type": "Composition",
+                "target": "CommandBridgeAdapter"
+            },
+            {
+                "type": "Composition",
+                "target": "DropShadow"
+            },
+            {
+                "type": "Composition",
+                "target": "Polygon"
+            },
+            {
+                "type": "Composition",
+                "target": "AggregationArrow"
+            },
+            {
+                "type": "Composition",
+                "target": "CompositionArrow"
+            },
+            {
+                "type": "Composition",
+                "target": "GeneralizationArrow"
+            },
+            {
+                "type": "Composition",
+                "target": "RealizationArrow"
+            },
+            {
+                "type": "Composition",
+                "target": "Line"
+            },
+            {
+                "type": "Composition",
+                "target": "SimpleDoubleProperty"
+            },
+            {
+                "type": "Composition",
+                "target": "SimpleDoubleProperty"
+            },
+            {
+                "type": "Composition",
+                "target": "SimpleDoubleProperty"
+            },
+            {
+                "type": "Composition",
+                "target": "SimpleDoubleProperty"
+            },
+            {
+                "type": "Composition",
+                "target": "Alert"
+            },
+            {
+                "type": "Composition",
+                "target": "TextInputDialog"
+            },
+            {
+                "type": "Composition",
+                "target": "FileChooser"
+            },
+            {
+                "type": "Composition",
+                "target": "File"
+            },
+            {
+                "type": "Composition",
+                "target": "Stage"
+            },
+            {
+                "type": "Composition",
+                "target": "FileChooser"
+            },
+            {
+                "type": "Composition",
+                "target": "File"
+            },
+            {
+                "type": "Composition",
+                "target": "Stage"
+            },
+            {
+                "type": "Composition",
+                "target": "FXMLLoader"
+            },
+            {
+                "type": "Composition",
+                "target": "Scene"
+            },
+            {
+                "type": "Composition",
+                "target": "Stage"
+            },
+            {
+                "type": "Composition",
+                "target": "File"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "MainMenu",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "start",
+                "parameters": [
+                    {
+                        "type": "Stage",
+                        "name": "stage"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Generalization",
+                "target": "Application"
+            },
+            {
+                "type": "Composition",
+                "target": "FXMLLoader"
+            },
+            {
+                "type": "Composition",
+                "target": "Scene"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "MainMenuController",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "handleButtonAction",
+                "parameters": [
+                    {
+                        "type": "ActionEvent",
+                        "name": "event"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "startCli",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "startGui",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "exitApplication",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "FXMLLoader"
+            },
+            {
+                "type": "Composition",
+                "target": "Stage"
+            },
+            {
+                "type": "Composition",
+                "target": "Scene"
+            },
+            {
+                "type": "Composition",
+                "target": "Stage"
+            },
+            {
+                "type": "Composition",
+                "target": "FXMLLoader"
+            },
+            {
+                "type": "Composition",
+                "target": "Scene"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "Memento",
+        "fields": [],
+        "methods": [],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "UMLClassNode"
+            },
+            {
+                "type": "Composition",
+                "target": "UMLClassNode"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "ObservableClass",
+        "fields": [
+            {
+                "type": "GraphicalClassNode",
+                "name": "selectedGraphicalClassNode"
+            }
+        ],
+        "methods": [
+            {
+                "type": "void",
+                "name": "addObserver",
+                "parameters": [
+                    {
+                        "type": "ObserverInterface",
+                        "name": "observer"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "removeObserver",
+                "parameters": [
+                    {
+                        "type": "ObserverInterface",
+                        "name": "observer"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "addClassBox",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "graphicalClassNode"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "removeClasBox",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "graphicalClassNode"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setSelectedClassBox",
+                "parameters": [
+                    {
+                        "type": "GraphicalClassNode",
+                        "name": "graphicalClassNode"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "GraphicalClassNode",
+                "name": "getSelectedClassBox",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<GraphicalClassNode>",
+                "name": "getAllClassBoxes",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "notifyObservers",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Aggregation",
+                "target": "GraphicalClassNode"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "RealizationArrow",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "drawArrow",
+                "parameters": [
+                    {
+                        "type": "Polygon",
+                        "name": "arrowHead"
+                    },
+                    {
+                        "type": "Line",
+                        "name": "line"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Realization",
+                "target": "ArrowStrategy"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "Storage",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "setAllNodes",
+                "parameters": [
+                    {
+                        "type": "UMLClassNode>",
+                        "name": "state"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Composition",
+                "target": "Storage"
+            },
+            {
+                "type": "Composition",
+                "target": "IllegalArgumentException"
+            },
+            {
+                "type": "Composition",
+                "target": "IllegalArgumentException"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "TextAreaOutputStream",
+        "fields": [],
+        "methods": [
+            {
+                "type": "void",
+                "name": "write",
+                "parameters": [
+                    {
+                        "type": "int",
+                        "name": "b"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "write",
+                "parameters": [
+                    {
+                        "type": "byte[]",
+                        "name": "b"
+                    },
+                    {
+                        "type": "int",
+                        "name": "off"
+                    },
+                    {
+                        "type": "int",
+                        "name": "len"
+                    }
+                ],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Generalization",
+                "target": "OutputStream"
+            },
+            {
+                "type": "Composition",
+                "target": "String"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    },
+    {
+        "className": "UMLClassNode",
+        "fields": [
+            {
+                "type": "String",
+                "name": "className"
+            },
+            {
+                "type": "List<Field>",
+                "name": "fields"
+            },
+            {
+                "type": "List<Method>",
+                "name": "methods"
+            },
+            {
+                "type": "List<Relationship>",
+                "name": "relationships"
+            },
+            {
+                "type": "String",
+                "name": "type"
+            },
+            {
+                "type": "String",
+                "name": "name"
+            },
+            {
+                "type": "String",
+                "name": "type"
+            },
+            {
+                "type": "String",
+                "name": "name"
+            },
+            {
+                "type": "List<Parameter>",
+                "name": "parameters"
+            },
+            {
+                "type": "boolean",
+                "name": "isOverloaded"
+            },
+            {
+                "type": "String",
+                "name": "type"
+            },
+            {
+                "type": "String",
+                "name": "name"
+            },
+            {
+                "type": "String",
+                "name": "type"
+            },
+            {
+                "type": "String",
+                "name": "target"
+            }
+        ],
+        "methods": [
+            {
+                "type": "String",
+                "name": "getClassName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<Field>",
+                "name": "getFields",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<Method>",
+                "name": "getMethods",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<Relationship>",
+                "name": "getRelationships",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setClassName",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "className"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setPosition",
+                "parameters": [
+                    {
+                        "type": "double",
+                        "name": "x"
+                    },
+                    {
+                        "type": "double",
+                        "name": "y"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getType",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setType",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "type"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setName",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "name"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getType",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setName",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "name"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setType",
+                "parameters": [
+                    {
+                        "type": "String",
+                        "name": "type"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "List<Parameter>",
+                "name": "getParameters",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "void",
+                "name": "setParameters",
+                "parameters": [
+                    {
+                        "type": "List<Parameter>",
+                        "name": "parameters"
+                    }
+                ],
+                "isOverloaded": false
+            },
+            {
+                "type": "boolean",
+                "name": "isOverloaded",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getType",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getName",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getType",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "getTarget",
+                "parameters": [],
+                "isOverloaded": false
+            },
+            {
+                "type": "String",
+                "name": "toString",
+                "parameters": [],
+                "isOverloaded": false
+            }
+        ],
+        "relationships": [
+            {
+                "type": "Aggregation",
+                "target": "List<Field>"
+            },
+            {
+                "type": "Aggregation",
+                "target": "List<Method>"
+            },
+            {
+                "type": "Aggregation",
+                "target": "List<Relationship>"
+            },
+            {
+                "type": "Composition",
+                "target": "Field"
+            },
+            {
+                "type": "Composition",
+                "target": "Method"
+            },
+            {
+                "type": "Composition",
+                "target": "Relationship"
+            },
+            {
+                "type": "Aggregation",
+                "target": "List<Parameter>"
+            },
+            {
+                "type": "Composition",
+                "target": "Parameter"
+            }
+        ],
+        "position": [
+            0,
+            0
+        ]
+    }
+]
