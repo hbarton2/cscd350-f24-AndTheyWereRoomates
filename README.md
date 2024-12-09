@@ -1,7 +1,10 @@
 # UML Editor
 
 * What's New:
-  * 
+  *  \*Grader\* Our UML diagram for this project can be found right next to our patterns Document.
+  ![UML Diagram](doc/images/kosherPNG.png)
+  * Patterns document - patterns.md
+  * UML diagram - looksKosherToMe.PNG
 * Major changes:
   * 
 ---
@@ -40,10 +43,12 @@ Ensure that the following software is installed on the target machine:
 ### 1. Obtain the Program File
 Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates.git
 
-### Make sure the main branch is selected
-![Main Branch](doc/images/mainbranch.png)
-### Click on the green code button and click on Download Zip.
-![Code Button](doc/images/codebutton.png)
+### 2. Click on latest UML Editor release
+![Release-png](doc/images/Releases.png)
+
+### 3. Download the appropriate version for your operating system
+![jar-png](doc/images/Jar.png)
+
 ### Navigate to where the package was downloaded and extract the files
 ### Steps to Open Terminal and Run `umleditor.jar`
 
@@ -557,7 +562,6 @@ These buttons all edit classes
 * **Open** - Open a file to load into the GUI
 * **New Project** - Creates a new project
 * **Save** - Saves your current workspace into a JSON file
-<br>(Located in *scr/main/resources/saves*)
 * **Export Imag**e - Exports out your workspace into a PNG file 
 <br>(Located in *scr/main/resources/exports*)
 * **Back to Main Menu** - Sends you back to the main menu where you can pick betwen GUI and CLI
@@ -567,16 +571,14 @@ These buttons all edit classes
 * **Redo** - Redo your last undo.
 
 ## Known GUI Bugs
-Connecting from one to another for some reason doesn't work, being labeled as "Cannot connect to self"
-![img.png](doc/images/GUIBug_CannotConnectToSelfError.png)
 
-Creating more than 15 classes will cause objects to appear off-screen and be rendered unobtainable.
-In this image, there's only 15 classes but there's 18 (19 in the other image), and they're off-screen on the bottom.
-They still exist and are reachable through Relationship but cannot be moved into screen, and moving elements
-don't fill in the slot with the new element.
-Also, elements appears below the UI.
-![img.png](doc/images/GUIBugs_SoftLimitOnElements.png)
-![img.png](doc/images/GUIBug_SoftLimitOnElements2.png)
+* For GUI default return types like "void" or certain data structures are not an option for the user 
+* the relationship arrowheads do not rotate how they should
+* Relationship arrows still overlap
+* Class Boxes still overlap
+* Dragging 
+
+
 
 
 ---

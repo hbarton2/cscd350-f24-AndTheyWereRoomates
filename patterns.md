@@ -37,14 +37,6 @@ A private static variable for the Storage instance.
 #### Line 20 - 25
 Creates an instance when needed.
 
-# Facade
-In the GUI and CLI interface, we simplify the complexity of creating a class and file.
-#### CommandLineTerminal.java
-The while loop in the given launch function only asks for the user's input, taking what was input into
-it and treating it as a valid command. The way the program does this has a lot of checks to ensure the input
-is valid and usable. But for the user, this is just a basic text input on their end, only needing to 
-format their inputs correctly for it to work.
-
 # Chain of Responsibilities
 Through multiple java files, the way a code is handled is through one program taking
 in code and then passing it to another file that will parse the information if the input is valid
@@ -108,3 +100,10 @@ We used this pattern to isolate the creation logic of the class box for the GUI.
 #### ClassBoxFactory.java
 ### Where it was implemented
 #### GUIViewController.java in lines 146 and 868
+
+
+# Singleton
+### Where it was implemented
+* CommandRegistries.java
+Lines 30-33
+This was used to ensure we weren't constantly getting the same json file. 
