@@ -178,6 +178,17 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testAddMethodWithParametersSuccess() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    CommandResult result =
+        parser.parseCommand("add method int banana string cashew string pistachio");
+    assertTrue(result.isSuccess(), "Command should succeed for valid method creation.");
+    assertTrue(
+        result.getMessage().contains("Method added: banana"), "Success message should match.");
+  }
+
+  @Test
   void testRemoveMethodSuccess() {
     parser.parseCommand("create class apple");
     parser.parseCommand("switch class apple");
@@ -398,6 +409,17 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("redo");
     assertTrue(result.isSuccess(), "Command should succeed for Redo.");
     assertTrue(result.getMessage().contains("Redone"), "Success message should match.");
+  }
+
+  @Test
+  void testURedoNoUndo() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+
+    CommandResult result = parser.parseCommand("redo");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+        result.getMessage().contains("Error: Nothing to redo"), "Success message should match.");
   }
 
   @Test
