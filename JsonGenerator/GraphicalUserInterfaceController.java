@@ -385,8 +385,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
       String fieldName = fieldNameInput.getText();
       String fieldType = dataTypeComboBox.getValue();
-      ListView<String> fieldList =
-          (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
+      ListView<String> fieldList = (ListView<String>) selectedGraphicalClassNode.getChildren().get(1);
       CommandResult result = commandBridge.addField(new String[] {fieldType, fieldName});
 
       if (result.isSuccess()) {
