@@ -2,6 +2,7 @@
 
 * What's New:
   *  \*Grader\* Our UML diagram for this project can be found right next to our patterns Document.
+  ![UML Diagram](doc/images/kosherPNG.png)
   * Patterns document - patterns.md
   * UML diagram - looksKosherToMe.PNG
 * Major changes:
