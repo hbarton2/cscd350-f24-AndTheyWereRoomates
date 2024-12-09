@@ -497,14 +497,6 @@ class CommandParserUnitTest {
     assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
   }
 
-  //  @Test
-  //  void testExit() {
-  //    CommandResult result = parser.parseCommand("exit");
-  //    assertTrue(result.isSuccess(), "Command should succeed for clearing screen.");
-  //    assertTrue(result.getMessage().contains("Program exited successfully."), "Success message
-  // should match.");
-  //  }
-
   @Test
   void testListClassSuccess() {
     parser.parseCommand("create class Car");
