@@ -1,5 +1,6 @@
 package org.project.UnitTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,6 +30,46 @@ class CommandParserUnitTest {
       throw new RuntimeException(e);
     }
     System.setOut(new PrintStream(outContent)); // Capture output for assertions
+  }
+
+  @Test
+  void removeClassToManyArgs() {
+    CommandResult result = parser.parseCommand("remove class yes and no");
+    assertEquals("remove class <classname>", result.getMessage());
+  }
+
+  @Test
+  void renameClassToManyArgs() {
+    CommandResult result = parser.parseCommand("rename class john apple seed");
+    assertEquals("rename class <existing classname> <new classname>", result.getMessage());
+  }
+
+  @Test
+  void listClassesToManyArgs() {
+    CommandResult result = parser.parseCommand("list classes all");
+    assertEquals("Syntax: list classes", result.getMessage());
+  }
+
+  @Test
+  void removeFieldToManyArgs() {
+    CommandResult result = parser.parseCommand("remove field Yes yes");
+    assertEquals("remove field <field name>", result.getMessage());
+  }
+
+  @Test
+  void renameMethodToManyArgs() {
+    CommandResult result = parser.parseCommand("rename method yes no yes no yes");
+    assertEquals(
+        "rename method <existing method name> <new method name> <return type>",
+        result.getMessage());
+  }
+
+  @Test
+  void addParamTooManyArgs() {
+    CommandResult result = parser.parseCommand("add parameter yes");
+    assertEquals(
+        "add parameter <method name> <parameter type> <parameter name> [<parameter type> <parameter name> ...]",
+        result.getMessage());
   }
 
   @Test
