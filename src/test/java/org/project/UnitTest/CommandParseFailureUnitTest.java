@@ -207,6 +207,14 @@ public class CommandParseFailureUnitTest {
   }
 
   @Test
+  void testLoadPrompt() {
+    CommandResult result = parser.parseCommand("load file");
+    assertTrue(
+        result.getMessage().contains("Syntax: load file <fileName>"),
+        "Error message should indicate duplicate class.");
+  }
+
+  @Test
   void testNewProjectPrompt() {
     CommandResult result = parser.parseCommand("new project class");
     assertTrue(

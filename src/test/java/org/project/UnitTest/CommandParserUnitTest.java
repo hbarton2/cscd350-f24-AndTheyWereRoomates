@@ -483,6 +483,14 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testLoadFileNotExist() {
+
+    CommandResult result = parser.parseCommand("load file NONEXISTENT");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
+  }
+
+  @Test
   void testLoadFileNotExisting() {
     CommandResult result = parser.parseCommand("load file NONEXISTENT");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
