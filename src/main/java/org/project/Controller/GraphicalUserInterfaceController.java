@@ -3,6 +3,7 @@ package org.project.Controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -1061,12 +1062,14 @@ public class GraphicalUserInterfaceController implements Initializable {
     /*Saving the current scene as an image.*/
     WritableImage image = canvas.snapshot(null, null);
 
+    Path filePath = Path.of(fileName);
+
     /*The path for the image, where the image will go*/
-    File file = new File("src/main/resources/exports/" + fileName + ".PNG");
+    File file = new File(filePath + ".png");
 
     /*Writes to the image.
      * Write - the image (what SwingFXUtils.fromFXImage is doing), the file format, the path name
      * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
-    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
   }
 }
