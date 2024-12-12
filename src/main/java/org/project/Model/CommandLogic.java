@@ -191,6 +191,7 @@ public class CommandLogic {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
     currentClass = storage.getNode(args[0]);
+    //saveState(new String[]{});
     return CommandResult.success("Class Switched to: " + args[0]);
   }
 
@@ -481,13 +482,14 @@ public class CommandLogic {
     if (args.length != 0) {
       return CommandResult.failure("No arguments needed");
     }
-    if (currentClass == null) {
-      return CommandResult.failure("Error: No class selected");
-    }
+//    if (currentClass == null) {
+//      return CommandResult.failure("Error: No class selected");
+//    }
     Memento memento = caretaker.undo();
     if (memento != null) {
       storage.setAllNodes(memento.getState());
       updateCurrentClass();
+
       return CommandResult.success("Undone");
     }
     return CommandResult.failure("Error: Nothing to undo");

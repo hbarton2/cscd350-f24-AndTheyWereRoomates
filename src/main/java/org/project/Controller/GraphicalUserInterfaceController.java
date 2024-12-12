@@ -939,7 +939,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     if (result.isSuccess()) {
       refreshCanvas(); // Refresh the UI to reflect the restored state
     } else {
-      showAlert("Redo Failed", result.getMessage());
+      showAlert("Undo Failed", result.getMessage());
     }
   }
 
