@@ -117,3 +117,8 @@ Which spreads out and connects to the different arrow java
 * Aggregation Arrow
 * Generalization Arrow
 This allows the arrows to be one of many different types of arrow types.
+
+# Factory
+### Where it was implemented
+* ClassNodeService.java
+This was implemented to simplify and centralize the creation of UMLClassNode objects from JSON data. As well as centralize and simplify the creation of JSON Objects from UMLClassNode.
