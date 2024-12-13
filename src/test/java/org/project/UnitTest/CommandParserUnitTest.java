@@ -40,6 +40,7 @@ class CommandParserUnitTest {
 
   @Test
   void testNoClassSelected() {
+
     CommandResult result = parser.parseCommand("add field int Banana");
     assertTrue(
         result
@@ -77,9 +78,8 @@ class CommandParserUnitTest {
     //        result.getMessage().contains("No class is selected use, switch class <className>"),
     //        "Success message should match.");
     //
-    //    result = parser.parseCommand("remove parameter banana int peach");
-    //    assertTrue(result.getMessage().contains("No class selected."), "Success message should
-    // match.");
+    result = parser.parseCommand("remove parameter banana int peach");
+    assertTrue(result.getMessage().contains("No class selected."), "Success message should match.");
     //
     //    result = parser.parseCommand("add relationship aggregation penut");
     //    assertTrue(

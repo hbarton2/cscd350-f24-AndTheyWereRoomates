@@ -221,4 +221,12 @@ public class CommandParseFailureUnitTest {
         result.getMessage().contains("Error: 'new project' does not take any arguments."),
         "Error message should indicate duplicate class.");
   }
+
+  @Test
+  void testSaveAs() {
+    CommandResult result = parser.parseCommand("save as");
+    assertTrue(
+        result.getMessage().contains("Syntax: save as <fileName>"),
+        "Error message should indicate duplicate class.");
+  }
 }
