@@ -229,4 +229,12 @@ public class CommandParseFailureUnitTest {
         result.getMessage().contains("Syntax: save as <fileName>"),
         "Error message should indicate duplicate class.");
   }
+
+  @Test
+  void testExportImage() {
+    CommandResult result = parser.parseCommand("image export");
+    assertTrue(
+        result.getMessage().contains("Syntax: image export <fileName>"),
+        "Error message should indicate duplicate class.");
+  }
 }
