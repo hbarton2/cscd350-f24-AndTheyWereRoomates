@@ -73,7 +73,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const release = await octokit.rest.repos.createRelease({
+            const release = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `v4.4.${{ github.run_number }}`,
