@@ -184,7 +184,7 @@ public class CommandParseFailureUnitTest {
 
   @Test
   void testUndoPrompt() {
-    CommandResult result = parser.parseCommand("undo class");
+    CommandResult result = parser.parseCommand("undo ");
     assertTrue(
         result.getMessage().contains("No arguments needed"),
         "Error message should indicate duplicate class.");
@@ -192,7 +192,7 @@ public class CommandParseFailureUnitTest {
 
   @Test
   void testRedoPrompt() {
-    CommandResult result = parser.parseCommand("undo class");
+    CommandResult result = parser.parseCommand("redo ");
     assertTrue(
         result.getMessage().contains("No arguments needed"),
         "Error message should indicate duplicate class.");
