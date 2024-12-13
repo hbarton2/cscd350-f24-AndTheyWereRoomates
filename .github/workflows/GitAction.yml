@@ -16,12 +16,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        java-version: [ '21.0.5' ]
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -29,35 +24,47 @@ jobs:
       - name: Set Up GraalVM JDK
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }}
+          java-version: '21.0.5'
           distribution: 'graalvm'
           cache: maven
-
-      - name: Verify Code Style with Spotless
-        run: |
-          mvn spotless:check || echo "Spotless check failed. Please run 'mvn spotless:apply' locally to fix."
-
-      - name: Run All Tests (Ignore Failures)
-        run: |
-          mvn test -DtestFailureIgnore=true || echo "Tests failed but proceeding with the build."
 
       - name: Run Clean, Package, Install
         run: |
           mvn clean package install -B
-          cp target/original-uml-editor-shaded.jar target/uml-editor.jar
-        shell: pwsh
+          # Verify that the shaded JAR file is created
+          if [ ! -f target/original-uml-editor-shaded.jar ]; then
+            echo "Shaded JAR file not found! Build failed."
+            exit 1
+          fi
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.os }}-${{ matrix.java-version }}
-          path: target/*.jar
+          name: shaded-jar
+          path: target/original-uml-editor-shaded.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up GraalVM JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21.0.5'
+          distribution: 'graalvm'
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: shaded-jar
 
       - name: Determine Release Type
         id: determine_release
-        shell: bash
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "release_type=release" >> $GITHUB_ENV
             echo "prerelease=false" >> $GITHUB_ENV
           else
@@ -65,42 +72,32 @@ jobs:
             echo "prerelease=true" >> $GITHUB_ENV
           fi
 
-      - name: Debug Release Variables
-        run: |
-          echo "Release Type: ${{ env.release_type }}"
-          echo "Prerelease: ${{ env.prerelease }}"
-
       - name: Create Release
         id: create_release
-        shell: bash
-        run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            prerelease_flag="--prerelease=false"
-          else
-            prerelease_flag="--prerelease=true"
-          fi
-          gh release create \
-            "v4.4.${{ github.run_number }}-${{ matrix.os }}-${{ matrix.java-version }}" \
-            --title "v4.4.${{ github.run_number }} UML Editor ${{ matrix.os }}" \
-            --notes "Automatically generated release" \
-            $prerelease_flag
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v4.4.${{ github.run_number }}
+          release_name: UML Editor ${{ env.release_type }}
+          body: |
+            Automatically generated ${{ env.release_type }} for UML Editor.
+          prerelease: ${{ env.prerelease }}
+          draft: false
+          files: |
+            target/original-uml-editor-shaded.jar
+            ${{ github.workspace }}/*.zip
+            ${{ github.workspace }}/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Upload Renamed JAR to Release
-#        if: steps.create_release.outputs.upload_url != ''
-#        uses: actions/upload-release-asset@v1
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: target/uml-editor.jar
-#          asset_name: uml-editor-${{ matrix.os }}-${{ matrix.java-version }}.jar
-#          asset_content_type: application/java-archive
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#      - name: Copy Renamed JAR to Project Root (Cross-Platform)
-#        run: |
-#          node -e "const fs = require('fs'); fs.copyFileSync('target/uml-editor.jar', 'uml-editor.jar'); console.log('Updated uml-editor.jar in the project root directory.');"
+      - name: Upload Source Code to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}
+          asset_name: source-code.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   check-code-coverage:
     needs: build

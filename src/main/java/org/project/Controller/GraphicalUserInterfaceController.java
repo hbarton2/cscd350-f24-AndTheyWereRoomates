@@ -1,9 +1,18 @@
 package org.project.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -893,26 +902,37 @@ public class GraphicalUserInterfaceController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
+    // Set the initial directory to the user's home directory
     File initialDirectory = new File(System.getProperty("user.home"));
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
+    // Show the save dialog and get the selected file
     File file = fileChooser.showSaveDialog(new Stage());
     if (file != null) {
-      String filePath = file.getAbsolutePath();
-
-      if (!filePath.endsWith(".json")) {
-        filePath += ".json";
+      String filename = file.getName();
+      if (!filename.endsWith(".json")) {
+        filename += ".json";
       }
 
-      CommandResult result = commandBridge.saveNewfile(new String[] {filePath});
-      if (result.isSuccess()) {
+      try {
+        // Construct the full file path
+        String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+        String filePath = jarLocation + File.separator + filename;
+
+        // Use the ClassNodeService to save the data
+        ClassNodeService classNodeService = new ClassNodeService();
+        classNodeService.StorageSaveToJsonArray(DATA_STORAGE, filePath);
+
+        // Show success alert
         showAlert("Success", "File saved to: " + filePath);
-      } else {
-        showAlert("Save Error", result.getMessage());
+      } catch (Exception e) {
+        // Show failure alert with exception message
+        showAlert("Save Error", "Error saving file: " + e.getMessage());
       }
     } else {
+      // Show error alert if no file was selected
       showAlert("Save Error", "No file selected.");
     }
   }
@@ -928,22 +948,61 @@ public class GraphicalUserInterfaceController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
+    // Set the initial directory to the user's home directory
     File initialDirectory = new File(System.getProperty("user.home"));
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
+    // Show the open file dialog and get the selected file
     File file = fileChooser.showOpenDialog(new Stage());
     if (file != null) {
       String fileName = file.getAbsolutePath();
 
-      CommandResult result = commandBridge.loadFile(new String[] {fileName});
+      try {
+        // Construct the file path and validate existence
+        String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+        java.nio.file.Path filePath = java.nio.file.Paths.get(fileName);
 
-      if (result.isSuccess()) {
+        if (!Files.exists(filePath)) {
+          showAlert("Load Error", "File not found: " + filePath.toAbsolutePath());
+          return;
+        }
+
+        // Read the JSON file content
+        String jsonContent = Files.readString(filePath);
+
+        // Parse the JSON content into DATA_STORAGE
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
+
+        ClassNodeService classNodeService = new ClassNodeService();
+        for (JsonElement element : jsonArray) {
+          if (element.isJsonObject()) {
+            JsonObject jsonObject = element.getAsJsonObject();
+            UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+            DATA_STORAGE.addNode(classNode.getClassName(), classNode);
+          } else {
+            // Handle non-JsonObject cases
+            System.err.println("Skipping non-JsonObject element: " + element);
+          }
+        }
+
+        // Update the canvas after loading the file
         refreshCanvas();
-      } else {
-        showAlert("Load Error", result.getMessage());
+
+        // Show success alert
+        showAlert("Success", "File loaded from: " + filePath.toAbsolutePath());
+      } catch (IOException e) {
+        showAlert("Load Error", "Error reading file: " + e.getMessage());
+      } catch (JsonSyntaxException e) {
+        showAlert("Load Error", "Error parsing JSON: " + e.getMessage());
+      } catch (Exception e) {
+        showAlert("Load Error", "Unexpected error: " + e.getMessage());
       }
+    } else {
+      // Show error alert if no file was selected
+      showAlert("Load Error", "No file selected.");
     }
   }
 
@@ -1111,44 +1170,112 @@ public class GraphicalUserInterfaceController implements Initializable {
     alert.showAndWait(); // Wait for the user to acknowledge
   }
 
-  public void loadProjectWithoutGUI() throws IOException {
-    // Get the directory where the JAR file is located
-    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
-
-    // Construct the path for the default save file
-    File file = new File(jarLocation, "temp_save.json");
-
-    // Validate the file exists
-    if (!file.exists()) {
-      throw new IOException("Default project file not found: " + file.getAbsolutePath());
+  public void loadProjectWithoutGUI(String fileName) throws IOException {
+    if (!fileName.endsWith(".json")) {
+      fileName += ".json";
     }
 
-    // Load the UML project using CommandBridge
-    CommandResult result = commandBridge.loadFile(new String[] {file.getAbsolutePath()});
+    File file = new File(fileName);
+    if (!file.isAbsolute()) {
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+      file = new File(jarLocation, fileName);
+    }
 
+    if (!file.exists() || !file.isFile()) {
+      throw new IOException("Project file not found: " + file.getAbsolutePath());
+    }
+
+    CommandResult result = commandBridge.loadFile(new String[] {file.getAbsolutePath()});
     if (!result.isSuccess()) {
       throw new IOException("Failed to load UML project: " + result.getMessage());
     }
 
-    // Refresh the canvas (to render the loaded project)
-    refreshCanvas();
+    renderDiagramOnCanvas(file.getName().replace(".json", ""));
   }
 
+  @FXML
   public void exportImageNonInteractive(String fileName) throws IOException {
-    if (fileName.isBlank()) {
-      fileName = "default_image";
+    // Initialize an invisible canvas if it's not already initialized
+    if (canvas == null) {
+      initializeInvisibleCanvas();
     }
 
-    // Use the directory where the JAR file is located
+    if (fileName == null || fileName.isBlank()) {
+      throw new IOException("File name cannot be null or blank");
+    }
+
+    // Get the directory where the JAR file is located
     String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
-    File file = new File(jarLocation, fileName + ".png");
+
+    // Construct the file path for the image
+    File imageFile = new File(jarLocation, fileName + ".png");
+
+    // Load the UML diagram and render it on the canvas
+    if (!renderDiagramOnCanvas(fileName)) {
+      throw new IOException("Failed to render UML diagram. File not found or invalid: " + fileName);
+    }
 
     // Capture the canvas as an image
     WritableImage image = canvas.snapshot(null, null);
 
     // Save the image
-    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", imageFile);
 
-    System.out.println("Image exported to: " + file.getAbsolutePath());
+    System.out.println("Image exported to: " + imageFile.getAbsolutePath());
+  }
+
+  /**
+   * Renders the UML diagram on the canvas based on the given JSON file name.
+   *
+   * @param fileName The name of the JSON file to load (without the .json extension).
+   * @return true if the diagram was successfully rendered, false otherwise.
+   */
+  private boolean renderDiagramOnCanvas(String fileName) {
+    try {
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+
+      // Ensure fileName is not an absolute path
+      File jsonFile = new File(fileName);
+      if (!jsonFile.isAbsolute()) {
+        jsonFile = new File(jarLocation, fileName + ".json");
+      }
+
+      System.out.println("Resolved file path: " + jsonFile.getAbsolutePath());
+      System.out.println("File exists: " + jsonFile.exists());
+
+      if (!jsonFile.exists() || !jsonFile.isFile()) {
+        System.err.println("Load Error: File not found: " + jsonFile.getAbsolutePath());
+        return false;
+      }
+
+      String jsonContent = Files.readString(jsonFile.toPath());
+      JsonArray jsonArray = new Gson().fromJson(jsonContent, JsonArray.class);
+
+      for (JsonElement element : jsonArray) {
+        if (!element.isJsonObject()) {
+          System.err.println("Invalid element found in JSON array: " + element);
+          return false;
+        }
+      }
+
+      System.out.println("JSON structure is valid.");
+      CommandResult result = commandBridge.loadFile(new String[] {jsonFile.getAbsolutePath()});
+      if (!result.isSuccess()) {
+        System.err.println("Load Error: " + result.getMessage());
+        return false;
+      }
+
+      refreshCanvas();
+      return true;
+    } catch (Exception e) {
+      System.err.println("Error rendering diagram: " + e.getMessage());
+      return false;
+    }
+  }
+
+  /** Initializes an invisible canvas for rendering UML diagrams. */
+  private void initializeInvisibleCanvas() {
+    canvas = new Pane(); // Or `new Canvas(width, height)` if using a Canvas
+    canvas.setPrefSize(800, 600); // Set appropriate dimensions for the UML diagram
   }
 }

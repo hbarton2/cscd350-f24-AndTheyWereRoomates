@@ -31,6 +31,7 @@ public class CommandLineInterfaceController {
 
   private CommandParser commandParser;
   private AutoComplete autoComplete;
+  private boolean isShiftPressed = false;
 
   private static final Logger LOGGER =
       Logger.getLogger(CommandLineInterfaceController.class.getName());
@@ -129,11 +130,17 @@ public class CommandLineInterfaceController {
           navigateHistory(1);
           event.consume();
         }
+        case SHIFT -> {
+          handleShiftKey(event);
+          event.consume();
+        }
         default -> {
           String text = event.getText(); // This respects Shift and Caps Lock
           if (text != null && !text.isEmpty()) {
             currentInput += text;
             refreshTerminal();
+          } else if (event.isShiftDown()) {
+            handleShiftKey(event);
           }
           event.consume();
         }
@@ -274,8 +281,9 @@ public class CommandLineInterfaceController {
   }
 
   private void handleShiftKey(KeyEvent event) {
-    if (event.isShiftDown()) {
-      appendToTerminal("Shift key pressed!\n"); // Example behavior
+    // Toggle Caps Lock mode on Shift key press
+    if (event.getEventType() == KeyEvent.KEY_PRESSED && event.isShiftDown()) {
+      isShiftPressed = !isShiftPressed; // Toggle the Caps Lock state
     }
   }
 
@@ -297,5 +305,9 @@ public class CommandLineInterfaceController {
   /** Scrolls the terminal area to the bottom. */
   private void scrollToBottom() {
     Platform.runLater(() -> terminalArea.setScrollTop(Double.MAX_VALUE));
+  }
+
+  private void clearTerminal() {
+    Platform.runLater(() -> terminalArea.setText(""));
   }
 }

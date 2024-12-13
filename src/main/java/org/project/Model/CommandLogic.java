@@ -627,6 +627,9 @@ public class CommandLogic {
       }
       Path filePath = Path.of(jarLocation, filename);
 
+      // Debugging: Log the resolved file path
+      System.out.println("Resolved file path: " + filePath.toAbsolutePath());
+
       // Validate that the file exists
       if (!Files.exists(filePath)) {
         return CommandResult.failure("File not found: " + filePath.toAbsolutePath());
@@ -634,7 +637,9 @@ public class CommandLogic {
 
       // Read the JSON file content
       String jsonContent = Files.readString(filePath);
-      loadedfileName = filename; // Store the loaded file name
+
+      // Debugging: Log the file content
+      System.out.println("File content: " + jsonContent);
 
       // Parse the JSON content into DATA_STORAGE
       Gson gson = new Gson();
@@ -642,16 +647,27 @@ public class CommandLogic {
 
       ClassNodeService classNodeService = new ClassNodeService();
       for (JsonElement element : jsonArray) {
-        JsonObject jsonObject = element.getAsJsonObject();
-        UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
-        STORAGE.addNode(classNode.getClassName(), classNode);
+        if (element.isJsonObject()) {
+          JsonObject jsonObject = element.getAsJsonObject();
+          UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+          STORAGE.addNode(classNode.getClassName(), classNode);
+        } else {
+          // Handle non-JsonObject cases
+          System.err.println("Skipping non-JsonObject element: " + element);
+        }
       }
 
+      // Store the loaded file name
+      loadedfileName = filename;
+
       return CommandResult.success("Loaded from " + filePath.toAbsolutePath());
+
     } catch (IOException e) {
       return CommandResult.failure("Error reading file: " + e.getMessage());
     } catch (JsonSyntaxException e) {
       return CommandResult.failure("Error parsing JSON: " + e.getMessage());
+    } catch (Exception e) {
+      return CommandResult.failure("Unexpected error: " + e.getMessage());
     }
   }
 
@@ -695,20 +711,25 @@ public class CommandLogic {
     }
 
     String fileName = args[0];
+    if (!fileName.endsWith(".json")) {
+      fileName += ".json";
+    }
 
     try {
-      // Instantiate the GUI controller (non-interactively)
-      GraphicalUserInterfaceController guiController = new GraphicalUserInterfaceController();
+      // Create an instance of GraphicalUserInterfaceController
+      GraphicalUserInterfaceController controller = new GraphicalUserInterfaceController();
 
-      // Load the project file from the directory where the JAR is located
-      guiController.loadProjectWithoutGUI();
+      // Load the UML project into the controller
+      controller.loadProjectWithoutGUI(fileName);
 
-      // Export the UML diagram as an image
-      guiController.exportImageNonInteractive(fileName);
+      // Export the image
+      controller.exportImageNonInteractive(fileName.replace(".png", ""));
 
-      return CommandResult.success("Image successfully exported to: " + fileName + ".png");
+      return CommandResult.success("Image successfully exported to: " + fileName);
     } catch (IOException e) {
       return CommandResult.failure("Error exporting image: " + e.getMessage());
+    } catch (Exception e) {
+      return CommandResult.failure("Unexpected error: " + e.getMessage());
     }
   }
 }
