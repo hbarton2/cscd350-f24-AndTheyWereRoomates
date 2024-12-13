@@ -97,11 +97,14 @@ jobs:
         run: |
           for jar in ./target/*.jar; do
             echo "Uploading $jar..."
+            upload_url="${{ steps.create_release.outputs.upload_url }}"
+            # Replace the placeholder with the actual file name
+            formatted_url=$(echo "$upload_url" | sed "s/{?name,label}/?name=$(basename "$jar")/")
             curl -X POST \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/java-archive" \
               --data-binary @"$jar" \
-              "${{ steps.create_release.outputs.upload_url }}?name=$(basename "$jar")"
+              "$formatted_url"
           done
 
       - name: Zip Source Code
