@@ -48,6 +48,11 @@ class CommandParserUnitTest {
             .contains("Error: No class selected. Use 'switch class <class name>' first."),
         "Success message should match.");
 
+    result = parser.parseCommand("rename field int Banana");
+    assertTrue(
+        result.getMessage().contains("No class is selected use, switch class <className>"),
+        "Success message should match.");
+
     result = parser.parseCommand("remove method banana");
     assertTrue(
         result.getMessage().contains("No class is selected use, switch class <className>"),
@@ -58,12 +63,31 @@ class CommandParserUnitTest {
         result.getMessage().contains("No class is selected use, switch class <className>"),
         "Success message should match.");
 
+    result = parser.parseCommand("remove method greanbeans int banana");
+    assertTrue(
+        result.getMessage().contains("Error: No class selected."), "Success message should match.");
+
     result = parser.parseCommand("rename method greanbeans int banana");
     assertTrue(
         result.getMessage().contains("No class is selected use, switch class <className>"),
         "Success message should match.");
 
     result = parser.parseCommand("add parameter banana int peach");
+    assertTrue(
+        result.getMessage().contains("No class is selected use, switch class <className>"),
+        "Success message should match.");
+
+    result = parser.parseCommand("remove parameter banana int peach");
+    assertTrue(
+        result.getMessage().contains("No class is selected use, switch class <className>"),
+        "Success message should match.");
+
+    result = parser.parseCommand("add relationship aggregation penut");
+    assertTrue(
+        result.getMessage().contains("No class is selected use, switch class <className>"),
+        "Success message should match.");
+
+    result = parser.parseCommand("remove relationship aggregation penut");
     assertTrue(
         result.getMessage().contains("No class is selected use, switch class <className>"),
         "Success message should match.");
@@ -251,10 +275,11 @@ class CommandParserUnitTest {
   @Test
   void testRemoveFieldExists() {
     parser.parseCommand("create class Apple");
+    parser.parseCommand("switch class Apple");
 
     CommandResult result = parser.parseCommand("remove field Banana");
     assertFalse(
-        result.getMessage().contains("Error: Field Banana already exists."),
+        result.getMessage().contains("Error: Field 'Banana' already exists."),
         "Success message should match.");
     parser.parseCommand("delete class Apple");
   }
