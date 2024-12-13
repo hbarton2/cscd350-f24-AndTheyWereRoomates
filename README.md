@@ -46,8 +46,11 @@ Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
 ### 2. Click on latest UML Editor release
 ![Release-png](doc/images/Releases.png)
 
-### 3. Download the appropriate version for your operating system
+### 3. Download the source code for the project labeled below.
 ![jar-png](doc/images/Jar.png)
+The default download for the latest is for Windows. If you require another version for your operating system, scroll up and click the blue text saying "releases" next to the version number. This will show you all the releases
+for the current project. Scroll down below the current release and find the version release of the operating system for the latest release.
+![img.png](doc/images/DownloadVersions.png)
 
 ### Navigate to where the package was downloaded and extract the files
 ### Steps to Open Terminal and Run `umleditor.jar`
