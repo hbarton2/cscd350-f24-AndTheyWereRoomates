@@ -101,7 +101,7 @@ class CommandLogicIntegrationTest {
 
   @AfterEach
   void tearDown() throws Exception {
-    // Reset CommandRegistries and clear storage after each test
+    // Reset CommandRegistries and clear DATA_STORAGE after each test
     CommandRegistries.resetInstance(); // Add a method to reset singleton state
     CommandLogic.getStorage().clearStorage();
   }

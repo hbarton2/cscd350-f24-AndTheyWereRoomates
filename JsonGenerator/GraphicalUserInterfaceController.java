@@ -186,7 +186,7 @@ public class GraphicalUserInterfaceController implements Initializable {
             : inspectorValues[0];
 
     // Create the class and retrieve its node
-    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates DATA_STORAGE
     UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
     if (result.isSuccess()) {
@@ -324,7 +324,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       Label className = (Label) selectedGraphicalClassNode.getChildren().get(0);
       String currentName = className.getText();
 
-      // Rename class in storage
+      // Rename class in DATA_STORAGE
       CommandResult result = commandBridge.renameClass(new String[] {currentName, newName});
       if (!result.isSuccess()) {
         showAlert("Class Rename Error", result.getMessage());

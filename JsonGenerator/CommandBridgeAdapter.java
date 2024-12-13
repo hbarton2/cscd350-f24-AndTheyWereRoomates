@@ -190,9 +190,9 @@ public class CommandBridgeAdapter implements CommandBridge {
   }
 
   /**
-   * Retrieves the storage used by {@code CommandLogic}.
+   * Retrieves the DATA_STORAGE used by {@code CommandLogic}.
    *
-   * @return the storage instance
+   * @return the DATA_STORAGE instance
    */
   public Storage getStorage() {
     return CommandLogic.getStorage();

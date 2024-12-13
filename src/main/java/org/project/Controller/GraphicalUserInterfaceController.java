@@ -1,10 +1,18 @@
 package org.project.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.util.*;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -18,6 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -25,6 +34,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
@@ -39,7 +49,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 import org.project.Model.UMLClassNode;
 import org.project.View.GraphicalClassNode;
 import org.project.View.GraphicalClassNodeFactory;
@@ -86,7 +96,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
   private GraphicalClassNode selectedGraphicalClassNode = null;
   private final CommandBridge commandBridge;
-  public static final Storage storage = Storage.getInstance();
+  public static final DataStorage DATA_STORAGE = DataStorage.getInstance();
   FileChooser fileChooser = new FileChooser();
 
   @FXML private ScrollPane scrollPane;
@@ -187,7 +197,8 @@ public class GraphicalUserInterfaceController implements Initializable {
             : inspectorValues[0];
 
     // Create the class and retrieve its node
-    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+    CommandResult result =
+        commandBridge.createClass(new String[] {className}); // Updates DATA_STORAGE
     UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
     if (result.isSuccess()) {
@@ -325,7 +336,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       Label className = (Label) selectedGraphicalClassNode.getChildren().get(0);
       String currentName = className.getText();
 
-      // Rename class in storage
+      // Rename class in DATA_STORAGE
       CommandResult result = commandBridge.renameClass(new String[] {currentName, newName});
       if (!result.isSuccess()) {
         showAlert("Class Rename Error", result.getMessage());
@@ -433,7 +444,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   /**
    * Inside the selected class the user has a field selected. When the user clicks "Rename Field"
-   * button this method will gave the text inside the field box and rename the field
+   * button this method will give the text inside the field box and rename the field
    *
    * @param event - Representing the action that the button is clicked
    */
@@ -851,12 +862,33 @@ public class GraphicalUserInterfaceController implements Initializable {
   }
 
   private String getFileName() {
-    String filename = "";
-    TextInputDialog dialog = new TextInputDialog("Enter File Name");
+    TextInputDialog dialog = new TextInputDialog();
     dialog.setTitle("Enter File Name");
-    dialog.setContentText("Enter A file name: ");
+    dialog.setHeaderText("Export Image");
+    dialog.setContentText("Enter a file name:");
+
     Optional<String> result = dialog.showAndWait();
-    return result.orElse("");
+
+    // Check if the dialog was canceled
+    if (result.isEmpty()) {
+      return ""; // Indicate cancellation by returning null
+    }
+
+    String filename = result.get().trim(); // Get the input and trim spaces
+
+    // Check if the filename is blank
+    if (filename.isEmpty()) {
+      Alert alert = new Alert(AlertType.WARNING);
+      alert.setTitle("File Name Error");
+      alert.setHeaderText("File Name cannot be blank");
+      alert.showAndWait(); // Wait for the user to acknowledge
+      //      return null;
+    }
+
+    // Ensure the filename does not include invalid characters
+    filename = filename.replaceAll("[^a-zA-Z0-9-_\\.]", "_"); // Replace invalid characters with '_'
+
+    return filename;
   }
 
   /** Exits the program when the exit button is clicked. */
@@ -870,26 +902,37 @@ public class GraphicalUserInterfaceController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
+    // Set the initial directory to the user's home directory
     File initialDirectory = new File(System.getProperty("user.home"));
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
+    // Show the save dialog and get the selected file
     File file = fileChooser.showSaveDialog(new Stage());
     if (file != null) {
-      String filePath = file.getAbsolutePath();
-
-      if (!filePath.endsWith(".json")) {
-        filePath += ".json";
+      String filename = file.getName();
+      if (!filename.endsWith(".json")) {
+        filename += ".json";
       }
 
-      CommandResult result = commandBridge.saveNewfile(new String[] {filePath});
-      if (result.isSuccess()) {
+      try {
+        // Construct the full file path
+        String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+        String filePath = jarLocation + File.separator + filename;
+
+        // Use the ClassNodeService to save the data
+        ClassNodeService classNodeService = new ClassNodeService();
+        classNodeService.StorageSaveToJsonArray(DATA_STORAGE, filePath);
+
+        // Show success alert
         showAlert("Success", "File saved to: " + filePath);
-      } else {
-        showAlert("Save Error", result.getMessage());
+      } catch (Exception e) {
+        // Show failure alert with exception message
+        showAlert("Save Error", "Error saving file: " + e.getMessage());
       }
     } else {
+      // Show error alert if no file was selected
       showAlert("Save Error", "No file selected.");
     }
   }
@@ -905,22 +948,61 @@ public class GraphicalUserInterfaceController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
+    // Set the initial directory to the user's home directory
     File initialDirectory = new File(System.getProperty("user.home"));
     if (initialDirectory.exists()) {
       fileChooser.setInitialDirectory(initialDirectory);
     }
 
+    // Show the open file dialog and get the selected file
     File file = fileChooser.showOpenDialog(new Stage());
     if (file != null) {
       String fileName = file.getAbsolutePath();
 
-      CommandResult result = commandBridge.loadFile(new String[] {fileName});
+      try {
+        // Construct the file path and validate existence
+        String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+        java.nio.file.Path filePath = java.nio.file.Paths.get(fileName);
 
-      if (result.isSuccess()) {
+        if (!Files.exists(filePath)) {
+          showAlert("Load Error", "File not found: " + filePath.toAbsolutePath());
+          return;
+        }
+
+        // Read the JSON file content
+        String jsonContent = Files.readString(filePath);
+
+        // Parse the JSON content into DATA_STORAGE
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
+
+        ClassNodeService classNodeService = new ClassNodeService();
+        for (JsonElement element : jsonArray) {
+          if (element.isJsonObject()) {
+            JsonObject jsonObject = element.getAsJsonObject();
+            UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
+            DATA_STORAGE.addNode(classNode.getClassName(), classNode);
+          } else {
+            // Handle non-JsonObject cases
+            System.err.println("Skipping non-JsonObject element: " + element);
+          }
+        }
+
+        // Update the canvas after loading the file
         refreshCanvas();
-      } else {
-        showAlert("Load Error", result.getMessage());
+
+        // Show success alert
+        showAlert("Success", "File loaded from: " + filePath.toAbsolutePath());
+      } catch (IOException e) {
+        showAlert("Load Error", "Error reading file: " + e.getMessage());
+      } catch (JsonSyntaxException e) {
+        showAlert("Load Error", "Error parsing JSON: " + e.getMessage());
+      } catch (Exception e) {
+        showAlert("Load Error", "Unexpected error: " + e.getMessage());
       }
+    } else {
+      // Show error alert if no file was selected
+      showAlert("Load Error", "No file selected.");
     }
   }
 
@@ -940,7 +1022,7 @@ public class GraphicalUserInterfaceController implements Initializable {
     if (result.isSuccess()) {
       refreshCanvas(); // Refresh the UI to reflect the restored state
     } else {
-      showAlert("Undo Failed", result.getMessage());
+      showAlert("Redo Failed", result.getMessage());
     }
   }
 
@@ -1049,27 +1131,151 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   @FXML
   public void onExportImage(ActionEvent event) throws IOException {
+    // Get the directory where the JAR file is located
+    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
 
-    /*This will print the project WITH the UI. If we need this, keep it here
-    *Creates the scene from the canvas
-    Scene scene = canvas.getScene();
-
-    *Saving the current scene as an image.
-    WritableImage image = scene.snapshot(null);
-    */
+    // Get the file name for the exported image
     String fileName = getFileName();
 
-    /*Saving the current scene as an image.*/
+    if (fileName.isBlank() || fileName == null) {
+      // Show confirmation popup
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Export Failed or Canceled");
+      alert.setHeaderText("Export Operation Failed or Canceled");
+      alert.showAndWait(); // Wait for the user to acknowledge
+      return;
+    }
+
+    // Saving the current scene as an image
     WritableImage image = canvas.snapshot(null, null);
 
-    Path filePath = Path.of(fileName);
+    // Construct the path for the image in the same directory as the JAR
+    File file = new File(jarLocation, fileName + ".png");
 
-    /*The path for the image, where the image will go*/
-    File file = new File(filePath + ".png");
-
-    /*Writes to the image.
-     * Write - the image (what SwingFXUtils.fromFXImage is doing), the file format, the path name
-     * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
+    // Writes the image to the file
     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+
+    // Use a TextArea to display the full path
+    TextArea textArea = new TextArea("Image exported to: \n" + file.getAbsolutePath());
+    textArea.setEditable(false); // Make it read-only
+    textArea.setWrapText(true); // Enable text wrapping
+    textArea.setPrefWidth(400); // Set preferred width
+    textArea.setPrefHeight(100); // Set preferred height
+
+    // Show confirmation popup
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Export Successful");
+    alert.setHeaderText("Image Exported Successfully");
+    alert.getDialogPane().setContent(textArea); // Add TextArea to the Alert
+    alert.showAndWait(); // Wait for the user to acknowledge
+  }
+
+  public void loadProjectWithoutGUI(String fileName) throws IOException {
+    if (!fileName.endsWith(".json")) {
+      fileName += ".json";
+    }
+
+    File file = new File(fileName);
+    if (!file.isAbsolute()) {
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+      file = new File(jarLocation, fileName);
+    }
+
+    if (!file.exists() || !file.isFile()) {
+      throw new IOException("Project file not found: " + file.getAbsolutePath());
+    }
+
+    CommandResult result = commandBridge.loadFile(new String[] {file.getAbsolutePath()});
+    if (!result.isSuccess()) {
+      throw new IOException("Failed to load UML project: " + result.getMessage());
+    }
+
+    renderDiagramOnCanvas(file.getName().replace(".json", ""));
+  }
+
+  @FXML
+  public void exportImageNonInteractive(String fileName) throws IOException {
+    // Initialize an invisible canvas if it's not already initialized
+    if (canvas == null) {
+      initializeInvisibleCanvas();
+    }
+
+    if (fileName == null || fileName.isBlank()) {
+      throw new IOException("File name cannot be null or blank");
+    }
+
+    // Get the directory where the JAR file is located
+    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+
+    // Construct the file path for the image
+    File imageFile = new File(jarLocation, fileName + ".png");
+
+    // Load the UML diagram and render it on the canvas
+    if (!renderDiagramOnCanvas(fileName)) {
+      throw new IOException("Failed to render UML diagram. File not found or invalid: " + fileName);
+    }
+
+    // Capture the canvas as an image
+    WritableImage image = canvas.snapshot(null, null);
+
+    // Save the image
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", imageFile);
+
+    System.out.println("Image exported to: " + imageFile.getAbsolutePath());
+  }
+
+  /**
+   * Renders the UML diagram on the canvas based on the given JSON file name.
+   *
+   * @param fileName The name of the JSON file to load (without the .json extension).
+   * @return true if the diagram was successfully rendered, false otherwise.
+   */
+  private boolean renderDiagramOnCanvas(String fileName) {
+    try {
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+
+      // Ensure fileName is not an absolute path
+      File jsonFile = new File(fileName);
+      if (!jsonFile.isAbsolute()) {
+        jsonFile = new File(jarLocation, fileName + ".json");
+      }
+
+      System.out.println("Resolved file path: " + jsonFile.getAbsolutePath());
+      System.out.println("File exists: " + jsonFile.exists());
+
+      if (!jsonFile.exists() || !jsonFile.isFile()) {
+        System.err.println("Load Error: File not found: " + jsonFile.getAbsolutePath());
+        return false;
+      }
+
+      String jsonContent = Files.readString(jsonFile.toPath());
+      JsonArray jsonArray = new Gson().fromJson(jsonContent, JsonArray.class);
+
+      for (JsonElement element : jsonArray) {
+        if (!element.isJsonObject()) {
+          System.err.println("Invalid element found in JSON array: " + element);
+          return false;
+        }
+      }
+
+      System.out.println("JSON structure is valid.");
+      CommandResult result = commandBridge.loadFile(new String[] {jsonFile.getAbsolutePath()});
+      if (!result.isSuccess()) {
+        System.err.println("Load Error: " + result.getMessage());
+        return false;
+      }
+
+      refreshCanvas();
+      return true;
+    } catch (Exception e) {
+      System.err.println("Error rendering diagram: " + e.getMessage());
+      return false;
+    }
+  }
+
+  /** Initializes an invisible canvas for rendering UML diagrams. */
+  private void initializeInvisibleCanvas() {
+    canvas = new Pane(); // Or `new Canvas(width, height)` if using a Canvas
+    canvas.setPrefSize(800, 600); // Set appropriate dimensions for the UML diagram
   }
 }

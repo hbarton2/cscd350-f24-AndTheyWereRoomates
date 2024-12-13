@@ -31,7 +31,7 @@
           ],
           "classInUse": [
             "Error: Class <classname> is currently set and cannot be removed.",
-            "Action: Switch to another class using 'switch <class name>' before removing."
+            "Action: Switch to another class using 'switch class <class name>' before removing."
           ]
         }
       },
@@ -54,10 +54,10 @@
           ]
         }
       },
-      "switch": {
+      "switch class": {
         "syntax": "switch class <existing classname>",
         "description": "Sets an existing class as the current class for quick-editing.",
-        "example": "switch Car",
+        "example": "switch class Car",
         "errors": {
           "classNotFound": [
             "Error: Class <classname> does not exist.",
@@ -95,7 +95,7 @@
         "example": "add field String exampleField",
         "errors": {
           "classNotSet": [
-            "Error: No class is currently set. Use 'switch <classname>' first."
+            "Error: No class is currently set. Use 'switch class <classname>' first."
           ],
           "fieldExists": [
             "Error: Field <field name> already exists in the class.",
@@ -113,7 +113,7 @@
         "example": "remove field exampleField",
         "errors": {
           "classNotSet": [
-            "Error: No class is currently set. Use 'switch <class name>' first."
+            "Error: No class is currently set. Use 'switch class <class name>' first."
           ],
           "fieldNotFound": [
             "Error: Field <field name> does not exist in the class.",
@@ -127,7 +127,7 @@
         "example": "rename field exampleField newFieldName newFieldType",
         "errors": {
           "classNotSet": [
-            "Error: No class is currently set. Use 'switch <classname>' first."
+            "Error: No class is currently set. Use 'switch class <classname>' first."
           ],
           "fieldNotFound": [
             "Error: Field <existing field name> does not exist in the class.",
@@ -345,6 +345,57 @@
           "invalidArguments": [
             "Error: 'new project' does not take any arguments.",
             "Suggestion: Use the command without any arguments."
+          ]
+        }
+      },
+      "image export": {
+        "syntax": "image export <file name>",
+        "description": "Export UML project to png image.",
+        "example": "image export file",
+        "errors": {
+          "invalidArguments": [
+            "Error: too many arguments.",
+            "Suggestion: image export <file name>"
+          ],
+          "missingFileName": [
+            "Error: Missing file name.",
+            "Suggestion: image export <file name>"
+          ],
+          "unsupportedCharacters": [
+            "Error: File name contains unsupported characters.",
+            "Suggestion: Ensure the file name does not contain special characters like *, ?, or |."
+          ],
+          "unsupportedExtension": [
+            "Error: Unsupported file extension.",
+            "Suggestion: Only .png files are supported."
+          ],
+          "fileNameTooLong": [
+            "Error: File name is too long.",
+            "Suggestion: Use a shorter file name."
+          ],
+          "fileAlreadyExists": [
+            "Error: File already exists.",
+            "Suggestion: Use a different file name or overwrite the existing file."
+          ],
+          "exportFailed": [
+            "Error: Could not export the project.",
+            "Suggestion: Check file permissions or try a different file name."
+          ],
+          "directoryNotWritable": [
+            "Error: Cannot write to the specified directory.",
+            "Suggestion: Check if the directory exists and you have write permissions."
+          ],
+          "noActiveProject": [
+            "Error: No active UML project to export.",
+            "Suggestion: Load or create a UML project before exporting."
+          ],
+          "renderingError": [
+            "Error: Failed to render UML diagram.",
+            "Suggestion: Ensure the UML project is valid and try again."
+          ],
+          "filePathInvalid": [
+            "Error: File path is invalid.",
+            "Suggestion: Ensure the file path is correct and accessible."
           ]
         }
       }

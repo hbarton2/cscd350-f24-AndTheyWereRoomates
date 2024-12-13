@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 import org.project.Model.UMLClassNode;
 import org.project.Model.UMLClassNode.Field;
 import org.project.Model.UMLClassNode.Method;
@@ -76,10 +76,10 @@ public class ClassNodeService {
     return new UMLClassNode(className, fields, methods, relationships, position);
   }
 
-  public void StorageSaveToJsonArray(Storage storage, String fileName) {
+  public void StorageSaveToJsonArray(DataStorage dataStorage, String fileName) {
     try {
       // Get the values from the TreeMap as a collection
-      Collection<UMLClassNode> classNodes = storage.getAllNodes().values();
+      Collection<UMLClassNode> classNodes = dataStorage.getAllNodes().values();
 
       // Create a Gson instance
       Gson gson = new Gson();

@@ -1,6 +1,6 @@
 package org.project.Controller;
 
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 
 public interface CommandBridge {
 
@@ -56,5 +56,5 @@ public interface CommandBridge {
 
   CommandResult exit(String[] args);
 
-  Storage getStorage();
+  DataStorage getStorage();
 }

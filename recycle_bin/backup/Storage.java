@@ -24,7 +24,7 @@ public class Storage {
     return instance;
   }
 
-  // Method to get the storage
+  // Method to get the DATA_STORAGE
   public TreeMap<String, UMLClassNode> getStorage() {
     return storage;
   }
@@ -65,7 +65,7 @@ public class Storage {
     storage.putAll(nodes);
   }
 
-  // Method to get the size of the storage
+  // Method to get the size of the DATA_STORAGE
   public int getSize() {
     return storage.size();
   }

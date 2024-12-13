@@ -33,10 +33,12 @@ module org.project {
       javafx.fxml,
       com.google.gson;
   opens org.project.Model to
+      javafx.fxml,
       com.google.gson;
   opens org.project.View to
       javafx.fxml,
       com.google.gson;
   opens org.project.Memento to
+      javafx.fxml,
       com.google.gson;
 }

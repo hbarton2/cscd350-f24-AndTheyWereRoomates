@@ -118,6 +118,7 @@ public class CommandRegistries extends CommandLogic {
     commandHandlers.put("exit", this::exit);
     commandHandlers.put("clear", this::clear);
     commandHandlers.put("new project", this::newProject);
+    commandHandlers.put("image export", this::imageExport);
   }
 
   // Execute a command by finding and running the appropriate handler

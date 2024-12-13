@@ -262,7 +262,7 @@ public class GUIViewController implements Initializable {
       }
       Label className = (Label) selectedClassBox.getChildren().get(0);
       String currentName = className.getText();
-      // Rename class in storage
+      // Rename class in DATA_STORAGE
       umlController.getStorage().renameClass(currentName, newName);
       // Rename class in View
       className.setText(newName);
@@ -382,7 +382,7 @@ public class GUIViewController implements Initializable {
 
           fieldNameInput.clear();
 
-          // update storage
+          // update DATA_STORAGE
           String oldFieldName = selectedField.split(" ")[1].toLowerCase().trim();
           umlController.fieldCommands.renameField(
               new String[] {
