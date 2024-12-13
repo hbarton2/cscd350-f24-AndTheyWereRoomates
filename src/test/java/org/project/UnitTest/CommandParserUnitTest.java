@@ -107,6 +107,8 @@ class CommandParserUnitTest {
   void listClasses() {
     parser.parseCommand("remove class Apple");
     parser.parseCommand("remove class Limo");
+    parser.parseCommand("remove class Pinto");
+
     parser.parseCommand("remove class apple");
     parser.parseCommand("remove class banana");
     parser.parseCommand("remove class null");
@@ -221,7 +223,7 @@ class CommandParserUnitTest {
   @Test
   void testRenameNullCheck() {
     parser.parseCommand("create class Car");
-    CommandResult result = parser.parseCommand("rename class Car " + null);
+    CommandResult result = parser.parseCommand("rename class Car ");
     assertFalse(
         result.getMessage().contains("Error: Failed to rename class."),
         "Error Message should indicate an already existing class");
@@ -229,14 +231,14 @@ class CommandParserUnitTest {
     parser.parseCommand("switch class Car");
     parser.parseCommand("add field int Green");
 
-    result = parser.parseCommand("rename field Green " + null + null);
+    result = parser.parseCommand("rename field Green ") ;
     assertFalse(
         result.getMessage().contains("Error: Failed to rename field."),
         "Error Message should indicate an already existing class");
 
     parser.parseCommand("add method int Yellow");
 
-    result = parser.parseCommand("rename method Yellow " + null + null);
+    result = parser.parseCommand("rename method Yellow ");
     assertFalse(
         result.getMessage().contains("Error: Failed to rename field."),
         "Error Message should indicate an already existing class");
@@ -646,9 +648,10 @@ class CommandParserUnitTest {
         "Success message should match.");
 
     parser.parseCommand("remove class PEANUTS");
+    parser.parseCommand("new project");
+
   }
 
-  
   @Test
   void testSaveAs() {
     parser.parseCommand("new project");
