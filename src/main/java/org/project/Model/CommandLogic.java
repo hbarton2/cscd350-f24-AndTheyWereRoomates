@@ -223,6 +223,9 @@ public class CommandLogic {
     } else if (args.length > 1) {
       return CommandResult.failure("remove field <field name>");
     }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
+    }
 
     String fieldName = args[0];
     List<UMLClassNode.Field> fields = currentClass.getFields();
@@ -243,6 +246,9 @@ public class CommandLogic {
   public CommandResult renameField(String[] args) {
     if (args.length != 3) {
       return CommandResult.failure("rename field <existing field name> <new field name> <newType>");
+    }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
     }
     saveState(new String[] {});
 
@@ -272,6 +278,10 @@ public class CommandLogic {
           "add method <return type> <method name> [<parameter type> <parameter name> ...]");
     }
 
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
+    }
+
     String returnType = args[0];
     String methodName = args[1];
     List<UMLClassNode.Method.Parameter> params = new ArrayList<>();
@@ -292,6 +302,9 @@ public class CommandLogic {
       return CommandResult.failure(
           "remove method <method name> [<parameter type> <parameter name>...]");
     }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
+    }
 
     for (UMLClassNode.Method method : currentClass.getMethods()) {
       if (method.getName().equals(args[0])) {
@@ -310,6 +323,9 @@ public class CommandLogic {
     } else if (args.length > 3) {
       return CommandResult.failure(
           "rename method <existing method name> <new method name> <return type>");
+    }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
     }
     String oldMethodName = args[0];
     String newMethodName = args[1];
@@ -339,6 +355,9 @@ public class CommandLogic {
     } else if (args.length % 2 != 1) {
       return CommandResult.failure(
           "add parameter <method name> <parameter type> <parameter name> [<parameter type> <parameter name> ...]");
+    }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
     }
 
     if (!methodExists(currentClass.getMethods(), args[0])) {
@@ -407,6 +426,9 @@ public class CommandLogic {
     if (args.length != 2) {
       return CommandResult.failure("add relationship <relationship type> <target class name>");
     }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
+    }
 
     if (!classExists(args[1])) {
       return CommandResult.failure("Error: Class '" + args[1] + "' does not exist.");
@@ -424,6 +446,9 @@ public class CommandLogic {
   public CommandResult removeRelationship(String[] args) {
     if (args.length != 2) {
       return CommandResult.failure("remove relationship <relationship type> <target class name>");
+    }
+    if (currentClass == null) {
+      return CommandResult.failure("No class is selected use, switch class <className>");
     }
 
     for (UMLClassNode.Relationship relationship : currentClass.getRelationships()) {
