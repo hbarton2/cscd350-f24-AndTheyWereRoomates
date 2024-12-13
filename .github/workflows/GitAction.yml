@@ -73,6 +73,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
             const release = await octokit.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
