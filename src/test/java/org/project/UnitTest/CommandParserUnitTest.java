@@ -48,7 +48,7 @@ class CommandParserUnitTest {
             .contains("Error: No class selected. Use 'switch class <class name>' first."),
         "Success message should match.");
 
-    result = parser.parseCommand("rename field int Banana");
+    result = parser.parseCommand("rename field int Banana Peanut");
     assertTrue(
         result.getMessage().contains("No class is selected use, switch class <className>"),
         "Success message should match.");
@@ -65,7 +65,8 @@ class CommandParserUnitTest {
 
     result = parser.parseCommand("remove method greanbeans int banana");
     assertTrue(
-        result.getMessage().contains("Error: No class selected."), "Success message should match.");
+        result.getMessage().contains("No class is selected use, switch class <className>"),
+        "Success message should match.");
 
     result = parser.parseCommand("rename method greanbeans int banana");
     assertTrue(
@@ -78,9 +79,7 @@ class CommandParserUnitTest {
         "Success message should match.");
 
     result = parser.parseCommand("remove parameter banana int peach");
-    assertTrue(
-        result.getMessage().contains("No class is selected use, switch class <className>"),
-        "Success message should match.");
+    assertTrue(result.getMessage().contains("No class selected."), "Success message should match.");
 
     result = parser.parseCommand("add relationship aggregation penut");
     assertTrue(
