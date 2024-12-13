@@ -95,7 +95,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/uml-editor-4-shaded.jar
+          asset_path: ./uml-editor-4-shaded.jar
           asset_name: uml-editor-4-shaded.jar
           asset_content_type: application/java-archive
         env:
