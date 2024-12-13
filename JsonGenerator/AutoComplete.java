@@ -15,7 +15,7 @@ public class AutoComplete {
   private final AnalyzingInfixSuggester suggester;
 
   public AutoComplete() throws IOException {
-    Directory directory = new ByteBuffersDirectory(); // In-memory storage
+    Directory directory = new ByteBuffersDirectory(); // In-memory DATA_STORAGE
     suggester = new AnalyzingInfixSuggester(directory, new StandardAnalyzer());
   }
 

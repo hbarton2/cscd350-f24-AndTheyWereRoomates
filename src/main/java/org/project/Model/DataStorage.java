@@ -3,20 +3,20 @@ package org.project.Model;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Storage {
+public class DataStorage {
 
-  private static volatile Storage instance; // Volatile for safe double-checked locking
+  private static volatile DataStorage instance; // Volatile for safe double-checked locking
   private final Map<String, UMLClassNode> storage;
 
-  private Storage() {
+  private DataStorage() {
     this.storage = new TreeMap<>();
   }
 
-  public static Storage getInstance() {
+  public static DataStorage getInstance() {
     if (instance == null) {
-      synchronized (Storage.class) {
+      synchronized (DataStorage.class) {
         if (instance == null) {
-          instance = new Storage();
+          instance = new DataStorage();
         }
       }
     }
@@ -59,19 +59,14 @@ public class Storage {
     return new TreeMap<>(storage); // Return a copy to prevent external modification
   }
 
-  public void setAllNodes(Map<String, UMLClassNode> state) {
-    synchronized (this) {
-      // Clear the current storage
-      storage.clear();
-
-      // Add all nodes from the provided state
-      storage.putAll(state);
-    }
+  public synchronized void setAllNodes(Map<String, UMLClassNode> state) {
+    storage.clear(); // Ensure the current DATA_STORAGE is cleared
+    storage.putAll(state); // Add all nodes from the provided state
   }
 
   public Map<Object, Object> getStorage() {
     synchronized (this) {
-      // Return a copy of the storage as a Map<Object, Object>
+      // Return a copy of the DATA_STORAGE as a Map<Object, Object>
       return new TreeMap<>(storage);
     }
   }
@@ -84,9 +79,9 @@ public class Storage {
   }
 
   public static void resetInstance() {
-    synchronized (Storage.class) {
+    synchronized (DataStorage.class) {
       if (instance != null) {
-        instance.clearStorage(); // Clear the current storage map
+        instance.clearStorage(); // Clear the current DATA_STORAGE
         instance = null; // Reset the instance to null
       }
     }

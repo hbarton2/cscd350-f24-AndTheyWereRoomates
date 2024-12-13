@@ -78,7 +78,7 @@ public class CommandLogic {
           "Error: Invalid class name. Use letters, numbers, and underscores only.");
     }
 
-    // Add the class to storage and set it as the current class
+    // Add the class to DATA_STORAGE and set it as the current class
     CommandResult result = addClass(className);
     if (result.isSuccess()) {
       currentClass = storage.getNode(className); // Set the newly added class as the current class
@@ -87,13 +87,13 @@ public class CommandLogic {
     return result;
   }
 
-  // Private helper function to add a class to storage
+  // Private helper function to add a class to DATA_STORAGE
   private CommandResult addClass(String className) {
     if (classExists(className)) {
       return CommandResult.failure("Error: Class '" + className + "' already exists.");
     }
 
-    // Add the class to storage
+    // Add the class to DATA_STORAGE
     UMLClassNode newClass = new UMLClassNode(className);
     storage.addNode(className, newClass);
     saveState(new String[] {}); // Save state after adding
@@ -123,7 +123,7 @@ public class CommandLogic {
     UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
     currentClass.getFields().add(field);
 
-    // Update storage with current class
+    // Update DATA_STORAGE with current class
     storage.updateNode(currentClass.getClassName(), currentClass);
 
     // Save the current state
@@ -199,7 +199,7 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: list classes");
     }
 
-    // Get all nodes from storage
+    // Get all nodes from DATA_STORAGE
     Map<String, UMLClassNode> nodes = storage.getAllNodes();
 
     if (nodes.isEmpty()) {
@@ -575,7 +575,7 @@ public class CommandLogic {
     }
 
     // Reset the application to its initial state
-    Storage.resetInstance(); // Clear the storage
+    Storage.resetInstance(); // Clear the DATA_STORAGE
     saveState(new String[] {}); // Save the cleared state
 
     currentClass = null; // Reset the current class
@@ -613,7 +613,7 @@ public class CommandLogic {
       String jsonContent = Files.readString(filePath);
       loadedfileName = filename; // Store the loaded file name
 
-      // Parse the JSON content into storage
+      // Parse the JSON content into DATA_STORAGE
       Gson gson = new Gson();
       JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
 

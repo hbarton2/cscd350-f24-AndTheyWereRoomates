@@ -2,7 +2,7 @@ package org.project.Controller;
 
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 
 /**
  * Adapter that bridges {@code CommandLogic} and {@code CommandBridge}. Delegates command execution
@@ -190,11 +190,11 @@ public class CommandBridgeAdapter implements CommandBridge {
   }
 
   /**
-   * Retrieves the storage used by {@code CommandLogic}.
+   * Retrieves the DATA_STORAGE used by {@code CommandLogic}.
    *
-   * @return the storage instance
+   * @return the DATA_STORAGE instance
    */
-  public Storage getStorage() {
+  public DataStorage getStorage() {
     return CommandLogic.getStorage();
   }
 }

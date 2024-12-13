@@ -138,7 +138,7 @@ public class PrintNodeTDD {
       assertEquals("blah3", relationship2.getDestination());
       assertEquals("association", relationship2.getType());
 
-      // Add class to storage with the correct name
+      // Add class to DATA_STORAGE with the correct name
       storage.addClass(exampleClass.getName());
       UMLModel.Class retrievedClass = storage.getClass(exampleClass.getName());
       assertNotNull(retrievedClass);

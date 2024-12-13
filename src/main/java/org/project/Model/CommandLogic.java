@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,13 +15,14 @@ import java.util.List;
 import java.util.Map;
 import org.project.Controller.ClassNodeService;
 import org.project.Controller.CommandResult;
+import org.project.Controller.GraphicalUserInterfaceController;
 import org.project.Memento.Caretaker;
 import org.project.Memento.Memento;
 
 // TODO: There is a lot of logic it's not kosher
 public class CommandLogic {
 
-  private static final Storage storage = Storage.getInstance();
+  private static final DataStorage STORAGE = DataStorage.getInstance();
 
   private UMLClassNode currentClass;
   private String loadedfileName = "";
@@ -31,17 +33,17 @@ public class CommandLogic {
   }
 
   public CommandResult saveState(String[] args) {
-    caretaker.saveState(new Memento(new HashMap<>(storage.getAllNodes())));
+    caretaker.saveState(new Memento(new HashMap<>(STORAGE.getAllNodes())));
     return CommandResult.success("State saved");
   }
 
   // Store class names
-  public static Storage getStorage() {
-    return storage;
+  public static DataStorage getStorage() {
+    return STORAGE;
   }
 
   public boolean classExists(String className) {
-    return storage.containsNode(className);
+    return STORAGE.containsNode(className);
   }
 
   public boolean fieldExists(List<UMLClassNode.Field> fieldList, String name) {
@@ -78,24 +80,24 @@ public class CommandLogic {
           "Error: Invalid class name. Use letters, numbers, and underscores only.");
     }
 
-    // Add the class to storage and set it as the current class
+    // Add the class to DATA_STORAGE and set it as the current class
     CommandResult result = addClass(className);
     if (result.isSuccess()) {
-      currentClass = storage.getNode(className); // Set the newly added class as the current class
+      currentClass = STORAGE.getNode(className); // Set the newly added class as the current class
     }
 
     return result;
   }
 
-  // Private helper function to add a class to storage
+  // Private helper function to add a class to DATA_STORAGE
   private CommandResult addClass(String className) {
     if (classExists(className)) {
       return CommandResult.failure("Error: Class '" + className + "' already exists.");
     }
 
-    // Add the class to storage
+    // Add the class to DATA_STORAGE
     UMLClassNode newClass = new UMLClassNode(className);
-    storage.addNode(className, newClass);
+    STORAGE.addNode(className, newClass);
     saveState(new String[] {}); // Save state after adding
     return CommandResult.success("Class added: " + className);
   }
@@ -123,8 +125,8 @@ public class CommandLogic {
     UMLClassNode.Field field = new UMLClassNode.Field(args[0], args[1]);
     currentClass.getFields().add(field);
 
-    // Update storage with current class
-    storage.updateNode(currentClass.getClassName(), currentClass);
+    // Update DATA_STORAGE with current class
+    STORAGE.updateNode(currentClass.getClassName(), currentClass);
 
     // Save the current state
     saveState(new String[] {});
@@ -150,7 +152,7 @@ public class CommandLogic {
     if (!classExists(args[0])) {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     } else {
-      storage.removeNode(args[0]);
+      STORAGE.removeNode(args[0]);
       saveState(new String[] {});
       return CommandResult.success("Class removed: " + args[0]);
     }
@@ -170,11 +172,11 @@ public class CommandLogic {
     if (classExists(newClassName)) {
       return CommandResult.failure("Error: Class '" + newClassName + "' already exists.");
     }
-    UMLClassNode classNode = storage.getNode(className);
+    UMLClassNode classNode = STORAGE.getNode(className);
     if (classNode != null) {
-      storage.removeNode(className);
+      STORAGE.removeNode(className);
       classNode.setClassName(newClassName);
-      storage.addNode(newClassName, classNode);
+      STORAGE.addNode(newClassName, classNode);
       saveState(new String[] {});
 
       return CommandResult.success("Class renamed: " + className + " to " + newClassName);
@@ -190,7 +192,7 @@ public class CommandLogic {
     if (!classExists(args[0])) {
       return CommandResult.failure("Error: Class '" + args[0] + "' does not exist.");
     }
-    currentClass = storage.getNode(args[0]);
+    currentClass = STORAGE.getNode(args[0]);
     return CommandResult.success("Class Switched to: " + args[0]);
   }
 
@@ -199,8 +201,8 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: list classes");
     }
 
-    // Get all nodes from storage
-    Map<String, UMLClassNode> nodes = storage.getAllNodes();
+    // Get all nodes from DATA_STORAGE
+    Map<String, UMLClassNode> nodes = STORAGE.getAllNodes();
 
     if (nodes.isEmpty()) {
       return CommandResult.success("No classes to display.");
@@ -453,10 +455,19 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: save");
     }
 
-    String filePath = "src/main/resources/saves/temp_save.json";
-    ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(storage, filePath);
-    return CommandResult.success("Saved to " + filePath);
+    try {
+      // Get the JAR's directory and save to temp_save.json
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+      String filePath = jarLocation + File.separator + "temp-save.json";
+
+      // Save the DATA_STORAGE data to JSON
+      ClassNodeService classNodeService = new ClassNodeService();
+      classNodeService.StorageSaveToJsonArray(STORAGE, filePath);
+
+      return CommandResult.success("Saved to " + filePath);
+    } catch (Exception e) {
+      return CommandResult.failure("Error saving file: " + e.getMessage());
+    }
   }
 
   public CommandResult saveAs(String[] args) {
@@ -464,17 +475,23 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: save as <fileName>");
     }
 
-    String filename = args[0];
-    // Ensure the filename ends with .json
-    if (!filename.endsWith(".json")) {
-      filename += ".json";
-    }
+    try {
+      // Get the JAR's directory and construct the file path
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+      String filename = args[0];
+      if (!filename.endsWith(".json")) {
+        filename += ".json";
+      }
+      String filePath = jarLocation + File.separator + filename;
 
-    // Use the user-defined path
-    Path filePath = Path.of(filename);
-    ClassNodeService classNodeService = new ClassNodeService();
-    classNodeService.StorageSaveToJsonArray(storage, filePath.toString());
-    return CommandResult.success("Saved to " + filePath.toAbsolutePath());
+      // Save the DATA_STORAGE data to the specified file
+      ClassNodeService classNodeService = new ClassNodeService();
+      classNodeService.StorageSaveToJsonArray(STORAGE, filePath);
+
+      return CommandResult.success("Saved to " + filePath);
+    } catch (Exception e) {
+      return CommandResult.failure("Error saving file: " + e.getMessage());
+    }
   }
 
   public CommandResult undo(String[] args) {
@@ -486,7 +503,7 @@ public class CommandLogic {
     }
     Memento memento = caretaker.undo();
     if (memento != null) {
-      storage.setAllNodes(memento.getState());
+      STORAGE.setAllNodes(memento.getState());
       updateCurrentClass();
       return CommandResult.success("Undone");
     }
@@ -499,7 +516,7 @@ public class CommandLogic {
     }
     Memento memento = caretaker.redo();
     if (memento != null) {
-      storage.setAllNodes(memento.getState());
+      STORAGE.setAllNodes(memento.getState());
       updateCurrentClass();
       return CommandResult.success("Redone");
     }
@@ -508,9 +525,9 @@ public class CommandLogic {
 
   private void updateCurrentClass() {
     if (currentClass != null) {
-      currentClass = storage.getNode(currentClass.getClassName());
-    } else if (!storage.getStorage().isEmpty()) {
-      currentClass = storage.getAllNodes().values().iterator().next();
+      currentClass = STORAGE.getNode(currentClass.getClassName());
+    } else if (!STORAGE.getStorage().isEmpty()) {
+      currentClass = STORAGE.getAllNodes().values().iterator().next();
     }
   }
 
@@ -575,7 +592,9 @@ public class CommandLogic {
     }
 
     // Reset the application to its initial state
-    Storage.resetInstance(); // Clear the storage
+    DataStorage.resetInstance(); // Clear and reset the DATA_STORAGE
+    DataStorage.getInstance(); // Reinitialize the DATA_STORAGE singleton
+
     saveState(new String[] {}); // Save the cleared state
 
     currentClass = null; // Reset the current class
@@ -597,23 +616,27 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: load file <fileName>");
     }
 
-    String filename = args[0];
-    // Ensure the filename ends with .json
-    if (!filename.endsWith(".json")) {
-      filename += ".json";
-    }
-
     try {
-      // Read the JSON file content
-      Path filePath = Path.of(filename);
+      // Get the directory where the JAR file is located
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+
+      // Construct the file path based on the JAR's location
+      String filename = args[0];
+      if (!filename.endsWith(".json")) {
+        filename += ".json";
+      }
+      Path filePath = Path.of(jarLocation, filename);
+
+      // Validate that the file exists
       if (!Files.exists(filePath)) {
         return CommandResult.failure("File not found: " + filePath.toAbsolutePath());
       }
 
+      // Read the JSON file content
       String jsonContent = Files.readString(filePath);
       loadedfileName = filename; // Store the loaded file name
 
-      // Parse the JSON content into storage
+      // Parse the JSON content into DATA_STORAGE
       Gson gson = new Gson();
       JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
 
@@ -621,8 +644,9 @@ public class CommandLogic {
       for (JsonElement element : jsonArray) {
         JsonObject jsonObject = element.getAsJsonObject();
         UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
-        storage.addNode(classNode.getClassName(), classNode);
+        STORAGE.addNode(classNode.getClassName(), classNode);
       }
+
       return CommandResult.success("Loaded from " + filePath.toAbsolutePath());
     } catch (IOException e) {
       return CommandResult.failure("Error reading file: " + e.getMessage());
@@ -636,25 +660,55 @@ public class CommandLogic {
       return CommandResult.failure("Syntax: load");
     }
 
-    String filePath = "src/main/resources/saves/temp_save.json";
     try {
+      newProject(args);
+
+      // Get the JAR's directory and locate the temp_save.json file
+      String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+      String filePath = jarLocation + File.separator + "temp-save.json";
+
+      // Read the JSON content
       String jsonContent = Files.readString(Path.of(filePath));
-      loadedfileName = "temp_save.json";
+      loadedfileName = "temp-save.json";
 
       Gson gson = new Gson();
       JsonArray jsonArray = gson.fromJson(jsonContent, JsonArray.class);
 
+      // Load the data into DATA_STORAGE
       ClassNodeService classNodeService = new ClassNodeService();
       for (JsonElement element : jsonArray) {
         JsonObject jsonObject = element.getAsJsonObject();
         UMLClassNode classNode = classNodeService.createClassNodeFromJson(jsonObject);
-        storage.addNode(classNode.getClassName(), classNode);
+        STORAGE.addNode(classNode.getClassName(), classNode);
       }
       return CommandResult.success("Loaded from " + filePath);
     } catch (IOException e) {
       return CommandResult.failure("Error reading file: " + e.getMessage());
     } catch (JsonSyntaxException e) {
       return CommandResult.failure("Error parsing JSON: " + e.getMessage());
+    }
+  }
+
+  public CommandResult imageExport(String[] args) {
+    if (args.length != 1) {
+      return CommandResult.failure("Syntax: image export <fileName>");
+    }
+
+    String fileName = args[0];
+
+    try {
+      // Instantiate the GUI controller (non-interactively)
+      GraphicalUserInterfaceController guiController = new GraphicalUserInterfaceController();
+
+      // Load the project file from the directory where the JAR is located
+      guiController.loadProjectWithoutGUI();
+
+      // Export the UML diagram as an image
+      guiController.exportImageNonInteractive(fileName);
+
+      return CommandResult.success("Image successfully exported to: " + fileName + ".png");
+    } catch (IOException e) {
+      return CommandResult.failure("Error exporting image: " + e.getMessage());
     }
   }
 }

@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -24,6 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
@@ -38,7 +40,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import org.project.Model.CommandLogic;
 import org.project.Model.CommandRegistries;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 import org.project.Model.UMLClassNode;
 import org.project.View.GraphicalClassNode;
 import org.project.View.GraphicalClassNodeFactory;
@@ -85,7 +87,7 @@ public class GraphicalUserInterfaceController implements Initializable {
   private final List<String> defaultTypes = Arrays.asList("Boolean", "Double", "String", "Int");
   private GraphicalClassNode selectedGraphicalClassNode = null;
   private final CommandBridge commandBridge;
-  public static final Storage storage = Storage.getInstance();
+  public static final DataStorage DATA_STORAGE = DataStorage.getInstance();
   FileChooser fileChooser = new FileChooser();
 
   @FXML private ScrollPane scrollPane;
@@ -186,7 +188,8 @@ public class GraphicalUserInterfaceController implements Initializable {
             : inspectorValues[0];
 
     // Create the class and retrieve its node
-    CommandResult result = commandBridge.createClass(new String[] {className}); // Updates storage
+    CommandResult result =
+        commandBridge.createClass(new String[] {className}); // Updates DATA_STORAGE
     UMLClassNode node1 = commandBridge.getStorage().getNode(className);
 
     if (result.isSuccess()) {
@@ -324,7 +327,7 @@ public class GraphicalUserInterfaceController implements Initializable {
       Label className = (Label) selectedGraphicalClassNode.getChildren().get(0);
       String currentName = className.getText();
 
-      // Rename class in storage
+      // Rename class in DATA_STORAGE
       CommandResult result = commandBridge.renameClass(new String[] {currentName, newName});
       if (!result.isSuccess()) {
         showAlert("Class Rename Error", result.getMessage());
@@ -432,7 +435,7 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   /**
    * Inside the selected class the user has a field selected. When the user clicks "Rename Field"
-   * button this method will gave the text inside the field box and rename the field
+   * button this method will give the text inside the field box and rename the field
    *
    * @param event - Representing the action that the button is clicked
    */
@@ -850,12 +853,33 @@ public class GraphicalUserInterfaceController implements Initializable {
   }
 
   private String getFileName() {
-    String filename = "";
-    TextInputDialog dialog = new TextInputDialog("Enter File Name");
+    TextInputDialog dialog = new TextInputDialog();
     dialog.setTitle("Enter File Name");
-    dialog.setContentText("Enter A file name: ");
+    dialog.setHeaderText("Export Image");
+    dialog.setContentText("Enter a file name:");
+
     Optional<String> result = dialog.showAndWait();
-    return result.orElse("");
+
+    // Check if the dialog was canceled
+    if (result.isEmpty()) {
+      return ""; // Indicate cancellation by returning null
+    }
+
+    String filename = result.get().trim(); // Get the input and trim spaces
+
+    // Check if the filename is blank
+    if (filename.isEmpty()) {
+      Alert alert = new Alert(AlertType.WARNING);
+      alert.setTitle("File Name Error");
+      alert.setHeaderText("File Name cannot be blank");
+      alert.showAndWait(); // Wait for the user to acknowledge
+      //      return null;
+    }
+
+    // Ensure the filename does not include invalid characters
+    filename = filename.replaceAll("[^a-zA-Z0-9-_\\.]", "_"); // Replace invalid characters with '_'
+
+    return filename;
   }
 
   /** Exits the program when the exit button is clicked. */
@@ -1048,25 +1072,83 @@ public class GraphicalUserInterfaceController implements Initializable {
 
   @FXML
   public void onExportImage(ActionEvent event) throws IOException {
+    // Get the directory where the JAR file is located
+    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
 
-    /*This will print the project WITH the UI. If we need this, keep it here
-    *Creates the scene from the canvas
-    Scene scene = canvas.getScene();
-
-    *Saving the current scene as an image.
-    WritableImage image = scene.snapshot(null);
-    */
+    // Get the file name for the exported image
     String fileName = getFileName();
 
-    /*Saving the current scene as an image.*/
+    if (fileName.isBlank() || fileName == null) {
+      // Show confirmation popup
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Export Failed or Canceled");
+      alert.setHeaderText("Export Operation Failed or Canceled");
+      alert.showAndWait(); // Wait for the user to acknowledge
+      return;
+    }
+
+    // Saving the current scene as an image
     WritableImage image = canvas.snapshot(null, null);
 
-    /*The path for the image, where the image will go*/
-    File file = new File("src/main/resources/exports/" + fileName + ".PNG");
+    // Construct the path for the image in the same directory as the JAR
+    File file = new File(jarLocation, fileName + ".png");
 
-    /*Writes to the image.
-     * Write - the image (what SwingFXUtils.fromFXImage is doing), the file format, the path name
-     * SwingFXUtils.fromFXImage - the snapshot being saved, a buffered object for the image which will probably not be needed*/
-    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
+    // Writes the image to the file
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+
+    // Use a TextArea to display the full path
+    TextArea textArea = new TextArea("Image exported to: \n" + file.getAbsolutePath());
+    textArea.setEditable(false); // Make it read-only
+    textArea.setWrapText(true); // Enable text wrapping
+    textArea.setPrefWidth(400); // Set preferred width
+    textArea.setPrefHeight(100); // Set preferred height
+
+    // Show confirmation popup
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Export Successful");
+    alert.setHeaderText("Image Exported Successfully");
+    alert.getDialogPane().setContent(textArea); // Add TextArea to the Alert
+    alert.showAndWait(); // Wait for the user to acknowledge
+  }
+
+  public void loadProjectWithoutGUI() throws IOException {
+    // Get the directory where the JAR file is located
+    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+
+    // Construct the path for the default save file
+    File file = new File(jarLocation, "temp_save.json");
+
+    // Validate the file exists
+    if (!file.exists()) {
+      throw new IOException("Default project file not found: " + file.getAbsolutePath());
+    }
+
+    // Load the UML project using CommandBridge
+    CommandResult result = commandBridge.loadFile(new String[] {file.getAbsolutePath()});
+
+    if (!result.isSuccess()) {
+      throw new IOException("Failed to load UML project: " + result.getMessage());
+    }
+
+    // Refresh the canvas (to render the loaded project)
+    refreshCanvas();
+  }
+
+  public void exportImageNonInteractive(String fileName) throws IOException {
+    if (fileName.isBlank()) {
+      fileName = "default_image";
+    }
+
+    // Use the directory where the JAR file is located
+    String jarLocation = new File(System.getProperty("user.dir")).getAbsolutePath();
+    File file = new File(jarLocation, fileName + ".png");
+
+    // Capture the canvas as an image
+    WritableImage image = canvas.snapshot(null, null);
+
+    // Save the image
+    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+
+    System.out.println("Image exported to: " + file.getAbsolutePath());
   }
 }

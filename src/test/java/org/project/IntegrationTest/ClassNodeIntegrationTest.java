@@ -8,25 +8,25 @@ import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.Controller.ClassNodeService;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 import org.project.Model.UMLClassNode;
 
 /*
-   Top-down Integration Test: ClassNodeService with Storage
+   Top-down Integration Test: ClassNodeService with DataStorage
 */
 // TODO: All test failed due to boolean and need to be fixed integration failure
 public class ClassNodeIntegrationTest {
 
-  private Storage storage;
+  private DataStorage dataStorage;
   private ClassNodeService classNodeService;
   private UMLClassNode classNode;
 
   @BeforeEach
   void setUp() throws Exception {
-    // Initialize ClassNodeService and Storage
+    // Initialize ClassNodeService and DataStorage
     classNodeService = new ClassNodeService();
-    storage = Storage.getInstance();
-    storage.clearStorage();
+    dataStorage = DataStorage.getInstance();
+    dataStorage.clearStorage();
 
     // Create a JSON object for a UMLClassNode
     JsonObject jsonNode = new JsonObject();
@@ -68,24 +68,24 @@ public class ClassNodeIntegrationTest {
     // Create UMLClassNode using ClassNodeService
     classNode = classNodeService.createClassNodeFromJson(jsonNode);
 
-    // Store the node in Storage
-    storage.addNode(classNode.getClassName(), classNode);
+    // Store the node in DataStorage
+    dataStorage.addNode(classNode.getClassName(), classNode);
   }
 
   @Test
   void testClassExistsInStorage() {
-    assertTrue(storage.containsNode("Car"), "Class 'Car' should exist in storage");
+    assertTrue(dataStorage.containsNode("Car"), "Class 'Car' should exist in DATA_STORAGE");
   }
 
   @Test
   void testClassName() {
-    UMLClassNode retrievedNode = storage.getNode("Car");
+    UMLClassNode retrievedNode = dataStorage.getNode("Car");
     assertEquals("Car", retrievedNode.getClassName(), "Class name should be 'Car'");
   }
 
   @Test
   void testFieldExists() {
-    UMLClassNode retrievedNode = storage.getNode("Car");
+    UMLClassNode retrievedNode = dataStorage.getNode("Car");
     assertEquals(1, retrievedNode.getFields().size(), "Class should have exactly one field");
     assertEquals(
         "color", retrievedNode.getFields().get(0).getName(), "Field name should be 'color' ");
@@ -93,7 +93,7 @@ public class ClassNodeIntegrationTest {
 
   @Test
   void testMethodExists() {
-    UMLClassNode retrievedNode = storage.getNode("Car");
+    UMLClassNode retrievedNode = dataStorage.getNode("Car");
     assertEquals(1, retrievedNode.getMethods().size(), "Class should have exactly one method");
     assertEquals(
         "drive", retrievedNode.getMethods().get(0).getName(), "Method name should be 'drive' ");
@@ -101,7 +101,7 @@ public class ClassNodeIntegrationTest {
 
   @Test
   void testRelationshipExists() {
-    UMLClassNode retrievedNode = storage.getNode("Car");
+    UMLClassNode retrievedNode = dataStorage.getNode("Car");
     assertEquals(
         1, retrievedNode.getRelationships().size(), "Class should have exactly one relationship");
     assertEquals(

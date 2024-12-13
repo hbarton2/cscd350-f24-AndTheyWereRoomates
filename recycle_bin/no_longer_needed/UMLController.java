@@ -9,7 +9,7 @@ import org.project.Model.UMLModel;
  */
 public class UMLController {
 
-  /** the storage instance used to manage the UML Model's data. */
+  /** the DATA_STORAGE instance used to manage the UML Model's data. */
   private final UMLModel.Storage storage;
 
   /** The save instance used to handle saving operations. */
@@ -35,7 +35,7 @@ public class UMLController {
 
   /**
    * Constructs a new instance of UMLController, and initialize all the different command modules as
-   * well as, storage save and load functions as well.
+   * well as, DATA_STORAGE save and load functions as well.
    */
   public UMLController() {
 
@@ -50,9 +50,9 @@ public class UMLController {
   }
 
   /**
-   * Returns the associated storage object with this controller.
+   * Returns the associated DATA_STORAGE object with this controller.
    *
-   * @return The UMLModel.Storage instance.
+   * @return The UMLModel.DataStorage instance.
    */
   public UMLModel.Storage getStorage() {
     return this.storage;
@@ -67,9 +67,9 @@ public class UMLController {
     private final UMLModel.Storage storage;
 
     /**
-     * Constructs a new class instance associated with storage.
+     * Constructs a new class instance associated with DATA_STORAGE.
      *
-     * @param storage The UMLModel.Storage instance to manage class operation.
+     * @param storage The UMLModel.DataStorage instance to manage class operation.
      */
     public ClassCommands(final UMLModel.Storage storage) {
       this.storage = storage;
@@ -158,9 +158,9 @@ public class UMLController {
     private final UMLModel.Storage storage;
 
     /**
-     * This constructs a new FieldCommands instance with the provided storage.
+     * This constructs a new FieldCommands instance with the provided DATA_STORAGE.
      *
-     * @param storage The UMLModel.Storage instance to manage the field operations.
+     * @param storage The UMLModel.DataStorage instance to manage the field operations.
      */
     public FieldCommands(UMLModel.Storage storage) {
       this.storage = storage;
@@ -270,16 +270,16 @@ public class UMLController {
     private final UMLModel.Storage storage;
 
     /**
-     * Creates a new class instance associated with storage
+     * Creates a new class instance associated with DATA_STORAGE
      *
-     * @param storage - the UMLModel.Storage instance to manage class operations
+     * @param storage - the UMLModel.DataStorage instance to manage class operations
      */
     public MethodCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
     /**
-     * Adds method to storage
+     * Adds method to DATA_STORAGE
      *
      * @param input - The parameter inputs to add a method- 'add method [class name] [new method
      *     name]'
@@ -394,16 +394,16 @@ public class UMLController {
     private final UMLModel.Storage storage;
 
     /**
-     * Creates a new class instance associated with storage
+     * Creates a new class instance associated with DATA_STORAGE
      *
-     * @param storage - the UMLModel.Storage instance to manage class operations
+     * @param storage - the UMLModel.DataStorage instance to manage class operations
      */
     public ParameterCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
     /**
-     * Adds parameter to storage
+     * Adds parameter to DATA_STORAGE
      *
      * @param input - The parameter inputs to add a parameter- 'add parameter [class name] [method
      *     name] [new name]'
@@ -452,7 +452,7 @@ public class UMLController {
     }
 
     /**
-     * Removes parameter from storage
+     * Removes parameter from DATA_STORAGE
      *
      * @param input - The parameter inputs to remove a parameter- 'add parameter [class name]
      *     [method name] [parameter name]'
@@ -497,7 +497,7 @@ public class UMLController {
     }
 
     /**
-     * Renames parameter in storage
+     * Renames parameter in DATA_STORAGE
      *
      * @param input - The parameter inputs to rename a parameter- 'add parameter [class name]
      *     [method name] [parameter name] [new parameter name]'
@@ -560,16 +560,16 @@ public class UMLController {
     private final UMLModel.Storage storage;
 
     /**
-     * Creates a new class instance associated with storage
+     * Creates a new class instance associated with DATA_STORAGE
      *
-     * @param storage - the UMLModel.Storage instance to manage class operations
+     * @param storage - the UMLModel.DataStorage instance to manage class operations
      */
     public RelationshipCommands(UMLModel.Storage storage) {
       this.storage = storage;
     }
 
     /**
-     * Adds parameter to storage
+     * Adds parameter to DATA_STORAGE
      *
      * @param input - The parameter inputs to add a relationship between classes - 'add relationship
      *     [class name] [class name]'
@@ -602,7 +602,7 @@ public class UMLController {
     }
 
     /**
-     * Adds parameter to storage
+     * Adds parameter to DATA_STORAGE
      *
      * @param input - The parameter inputs to remove a relationship between classes - 'add
      *     relationship [class name] [class name]'

@@ -106,7 +106,7 @@ public class CommandLogic {
     return CommandResult.success("Class created: " + className);
   }
 
-  // TODO: Need a class where the logic and storage device
+  // TODO: Need a class where the logic and DATA_STORAGE device
 
   public CommandResult addField(String[] args) {
     if (args.length < 2) {
@@ -165,7 +165,7 @@ public class CommandLogic {
     } else {
       return CommandResult.failure("Error: Failed to rename class.");
     }
-    // UMLClassNode classNode = storage.getNode(className);
+    // UMLClassNode classNode = DATA_STORAGE.getNode(className);
     // classNode.setClassName(newClassName);
     // return CommandResult.success("Class renamed: " + className);
   }

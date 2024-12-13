@@ -61,7 +61,7 @@ public class Storage {
 
   public void setAllNodes(Map<String, UMLClassNode> state) {
     synchronized (this) {
-      // Clear the current storage
+      // Clear the current DATA_STORAGE
       storage.clear();
 
       // Add all nodes from the provided state
@@ -71,7 +71,7 @@ public class Storage {
 
   public Map<Object, Object> getStorage() {
     synchronized (this) {
-      // Return a copy of the storage as a Map<Object, Object>
+      // Return a copy of the DATA_STORAGE as a Map<Object, Object>
       return new TreeMap<>(storage);
     }
   }
@@ -86,7 +86,7 @@ public class Storage {
   public static void resetInstance() {
     synchronized (Storage.class) {
       if (instance != null) {
-        instance.clearStorage(); // Clear the current storage map
+        instance.clearStorage(); // Clear the current DATA_STORAGE map
         instance = null; // Reset the instance to null
       }
     }

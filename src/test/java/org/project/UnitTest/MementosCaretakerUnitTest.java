@@ -8,18 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.project.Controller.CommandResult;
 import org.project.Memento.Caretaker;
 import org.project.Model.CommandRegistries;
-import org.project.Model.Storage;
+import org.project.Model.DataStorage;
 
 class MementosCaretakerUnitTest {
 
   // Get rid of this if it's unneeded.
-  //    private final Storage storage = new Storage();
+  //    private final DataStorage DATA_STORAGE = new DataStorage();
   private final Caretaker caretaker = new Caretaker();
   private CommandRegistries registries;
 
   @BeforeEach
   public void setUp() {
-    Storage.getInstance();
+    DataStorage.getInstance();
     CommandRegistries.getInstance("src/main/resources/CLICommands.json");
   }
 

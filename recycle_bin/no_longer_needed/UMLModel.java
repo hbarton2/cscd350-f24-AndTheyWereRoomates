@@ -695,11 +695,11 @@ public class UMLModel {
 
   //  public static class Load {
   //
-  //    private Storage storage;
+  //    private DataStorage DATA_STORAGE;
   //
   //
-  //    public Load(final Storage storage) {
-  //      this.storage = storage;
+  //    public Load(final DataStorage DATA_STORAGE) {
+  //      this.DATA_STORAGE = DATA_STORAGE;
   //    }
   //
   //    public boolean Load(final String fileName) {
@@ -712,7 +712,7 @@ public class UMLModel {
   //        Gson gson = new Gson();
   //        Type type = new TypeToken<TreeMap<String, UMLModel.Class>>() {
   //        }.getType();
-  //        storage.list = gson.fromJson(reader, type);
+  //        DATA_STORAGE.list = gson.fromJson(reader, type);
   //        return true;
   //      } catch (IOException e) {
   //        e.printStackTrace();
@@ -723,11 +723,11 @@ public class UMLModel {
   //
   //  public static class Save {
   //
-  //    private Storage storage;
+  //    private DataStorage DATA_STORAGE;
   //
   //
-  //    public Save(final Storage storage) {
-  //      this.storage = storage;
+  //    public Save(final DataStorage DATA_STORAGE) {
+  //      this.DATA_STORAGE = DATA_STORAGE;
   //    }
   //
   //
@@ -736,7 +736,7 @@ public class UMLModel {
   //      try {
   //        FileWriter writer = new FileWriter(fileName);
   //        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-  //        gson.toJson(storage.getClasses(), writer);
+  //        gson.toJson(DATA_STORAGE.getClasses(), writer);
   //
   //        writer.close();
   //
