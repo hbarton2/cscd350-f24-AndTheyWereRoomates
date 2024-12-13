@@ -417,7 +417,7 @@ class CommandParserUnitTest {
     parser.parseCommand("delete class apple");
   }
 
-      @Test
+  @Test
   void testRemoveParameterSuccess() {
     parser.parseCommand("create class apple");
     parser.parseCommand("switch class apple");
@@ -678,7 +678,8 @@ class CommandParserUnitTest {
   void testLoadFileExcceptionParsing() {
     CommandResult result = parser.parseCommand("load file src/main/resources/saves/BrokenSave");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-    assertTrue(result.getMessage().contains("Error parsing JSON: "), "Success message should match.");
+    assertTrue(
+        result.getMessage().contains("Error parsing JSON: "), "Success message should match.");
   }
 
   @Test
@@ -690,11 +691,12 @@ class CommandParserUnitTest {
   }
 
   //  @Test
-//  void testLoadFileNotExisting() {
-//    CommandResult result = parser.parseCommand("load file NONEXISTENT");
-//    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-//    assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
-//  }
+  //  void testLoadFileNotExisting() {
+  //    CommandResult result = parser.parseCommand("load file NONEXISTENT");
+  //    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //    assertTrue(result.getMessage().contains("File not found:"), "Success message should
+  // match.");
+  //  }
 
   @Test
   void testListClassSuccess() {
@@ -712,6 +714,7 @@ class CommandParserUnitTest {
         result.getMessage().contains("Available Commands:"),
         "Help message should list available commands.");
   }
+
   @AfterEach
   void tearDown() {
     System.setOut(originalOut); // Reset System.out
