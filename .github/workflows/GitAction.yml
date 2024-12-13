@@ -101,7 +101,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/java-archive" \
               --data-binary @"$jar" \
-              "${{ steps.create_release.outputs.upload_url }}&name=$(basename "$jar")"
+              "${{ steps.create_release.outputs.upload_url }}?name=$(basename "$jar")"
           done
 
       - name: Zip Source Code
