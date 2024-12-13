@@ -84,8 +84,9 @@ ArrowStrategy interface to isolate drawing logic
 * CompositionArrow.java <br>
   These classes contain the logic to draw the different types of arrows
 ### Where these classes are being used
-In the GUIController.java in lines 540-593.
+In the GraphicalUserInterfaceController.java in lines 540-593.
 It calls the appropriate logic depending on what the user has selected.
+
 # Observer
 The Observer Pattern is implemented in the project to ensure that all ComboBoxes(UI elements that hold data types for fields, method, and etc) are updated whenever a class is created or removed.
 ### Classes created to implement Observer pattern
@@ -93,17 +94,31 @@ The Observer Pattern is implemented in the project to ensure that all ComboBoxes
 #### ObservableClass.java
 #### ComboBoxObserver.java
 ### Where it was implemented
-#### GUIViewController.java in lines 71, 94-104, 166, 200, 875, and 877.
+#### GraphicalUserInterfaceController.java in lines 71, 94-104, 166, 200, 875, and 877.
 # Factory
 We used this pattern to isolate the creation logic of the class box for the GUI.
 ### Classes created to implement Factory pattern
 #### ClassBoxFactory.java
 ### Where it was implemented
-#### GUIViewController.java in lines 146 and 868
-
+#### GraphicalUserInterfaceController.java in lines 146 and 868
 
 # Singleton
 ### Where it was implemented
 * CommandRegistries.java
 Lines 30-33
 This was used to ensure we weren't constantly getting the same json file. 
+
+# Bridge
+### Where it was implemented
+* ArrowStrategy.java
+Which spreads out and connects to the different arrow java
+* Composition Arrow
+* Realization Arrow
+* Aggregation Arrow
+* Generalization Arrow
+This allows the arrows to be one of many different types of arrow types.
+
+# Factory
+### Where it was implemented
+* ClassNodeService.java
+This was implemented to simplify and centralize the creation of UMLClassNode objects from JSON data. As well as centralize and simplify the creation of JSON Objects from UMLClassNode.
