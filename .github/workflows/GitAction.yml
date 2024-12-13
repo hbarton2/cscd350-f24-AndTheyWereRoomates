@@ -3,7 +3,7 @@ name: Java Continuous Integration with Maven (GraalVM)
 on:
   push:
     branches:
-      - "*"
+      - main
   pull_request:
     branches:
       - "*"
@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -31,7 +31,6 @@ jobs:
       - name: Run Clean, Package, Install
         run: |
           mvn clean package install -B
-          # Verify that the shaded JAR file is created
           if [ ! -f target/original-uml-editor-shaded.jar ]; then
             echo "Shaded JAR file not found! Build failed."
             exit 1
@@ -45,16 +44,10 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Set Up GraalVM JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21.0.5'
-          distribution: 'graalvm'
 
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
@@ -77,23 +70,25 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: v4.4.${{ github.run_number }}
-          release_name: UML Editor ${{ env.release_type }}
+          name: UML Editor ${{ env.release_type }}
           body: |
             Automatically generated ${{ env.release_type }} for UML Editor.
           prerelease: ${{ env.prerelease }}
           draft: false
-          files: |
+          artifacts: |
             target/original-uml-editor-shaded.jar
-            ${{ github.workspace }}/*.zip
-            ${{ github.workspace }}/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Source Code to Release
+      - name: Zip Source Code
+        run: |
+          zip -r source-code.zip .
+
+      - name: Upload Source Code
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}
+          asset_path: source-code.zip
           asset_name: source-code.zip
           asset_content_type: application/zip
         env:
@@ -101,7 +96,7 @@ jobs:
 
   check-code-coverage:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
