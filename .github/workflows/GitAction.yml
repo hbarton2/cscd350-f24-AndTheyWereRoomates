@@ -3,7 +3,7 @@ name: Java Continuous Integration with Maven (GraalVM)
 on:
   push:
     branches:
-      - main
+      - "*"
   pull_request:
     branches:
       - "*"
@@ -31,16 +31,19 @@ jobs:
       - name: Run Clean, Package, Install
         run: |
           mvn clean package install -B
-          if [ ! -f target/original-uml-editor-shaded.jar ]; then
-            echo "Shaded JAR file not found! Build failed."
+          if [ ! -f target/uml-editor.jar ]; then
+            echo "Shaded JAR file 'uml-editor.jar' not found! Build failed."
             exit 1
           fi
+
+      - name: Debug Build Output
+        run: ls -l target/
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: shaded-jar
-          path: target/original-uml-editor-shaded.jar
+          path: target/uml-editor.jar
 
   release:
     needs: build
@@ -76,19 +79,21 @@ jobs:
           prerelease: ${{ env.prerelease }}
           draft: false
           artifacts: |
-            target/original-uml-editor-shaded.jar
+            target/uml-editor.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip Source Code
-        run: |
-          zip -r source-code.zip .
+        run: zip -r source-code.zip .
+
+      - name: Debug Source Code Zip
+        run: ls -l
 
       - name: Upload Source Code
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: source-code.zip
+          asset_path: ./source-code.zip
           asset_name: source-code.zip
           asset_content_type: application/zip
         env:
