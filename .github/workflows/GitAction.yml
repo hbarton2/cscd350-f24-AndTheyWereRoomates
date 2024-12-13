@@ -97,10 +97,12 @@ jobs:
         run: |
           for jar in ./target/*.jar; do
             echo "Uploading $jar..."
-            gh release upload ${{ steps.create_release.outputs.upload_url }} "$jar" --clobber
+            curl -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/java-archive" \
+              --data-binary @"$jar" \
+              "${{ steps.create_release.outputs.upload_url }}?name=$(basename "$jar")"
           done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip Source Code
         run: zip -r source-code.zip .
