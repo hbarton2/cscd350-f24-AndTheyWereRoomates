@@ -438,7 +438,7 @@ class CommandParserUnitTest {
   void testUndoNoClass() {
     CommandResult result = parser.parseCommand("undo");
     assertTrue(
-        result.getMessage().contains("Error: No class selected"), "Success message should match.");
+        result.getMessage().contains("Error: Nothing to undo"), "Success message should match.");
   }
 
   @Test
@@ -481,35 +481,19 @@ class CommandParserUnitTest {
         "Success message should match.");
   }
 
-  // Was requested to NOT include this stuff
-  //  @Test
-  //  void testSave() {
-  //    parser.parseCommand("create class apple");
-  //    parser.parseCommand("switch class apple");
-  //
-  //    CommandResult result = parser.parseCommand("save");
-  //    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-  //    assertTrue(
-  //        result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-  //        "Success message should match.");
-  //  }
-
-  //    @Test
-  //    void testSaveAs(){
-  //      parser.parseCommand("create class apple");
-  //      parser.parseCommand("switch class apple");
-  //
-  //      CommandResult result = parser.parseCommand("save as DUMMY");
-  //      assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-  //      assertTrue(
-  //              result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-  //   "Success message should match.");
-  //
-  //    }
-
   @Test
-  void testLoad() {
-    CommandResult result = parser.parseCommand("load");
+  void testSaveAndLoad() {
+    //      parser.parseCommand("create class apple");
+    //      parser.parseCommand("switch class apple");
+    parser.parseCommand("new project");
+
+    CommandResult result = parser.parseCommand("save");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+        result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
+        "Success message should match.");
+
+    result = parser.parseCommand("load");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
@@ -517,9 +501,29 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testSaveAs() {
+    //        parser.parseCommand("create class apple");
+    //        parser.parseCommand("switch class apple");
+    parser.parseCommand("new project");
+
+    CommandResult result = parser.parseCommand("save as src/main/resources/saves/DUMMY");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Saved to"), "Success message should match.");
+  }
+
+  //  @Test
+  //  void testLoad() {
+  //    CommandResult result = parser.parseCommand("load");
+  //    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //    assertTrue(
+  //        result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
+  //            "Success message should match.");
+  //  }
+
+  @Test
   void testLoadFile() {
 
-    CommandResult result = parser.parseCommand("load file DUMMY");
+    CommandResult result = parser.parseCommand("load file src/main/resources/saves/test");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(result.getMessage().contains("Loaded from"), "Success message should match.");
   }
