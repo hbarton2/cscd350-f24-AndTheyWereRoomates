@@ -229,4 +229,20 @@ public class CommandParseFailureUnitTest {
         result.getMessage().contains("Syntax: save as <fileName>"),
         "Error message should indicate duplicate class.");
   }
+
+  @Test
+  void testRemoveParameterPromptOther() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int banana");
+    parser.parseCommand("add parameter banana int peach");
+    CommandResult result = parser.parseCommand("remove parameter banana");
+    assertTrue(
+        result
+            .getMessage()
+            .contains("remove parameter <method name> <parameter name> [<parameter name> ...]"),
+        "Error message should indicate duplicate class.");
+
+    parser.parseCommand("delete class apple");
+  }
 }

@@ -40,7 +40,6 @@ class CommandParserUnitTest {
 
   @Test
   void testNoClassSelected() {
-
     CommandResult result = parser.parseCommand("add field int Banana");
     assertTrue(
         result
@@ -427,6 +426,18 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid parameter removal.");
     assertTrue(
         result.getMessage().contains("Parameters removed from banana"),
+        "Success message should match.");
+    parser.parseCommand("delete class apple");
+  }
+
+  @Test
+  void testRemoveParameterNoMethod() {
+    parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add parameter banana int peach");
+    CommandResult result = parser.parseCommand("remove parameter banana peach");
+    assertTrue(
+        result.getMessage().contains("Error: Method banana not found."),
         "Success message should match.");
     parser.parseCommand("delete class apple");
   }
