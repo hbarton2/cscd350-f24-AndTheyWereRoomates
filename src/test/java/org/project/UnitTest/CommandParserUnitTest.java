@@ -648,6 +648,7 @@ class CommandParserUnitTest {
     parser.parseCommand("remove class PEANUTS");
   }
 
+  
   @Test
   void testSaveAs() {
     parser.parseCommand("new project");
