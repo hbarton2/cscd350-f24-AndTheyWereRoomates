@@ -1,1 +1,1 @@
-[]
+[{"className":"PEANUTS","fields":[{"type":"INT","name":"DUMMY"}],"methods":[{"type":"INT","name":"PEACHES","parameters":[],"isOverloaded":false},{"type":"STRING","name":"ALMONDS","parameters":[],"isOverloaded":false}],"relationships":[],"position":[0.0,0.0]}]

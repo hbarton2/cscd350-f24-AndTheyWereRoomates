@@ -483,9 +483,12 @@ class CommandParserUnitTest {
 
   @Test
   void testSaveAndLoad() {
-    //      parser.parseCommand("create class apple");
-    //      parser.parseCommand("switch class apple");
     parser.parseCommand("new project");
+    parser.parseCommand("create class PEANUTS");
+    parser.parseCommand("switch class PEANUTS");
+    parser.parseCommand("add field INT DUMMY");
+    parser.parseCommand("add method INT PEACHES");
+    parser.parseCommand("add method STRING ALMONDS");
 
     CommandResult result = parser.parseCommand("save");
     assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
@@ -493,17 +496,19 @@ class CommandParserUnitTest {
         result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
         "Success message should match.");
 
+    parser.parseCommand("remove class PEANUTS");
+
     result = parser.parseCommand("load");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
         "Success message should match.");
+
+    parser.parseCommand("remove class PEANUTS");
   }
 
   @Test
   void testSaveAs() {
-    //        parser.parseCommand("create class apple");
-    //        parser.parseCommand("switch class apple");
     parser.parseCommand("new project");
 
     CommandResult result = parser.parseCommand("save as src/main/resources/saves/DUMMY");
