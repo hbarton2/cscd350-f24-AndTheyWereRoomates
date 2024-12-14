@@ -1,10 +1,7 @@
 # UML Editor
 
 * What's New:
-  *  \*Grader\* Our UML diagram for this project can be found right next to our patterns Document.
-  ![UML Diagram](doc/images/kosherPNG.png)
-  * Patterns document - patterns.md
-  * UML diagram - looksKosherToMe.PNG
+  * See our latest for all documentation and JAR executables
 * Major changes:
   * 
 ---
@@ -34,6 +31,7 @@ Ensure that the following software is installed on the target machine:
 - **Java Runtime Environment (JRE)** or **Java Development Kit (JDK)** version 21.0.5 or higher.  
   You can download it from the [Oracle Java Downloads page](https://www.oracle.com/java/technologies/javase-downloads.html) or **Highly Recommend** [GraalVM for JDK 21.0.5](https://www.oracle.com/java/technologies/downloads/?er=221886#graalvmjava21).
 - Any JDK 21+ is able to run project with **JavaFX** version 23.0.1.
+- 32bit Systems are not supported (Use at users own risk)
 ---
 
 ## Running the Application for User
@@ -47,14 +45,13 @@ Download the package https://github.com/hbarton2/cscd350-f24-AndTheyWereRoomates
 ![Release-png](doc/images/Releases.png)
 
 ### 3. Download the source code for the project labeled below.
-![jar-png](doc/images/Jar.png)
-The default download for the latest is for Windows. If you require another version for your operating system, scroll up and click the blue text saying "releases" next to the version number. This will show you all the releases
-for the current project. Scroll down below the current release and find the version release of the operating system for the latest release.
-![img.png](doc/images/DownloadVersions.png)
+![jar-png](doc/images/release_1.png)
 
 ### Navigate to where the package was downloaded and extract the files
-### Steps to Open Terminal and Run `umleditor.jar`
+Once extracted, you will find three corresponding operating system directories. Each directory contains a UML-editor.jar executable.
+![img.png](doc/images/release_2.png)
 
+### Steps to Open Terminal and Run `uml-editor.jar`
 
 2. **Locate `uml-editor.jar`**:
     - Navigate to the directory where `uml-editor.jar` is located using your file explorer.
@@ -166,17 +163,14 @@ mvn test
 
 - Navigate to GitHub and open the project repository.
 
-- Go to the Actions tab.
+- Go to the Actions tab(for the latest report per Pull Request) or Releases.
 
 - Code coverage details are available under every action event as artifacts. This makes it easy to stay informed about the current state of the code.
 
 - While using this tool, developers can ensure high-quality code and write effective tests.
 
-- select `Testing PR with new GitAction`
-![CodeCoverageReadme1.png](doc/images/CodeCoverageReadme1.png)
-
-- Next you will select `code-coverage-report` the Actions box at the bottom of the page. and save it to your machine.
-![CodeCoverageReadme2.png](doc/images/CodeCoverageReadme2.png)
+- For every Latest Release will have `code-coverage-report.zip`
+![CodeCoverageReadme1.png](doc/images/release_1.png)
 
 - Go to the file you just downloaded and open it and open the file `index.htm`.
 ![CodeCoverageReadme3.png](doc/images/CodeCoverageReadme3.png)
@@ -579,10 +573,5 @@ These buttons all edit classes
 * the relationship arrowheads do not rotate how they should
 * Relationship arrows still overlap
 * Class Boxes still overlap
-* Dragging 
-
-
-
-
+* Dragging
 ---
-
