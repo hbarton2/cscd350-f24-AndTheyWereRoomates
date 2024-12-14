@@ -28,12 +28,12 @@ jobs:
           distribution: 'graalvm'
           cache: maven
 
-      - name: Run Clean, Package, Install
+      - name: Run Clean and Install
         run: |
-          mvn clean package install -B
+          mvn clean install -B
           echo "Checking for shaded JAR files..."
-          if [ $(ls target/*.jar | wc -l) -eq 0 ]; then
-            echo "No JAR files found in target directory. Build failed."
+          if [ $(ls target/*shaded.jar | wc -l) -eq 0 ]; then
+            echo "No shaded JAR files found in target directory. Build failed."
             exit 1
           fi
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shaded-jars
-          path: target/*.jar
+          path: target/*shaded.jar
 
   release:
     needs: build
@@ -93,12 +93,11 @@ jobs:
           release_type: ${{ env.release_type }}
           prerelease: ${{ env.prerelease }}
 
-      - name: Upload All JARs to Release
+      - name: Upload Shaded JAR to Release
         run: |
-          for jar in ./target/*.jar; do
+          for jar in ./target/*shaded.jar; do
             echo "Uploading $jar..."
             upload_url="${{ steps.create_release.outputs.upload_url }}"
-            # Replace the placeholder with the actual file name
             formatted_url=$(echo "$upload_url" | sed "s/{?name,label}/?name=$(basename "$jar")/")
             curl -X POST \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \

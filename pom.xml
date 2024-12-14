@@ -163,28 +163,25 @@
         <version>3.6.0</version>
         <executions>
           <execution>
-            <phase>package</phase>
+            <phase>package</phase> <!-- Ensure this runs during the package phase -->
             <goals>
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>uml-editor</finalName>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <!-- Set the final name of the shaded JAR -->
+              <finalName>uml-editor-shaded</finalName>
+
+              <!-- Do not attach the original JAR -->
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+
+              <!-- Specify the main class for the JAR's manifest -->
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.project.Main</mainClass>
                 </transformer>
               </transformers>
-              <filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                  </excludes>
-                </filter>
-              </filters>
+
+              <!-- Do not create a dependency-reduced POM -->
               <createDependencyReducedPom>false</createDependencyReducedPom>
             </configuration>
           </execution>
