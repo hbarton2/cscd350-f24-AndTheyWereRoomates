@@ -697,13 +697,14 @@ class CommandParserUnitTest {
     assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
   }
 
-  //  @Test
-  //  void testLoadFileNotExisting() {
-  //    CommandResult result = parser.parseCommand("load file NONEXISTENT");
-  //    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-  //    assertTrue(result.getMessage().contains("File not found:"), "Success message should
-  // match.");
-  //  }
+  @Test
+  void testLoadFileExcception() {
+    CommandResult result = parser.parseCommand("load file src/main/resources/exportd/test");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+        result.getMessage().contains("Error parsing JSON: "), "Success message should match.");
+  }
+
   @Test
   void testExportImageSuccess() {
     CommandResult result = parser.parseCommand("image export src/main/resources/saves/DUMMY");
