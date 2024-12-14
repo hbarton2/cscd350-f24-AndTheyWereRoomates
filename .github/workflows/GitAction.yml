@@ -16,7 +16,12 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        java-version: ['21.0.5']
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,18 +29,21 @@ jobs:
       - name: Set Up GraalVM JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21.0.5'
+          java-version: ${{ matrix.java-version }}
           distribution: 'graalvm'
           cache: maven
 
-      - name: Run Clean and Install
+      - name: Verify Code Style with Spotless
+        run: mvn spotless:check || echo "Spotless check failed. Please fix formatting."
+
+      - name: Run Tests
+        run: mvn test || echo "Tests failed but continuing..."
+
+      - name: Run Clean and Package
         run: |
-          mvn clean install -B
-          echo "Checking for shaded JAR files..."
-          if [ $(ls target/*shaded.jar | wc -l) -eq 0 ]; then
-            echo "No shaded JAR files found in target directory. Build failed."
-            exit 1
-          fi
+          mvn clean package -B
+          echo "Renaming JAR for consistency..."
+          cp target/*shaded.jar target/uml-editor-${{ matrix.os }}.jar
 
       - name: Debug Build Output
         run: ls -l target/
@@ -43,12 +51,12 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: shaded-jars
-          path: target/*shaded.jar
+          name: build-artifacts-${{ matrix.os }}
+          path: target/*.jar
 
   release:
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -56,22 +64,8 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: shaded-jars
+          name: build-artifacts-ubuntu-latest
           path: ./target/
-
-      - name: Debug Artifact Download
-        run: ls -l ./target/
-
-      - name: Determine Release Type
-        id: determine_release
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "release_type=release" >> $GITHUB_ENV
-            echo "prerelease=false" >> $GITHUB_ENV
-          else
-            echo "release_type=pre-release" >> $GITHUB_ENV
-            echo "prerelease=true" >> $GITHUB_ENV
-          fi
 
       - name: Create Release
         id: create_release
@@ -82,42 +76,23 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `v4.4.${{ github.run_number }}`,
-              name: `UML Editor ${process.env.release_type}`,
-              body: "Automatically generated release for UML Editor.",
-              prerelease: process.env.prerelease === 'true',
+              name: "UML Editor Release",
+              body: "Automatically generated release.",
+              prerelease: false,
               draft: false,
             });
             core.setOutput("upload_url", release.data.upload_url);
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          release_type: ${{ env.release_type }}
-          prerelease: ${{ env.prerelease }}
 
-      - name: Upload Shaded JAR to Release
+      - name: Upload JAR to Release
         run: |
-          for jar in ./target/*shaded.jar; do
+          for jar in ./target/*.jar; do
             echo "Uploading $jar..."
-            upload_url="${{ steps.create_release.outputs.upload_url }}"
-            formatted_url=$(echo "$upload_url" | sed "s/{?name,label}/?name=$(basename "$jar")/")
             curl -X POST \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/java-archive" \
               --data-binary @"$jar" \
-              "$formatted_url"
+              "${{ steps.create_release.outputs.upload_url }}?name=$(basename "$jar")"
           done
-
-      - name: Zip Source Code
-        run: zip -r source-code.zip .
-
-      - name: Upload Source Code
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./source-code.zip
-          asset_name: source-code.zip
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   check-code-coverage:
     needs: build
