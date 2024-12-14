@@ -39,6 +39,60 @@ class CommandParserUnitTest {
   }
 
   @Test
+  void testNoClassSelected() {
+
+    CommandResult result = parser.parseCommand("add field int Banana");
+    assertTrue(
+        result
+            .getMessage()
+            .contains("Error: No class selected. Use 'switch class <class name>' first."),
+        "Success message should match.");
+
+    //    result = parser.parseCommand("rename field int Banana Peanut");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("remove method banana");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("add method int banana");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("remove method greanbeans int banana");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("rename method greanbeans int banana");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("add parameter banana int peach");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    result = parser.parseCommand("remove parameter banana int peach");
+    assertTrue(result.getMessage().contains("No class selected."), "Success message should match.");
+    //
+    //    result = parser.parseCommand("add relationship aggregation penut");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+    //
+    //    result = parser.parseCommand("remove relationship aggregation penut");
+    //    assertTrue(
+    //        result.getMessage().contains("No class is selected use, switch class <className>"),
+    //        "Success message should match.");
+  }
+
+  @Test
   void renameClassToManyArgs() {
     CommandResult result = parser.parseCommand("rename class john apple seed");
     assertEquals("rename class <existing classname> <new classname>", result.getMessage());
@@ -48,6 +102,20 @@ class CommandParserUnitTest {
   void listClassesToManyArgs() {
     CommandResult result = parser.parseCommand("list classes all");
     assertEquals("Syntax: list classes", result.getMessage());
+  }
+
+  @Test
+  void listClasses() {
+    parser.parseCommand("remove class Apple");
+    parser.parseCommand("remove class Limo");
+    parser.parseCommand("remove class Pinto");
+
+    parser.parseCommand("remove class apple");
+    parser.parseCommand("remove class banana");
+    parser.parseCommand("remove class null");
+
+    CommandResult result = parser.parseCommand("list classes");
+    assertEquals("No classes to display.", result.getMessage());
   }
 
   @Test
@@ -78,6 +146,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid class creation.");
     assertTrue(
         result.getMessage().contains("Class added: Ferari"), "Success message should match.");
+    parser.parseCommand("remove  class Ferari");
   }
 
   @Test
@@ -87,6 +156,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Class 'Car' already exists."),
         "Error message should indicate duplicate class.");
+    parser.parseCommand("remove class Car");
   }
 
   @Test
@@ -95,6 +165,15 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Invalid class name."),
         "Error message should indicate invalid class name.");
+  }
+
+  @Test
+  void testCreateClassEmptyName() {
+    CommandResult result = parser.parseCommand("create class " + "  ");
+    assertTrue(result.isSuccess(), "Command should succeed for valid class creation.");
+    assertTrue(
+        result.getMessage().contains("Error: Class name cannot be empty."),
+        "Success message should match.");
   }
 
   @Test
@@ -121,23 +200,57 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Class renamed: Car to Limo"),
         "Success message should match.");
+    parser.parseCommand("remove class Limo");
   }
 
   @Test
   void testRenameClassNotExist() {
+    parser.parseCommand("remove class Car");
+    parser.parseCommand("remove class Pinto");
+
     CommandResult result = parser.parseCommand("rename class Car Pinto");
-    assertFalse(
-        result.getMessage().contains("Error: Class Car does not exist."),
+    assertTrue(
+        result.getMessage().contains("Error: Class 'Car' does not exist."),
         "Error Message should indicate a class not existing");
   }
 
   @Test
   void testRenameClassAlreadyExists() {
     parser.parseCommand("create class Car");
-    CommandResult result = parser.parseCommand("rename class Car Car");
+    parser.parseCommand("create class Pinto");
+
+    CommandResult result = parser.parseCommand("rename class Car Pinto");
     assertFalse(
         result.getMessage().contains("Error: Class Pinto already exists."),
         "Error Message should indicate an already existing class");
+    parser.parseCommand("remove class Car");
+    parser.parseCommand("remove class Pinto");
+  }
+
+  @Test
+  void testRenameNullCheck() {
+    parser.parseCommand("create class Car");
+    CommandResult result = parser.parseCommand("rename class Car ");
+    assertFalse(
+        result.getMessage().contains("Error: Failed to rename class."),
+        "Error Message should indicate an already existing class");
+
+    parser.parseCommand("switch class Car");
+    parser.parseCommand("add field int Green");
+
+    result = parser.parseCommand("rename field Green ");
+    assertFalse(
+        result.getMessage().contains("Error: Failed to rename field."),
+        "Error Message should indicate an already existing class");
+
+    parser.parseCommand("add method int Yellow");
+
+    result = parser.parseCommand("rename method Yellow ");
+    assertFalse(
+        result.getMessage().contains("Error: Failed to rename field."),
+        "Error Message should indicate an already existing class");
+
+    parser.parseCommand("remove class Car");
   }
 
   @Test
@@ -149,6 +262,8 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Field added: Type='int', Name='Banana' to class 'Apple'"),
         "Success message should match.");
+
+    parser.parseCommand("remove class Apple");
   }
 
   @Test
@@ -161,16 +276,19 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Field removed: Banana"), "Success message should match.");
+    parser.parseCommand("remove class Apple");
   }
 
   @Test
   void testRemoveFieldExists() {
     parser.parseCommand("create class Apple");
+    parser.parseCommand("switch class Apple");
 
     CommandResult result = parser.parseCommand("remove field Banana");
-    assertFalse(
-        result.getMessage().contains("Error: Field Banana already exists."),
+    assertTrue(
+        result.getMessage().contains("Error: Field 'Banana' already exists."),
         "Success message should match.");
+    parser.parseCommand("remove class Apple");
   }
 
   @Test
@@ -183,6 +301,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid field renaming.");
     assertTrue(
         result.getMessage().contains("Field: banana to pear"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -194,6 +313,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Field 'banana' does not exist."),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -206,6 +326,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Field 'Pear' already exists."),
         "Success message should match.");
+    parser.parseCommand("remove class Apple");
   }
 
   @Test
@@ -216,6 +337,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid method creation.");
     assertTrue(
         result.getMessage().contains("Method added: banana"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -227,6 +349,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid method creation.");
     assertTrue(
         result.getMessage().contains("Method added: banana"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -238,6 +361,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid method removal.");
     assertTrue(
         result.getMessage().contains("Method removed: banana"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -249,6 +373,7 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid method rename.");
     assertTrue(
         result.getMessage().contains("Method: banana to pear"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -260,6 +385,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Method 'banana' does not exist."),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -273,6 +399,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Method 'pear' already exists."),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -284,16 +411,19 @@ class CommandParserUnitTest {
     assertTrue(result.isSuccess(), "Command should succeed for valid parameter creation.");
     assertTrue(
         result.getMessage().contains("Method: banana to int"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
   void testAddParameterNotExist() {
     parser.parseCommand("create class apple");
     parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int melon");
     CommandResult result = parser.parseCommand("add parameter banana int peach");
     assertTrue(
         result.getMessage().contains("Error: Method 'banana' does not exist."),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -307,15 +437,19 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Parameters removed from banana"),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
-  void testRemoveParameterNoClassSelected() {
+  void testRemoveParameterNoMethod() {
     parser.parseCommand("create class apple");
+    parser.parseCommand("switch class apple");
+    parser.parseCommand("add method int deets");
     CommandResult result = parser.parseCommand("remove parameter banana peach");
-    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
-        result.getMessage().contains("Error: No class selected."), "Success message should match.");
+        result.getMessage().contains("Error: Method banana not found."),
+        "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -331,6 +465,8 @@ class CommandParserUnitTest {
             .getMessage()
             .contains("Ready to rename parameter from peach to peanut in method banana"),
         "Success message should match.");
+
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -343,6 +479,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Added relationship to banana type of aggregation"),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -354,6 +491,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Can't connect to itself"),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -365,6 +503,7 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Error: Class 'NONEXISTENT' does not exist"),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -378,18 +517,23 @@ class CommandParserUnitTest {
     assertTrue(
         result.getMessage().contains("Relationship removed from banana type of aggregation"),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
+    parser.parseCommand("remove class banana");
   }
 
   @Test
   void testRemoveRelationshipNotExistent() {
     parser.parseCommand("create class apple");
+    parser.parseCommand("create class banana");
     parser.parseCommand("switch class apple");
     parser.parseCommand("add relationship aggregation banana");
-    CommandResult result = parser.parseCommand("remove relationship aggregation NONEXISTENT");
+    CommandResult result = parser.parseCommand("remove relationship aggregation NONEXISTANT");
     // assertTrue(result.isSuccess(), "Command should succeed for valid Relationship creation.");
     assertTrue(
-        result.getMessage().contains("Error: Relationship NONEXISTENT not found."),
+        result.getMessage().contains("Error: Relationship NONEXISTANT not found."),
         "Success message should match.");
+    parser.parseCommand("remove class apple");
+    parser.parseCommand("remove class banana");
   }
 
   @Test
@@ -401,15 +545,17 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("list detail");
     assertTrue(result.isSuccess(), "Command should succeed for valid class list.");
     assertTrue(result.getMessage().contains("Listing Detail..."), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
   void testListDetailNotSelected() {
-    parser.parseCommand("create class apple");
+    // parser.parseCommand("create class apple");
 
     CommandResult result = parser.parseCommand("list detail");
     assertTrue(
         result.getMessage().contains("Error: No class selected"), "Success message should match.");
+    // parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -421,6 +567,7 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("undo");
     assertTrue(result.isSuccess(), "Command should succeed for valid undo.");
     assertTrue(result.getMessage().contains("Undone"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -432,13 +579,16 @@ class CommandParserUnitTest {
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Error: Nothing to undo"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
   void testUndoNoClass() {
+
     CommandResult result = parser.parseCommand("undo");
     assertTrue(
         result.getMessage().contains("Error: No class selected"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -450,6 +600,7 @@ class CommandParserUnitTest {
     CommandResult result = parser.parseCommand("redo");
     assertTrue(result.isSuccess(), "Command should succeed for Redo.");
     assertTrue(result.getMessage().contains("Redone"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -461,6 +612,7 @@ class CommandParserUnitTest {
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(
         result.getMessage().contains("Error: Nothing to redo"), "Success message should match.");
+    parser.parseCommand("remove class apple");
   }
 
   @Test
@@ -481,62 +633,92 @@ class CommandParserUnitTest {
         "Success message should match.");
   }
 
-  // Was requested to NOT include this stuff
-  //  @Test
-  //  void testSave() {
-  //    parser.parseCommand("create class apple");
-  //    parser.parseCommand("switch class apple");
-  //
-  //    CommandResult result = parser.parseCommand("save");
-  //    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-  //    assertTrue(
-  //        result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-  //        "Success message should match.");
-  //  }
+  @Test
+  void testSaveAndLoad() {
+    parser.parseCommand("new project");
+    parser.parseCommand("create class PEANUTS");
+    parser.parseCommand("switch class PEANUTS");
+    parser.parseCommand("add field INT DUMMY");
+    parser.parseCommand("add method INT PEACHES");
+    parser.parseCommand("add method STRING ALMONDS");
 
-  //    @Test
-  //    void testSaveAs(){
-  //      parser.parseCommand("create class apple");
-  //      parser.parseCommand("switch class apple");
-  //
-  //      CommandResult result = parser.parseCommand("save as DUMMY");
-  //      assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-  //      assertTrue(
-  //              result.getMessage().contains("Saved to src/main/resources/saves/temp_save.json"),
-  //   "Success message should match.");
-  //
-  //    }
+    CommandResult result = parser.parseCommand("save");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Saved to "), "Success message should match.");
+
+    parser.parseCommand("remove class PEANUTS");
+
+    result = parser.parseCommand("load");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Loaded from "), "Success message should match.");
+
+    parser.parseCommand("remove class PEANUTS");
+    parser.parseCommand("new project");
+  }
 
   @Test
-  void testLoad() {
-    CommandResult result = parser.parseCommand("load");
-    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-    assertTrue(
-        result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
-        "Success message should match.");
+  void testSaveAs() {
+    parser.parseCommand("new project");
+
+    CommandResult result = parser.parseCommand("save as src/main/resources/saves/DUMMY");
+    assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(result.getMessage().contains("Saved to"), "Success message should match.");
   }
+
+  //  @Test
+  //  void testLoad() {
+  //    CommandResult result = parser.parseCommand("load");
+  //    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+  //    assertTrue(
+  //        result.getMessage().contains("Loaded from src/main/resources/saves/temp_save.json"),
+  //            "Success message should match.");
+  //  }
 
   @Test
   void testLoadFile() {
 
-    CommandResult result = parser.parseCommand("load file DUMMY");
+    CommandResult result = parser.parseCommand("load file src/main/resources/saves/test");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(result.getMessage().contains("Loaded from"), "Success message should match.");
   }
 
   @Test
-  void testLoadFileNotExist() {
+  void testLoadFileExcceptionParsing() {
+    CommandResult result = parser.parseCommand("load file src/main/resources/saves/BrokenSave");
+    // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
+    assertTrue(
+        result.getMessage().contains("Error parsing JSON: "), "Success message should match.");
+  }
 
+  @Test
+  void testLoadFileNotExist() {
     CommandResult result = parser.parseCommand("load file NONEXISTENT");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
     assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
   }
 
   @Test
-  void testLoadFileNotExisting() {
-    CommandResult result = parser.parseCommand("load file NONEXISTENT");
+  void testLoadFileExcception() {
+    CommandResult result = parser.parseCommand("load file src/main/resources/exportd/test");
     // assertTrue(result.isSuccess(), "Command should succeed for valid field removal.");
-    assertTrue(result.getMessage().contains("File not found:"), "Success message should match.");
+    assertTrue(
+        result.getMessage().contains("Error parsing JSON: "), "Success message should match.");
+  }
+
+  @Test
+  void testExportImageSuccess() {
+    CommandResult result = parser.parseCommand("image export src/main/resources/saves/DUMMY");
+    assertTrue(
+        result.getMessage().contains("Image successfully exported to: "),
+        "Success message should match.");
+  }
+
+  @Test
+  void testExportImageError() {
+
+    CommandResult result = parser.parseCommand("image export src/main/resources/saves/test");
+    assertTrue(
+        result.getMessage().contains("Error exporting image: "), "Success message should match.");
   }
 
   @Test
